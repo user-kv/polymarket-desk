@@ -36,6 +36,14 @@ def _celsius_to_f(c):
     return c * 9 / 5 + 32
 
 
+def _to_float(v, default=0.0):
+    """Tolerant float parse for Gamma volume/liquidity (may be str, None, or num)."""
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return default
+
+
 def fetch_weather_markets(cfg, cutoff_hours=48):
     """
     Scan Gamma API pages and return all active temperature markets for
@@ -143,6 +151,11 @@ def fetch_weather_markets(cfg, cutoff_hours=48):
                     "resolutionSource",
                     f"https://www.wunderground.com/history/daily/us/{matched_city['station'].lower()}"
                 ),
+                # Captured for the desk-layer liquidity rule (research round 5): avoid
+                # illiquid markets you can't realistically fill, and the hyper-saturated
+                # ones where pro bots have already closed the latency window.
+                "volume_num": _to_float(m.get("volumeNum", m.get("volume"))),
+                "liquidity_num": _to_float(m.get("liquidityNum", m.get("liquidity"))),
                 **event_info,
             })
 

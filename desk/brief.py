@@ -22,6 +22,7 @@ from dataclasses import dataclass, asdict
 
 from desk.memory.store import recall
 from desk.agents import llm
+from desk import risk
 
 DEBATE_ENABLED = False           # default: single-agent baseline (cheaper, see R2)
 MAX_DEBATE_ROUNDS = 2            # hard cap — gains saturate by round 2/3 (R2)
@@ -115,11 +116,22 @@ def build_brief(market: dict, forecast_summary: dict, evaluation: dict,
         conf, rationale = _baseline_confidence(evaluation, forecast_summary, lessons)
         mode = "single"
 
-    # GROUND-TRUTH AUTHORITY: never upgrade. A low-confidence BET is downgraded to SKIP.
+    # GROUND-TRUTH AUTHORITY: never upgrade. Only confirm or VETO an engine BET.
     recommendation = engine_action
-    if engine_action == "BET" and conf < 0.5:
-        recommendation = "SKIP"
-        rationale += " | VETO: confidence below 0.5, engine BET downgraded to SKIP."
+    if engine_action == "BET":
+        if conf < 0.5:
+            recommendation = "SKIP"
+            rationale += " | VETO: confidence below 0.5, engine BET downgraded to SKIP."
+        else:
+            # Phase 2 risk guards — either can veto a confident bet, neither can create one.
+            decline, dmsg = risk.should_decline_category(_category(market))
+            liquid, lmsg = risk.passes_liquidity(market)
+            if decline:
+                recommendation = "SKIP"
+                rationale += f" | VETO(risk): {dmsg}"
+            elif not liquid:
+                recommendation = "SKIP"
+                rationale += f" | VETO(liquidity): {lmsg}"
 
     return Brief(
         slug=market.get("slug", ""), city=market.get("city", ""),
