@@ -1,0 +1,78 @@
+{
+  "scan_timestamp": "2026-06-12T16:27:06Z",
+  "test_mode": true,
+  "markets_found": 6,
+  "markets_priced": 6,
+  "bets_placed": 1,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 96-97\u00b0F on June 13?",
+        "slug": "highest-temperature-in-atlanta-on-june-13-2026-96-97f",
+        "market_id": "2512739",
+        "end_date": "2026-06-13T12:00:00Z",
+        "end_dt": "2026-06-13 12:00:00+00:00",
+        "hours_left": 19.6,
+        "yes_token": "32562307211831375130947740837352746468458626977186191574622703536904053968350",
+        "no_token": "112551705848244514182257550315769009202572601364577215755481024039466899703419",
+        "bucket_low_f": 96.0,
+        "bucket_high_f": 97.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ga/atlanta/KATL",
+        "event_id": "585542",
+        "event_slug": "highest-temperature-in-atlanta-on-june-13-2026",
+        "ask_price": 0.041
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 91.136,
+        "ecmwf_mean_f": 89.27600000000001,
+        "combined_mean_f": 89.9735,
+        "n_members": 80
+      },
+      "evaluation": {
+        "action": "BET",
+        "reason": "All rules pass. Edge=-4.1pt, prob=0.0%, ask=0.041",
+        "edge_pct": -4.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.041,
+        "gfs_mean_f": 91.1,
+        "ecmwf_mean_f": 89.3,
+        "combined_mean_f": 90.0,
+        "n_members": 80,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.000 ask=0.041 edge=-4.1pt threshold=-50pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=19.6"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=91.1F ecmwf=89.3F diff=1.03C (max 999.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[96.0,97.0] mean=90.0F buf\u00b1-999.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$0.00 max=$100.00 "
+          ]
+        ],
+        "shares": 121.9512,
+        "stake": 5.0
+      }
+    }
+  ]
+}

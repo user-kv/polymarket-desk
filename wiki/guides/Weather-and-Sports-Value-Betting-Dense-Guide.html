@@ -1,0 +1,238 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+@page { size: a4 portrait; margin: 1.7cm 1.6cm;
+  @frame footer_frame { -pdf-frame-content: footerContent; bottom: 0.9cm; left: 1.6cm; right: 1.6cm; height: 1cm; } }
+body { font-family: Helvetica, Arial, sans-serif; font-size: 10.5pt; line-height: 1.42; color: #1a1a1a; }
+h1 { font-size: 18pt; color: #0b3d63; border-bottom: 2px solid #0b3d63; padding-bottom: 3px; page-break-before: always; }
+h2 { font-size: 13pt; color: #14507a; margin-top: 13px; border-bottom: 1px solid #cdddea; padding-bottom: 2px; }
+h3 { font-size: 11.5pt; color: #20618f; margin-top: 10px; }
+p { margin: 5px 0; }
+ul, ol { margin: 4px 0 4px 2px; }
+li { margin: 2px 0; }
+hr { border: none; border-top: 1px solid #d9d9d9; margin: 10px 0; }
+blockquote { background: #eef5fb; border-left: 4px solid #2b7cc0; margin: 8px 0; padding: 6px 10px; color: #143b56; }
+code { font-family: Courier, monospace; background: #f2f2f2; font-size: 9.5pt; padding: 1px 2px; }
+table { border-collapse: collapse; width: 100%; margin: 7px 0; }
+th, td { border: 1px solid #bbb; padding: 3px 5px; font-size: 9pt; text-align: left; vertical-align: top; }
+th { background: #e8f0f7; }
+strong { color: #111; }
+#footerContent { font-size: 8pt; color: #888; text-align: center; }
+</style></head><body>
+
+
+<div style="page-break-after: always; text-align:center;">
+  <div style="margin-top: 4.5cm;"></div>
+  <div style="font-size: 27pt; color:#0b3d63; font-weight:bold; line-height:1.2;">The Two-Strategy Playbook</div>
+  <div style="margin-top: 0.8cm; font-size: 15pt; color:#14507a;">Weather Trading &nbsp;+&nbsp; Sports Value-Betting</div>
+  <div style="margin-top: 0.5cm; font-size: 12pt; color:#555;">Dense Edition &mdash; every line is signal</div>
+  <div style="margin-top: 3cm; font-size: 11pt; color:#777;">June 2026</div>
+  <div style="margin-top: 2.5cm; font-size: 9pt; color:#a33; max-width: 12cm; margin-left:auto; margin-right:auto;">
+    Educational only &mdash; not financial advice. Prediction-market trading is risky, zero-sum, and
+    legally restricted in many places including Australia. Never trade money you cannot afford to lose.</div>
+</div><h1 id="the-two-strategy-playbook">The Two-Strategy Playbook</h1>
+<h3 id="weather-trading-sports-value-betting-on-prediction-markets-dense-edition">Weather Trading + Sports Value-Betting on Prediction Markets — Dense Edition</h3>
+<p><em>Information-dense. Every line is signal. Read top to bottom once, then use as a reference.</em></p>
+<hr />
+<h2 id="the-one-skill-both-strategies-are-this">THE ONE SKILL (both strategies are this)</h2>
+<p><strong>Buy when the market price is below the true probability — measured against a reliable "answer key" — then hold to resolution.</strong><br />
+- Weather's answer key = <strong>free professional forecast models</strong>.<br />
+- Sports' answer key = <strong>de-vigged sharp bookmaker odds (Pinnacle)</strong>.<br />
+Everything below is how to (a) get a trustworthy true probability, (b) find where Polymarket disagrees, (c) size it, (d) prove your edge is real.</p>
+<h2 id="brutal-truths-memorize">BRUTAL TRUTHS (memorize)</h2>
+<ul>
+<li><strong>~88% of users lose</strong> (only ~12% net-positive; only ~3% are "skilled" at value betting). The edge is real but thin and statistical.</li>
+<li><strong>Never bet money you can't afford to lose. Never your whole bankroll. Not even close.</strong> A normal 6-loss streak wipes out a big-bet account even with a <em>winning</em> system ("risk of ruin").</li>
+<li><strong>Access:</strong> Polymarket <strong>and</strong> Kalshi both block <strong>Australia</strong> (ACMA ISP-block since Aug 2025). A VPN breaks ToS and gives zero fund-recovery protection. Solve "where can I legally trade" <em>before</em> funding. The skill below is portable; the access problem is separate.</li>
+<li><strong>Costs are real:</strong> ~<strong>2% winner fee</strong> + <strong>spread</strong> (1–2¢ liquid, 5–10¢ niche). A 5% edge in a 6% spread is a <em>loser</em>. Always subtract costs first.</li>
+<li><strong>Validate before scaling.</strong> Most strategies "fail" not because the logic is wrong but because the edge was never proven. Paper-trade, log everything, judge after 100+ trades.</li>
+</ul>
+<hr />
+<h1 id="part-a-shared-foundations">PART A — SHARED FOUNDATIONS</h1>
+<h2 id="a1-price-probability">A1. Price = probability</h2>
+<p>A share pays <strong>$1 if right, $0 if wrong</strong>. Price in cents = the crowd's implied probability (65¢ = 65%). "Yes" + "No" ≈ $1.</p>
+<h2 id="a2-expected-value-ev-the-only-question-that-matters">A2. Expected Value (EV) — the only question that matters</h2>
+<p><strong>EV = (your true prob × amount won) − (lose prob × amount lost).</strong> Positive EV = profitable on average → bet. Negative = skip, no matter how tempting.<br />
+<em>Example:</em> buy "Yes" at 40¢, you think true 65%. Win → +60¢ (65%); lose → −40¢ (35%). EV = 0.65×0.60 − 0.35×0.40 = <strong>+$0.25/share</strong>. <strong>Then subtract costs</strong> — if spread+fee = 6¢, real EV ≈ +19¢. Still a great bet.</p>
+<h2 id="a3-costs-and-how-to-dodge-them">A3. Costs (and how to dodge them)</h2>
+<ul>
+<li><strong>Taker fee</strong> ~2% (weather ~1.25%), <strong>highest near 50¢</strong>, ~0 near 1¢/99¢.</li>
+<li><strong>Maker = 0 fee.</strong> Post a <strong>limit order</strong> (offer to buy at your price, wait) instead of a market order → pay no fee. Use limit orders by default.</li>
+<li><strong>Spread</strong> = hidden round-trip cost. Worst in niche markets (where the best edges live) → demand a bigger edge there.</li>
+</ul>
+<h2 id="a4-sizing-fractional-kelly">A4. Sizing — fractional Kelly</h2>
+<ul>
+<li>Kelly fraction: <strong>f = (b·p − q) / b</strong> — b = decimal odds − 1, p = your true prob, q = 1−p. f = % of bankroll.</li>
+<li><strong>Use Quarter Kelly (0.25×)</strong> — full Kelly assumes you <em>know</em> the true prob (you don't); fractional cuts variance and protects against estimate error.</li>
+<li><strong>Hard caps:</strong> ≤5% of bankroll per position; while learning, a flat tiny stake ($1–5).</li>
+<li><strong>Bankroll</strong> = money you can fully afford to lose. Diversify across many small bets — the edge only shows over <em>hundreds</em> of independent trades.</li>
+</ul>
+<h2 id="a5-proof-of-edge-do-this-or-youre-guessing">A5. Proof of edge (do this or you're guessing)</h2>
+<ul>
+<li><strong>Log every trade:</strong> date, market, your prob, price paid, size, result.</li>
+<li>For sports, also log <strong>Closing Line Value (CLV)</strong> — see C5. CLV proves edge <em>before</em> results catch up.</li>
+<li>Judge after <strong>100+ trades</strong>: are you positive <em>after costs</em>? If not, fix it before risking more.</li>
+</ul>
+<hr />
+<h1 id="part-b-weather-trading">PART B — WEATHER TRADING</h1>
+<h2 id="b1-why-its-good">B1. Why it's good</h2>
+<p>Objective government resolution (no rug-pulls), casual/emotional opponents, <strong>free pro forecasts</strong> they ignore, <strong>daily</strong> feedback (fast learning). The big winners: gopfan2 (~$2M), ColdMath (~$120k+ barbell). An honest public bot (natestokens) logged <strong>+27% ROI, 61% win</strong> — real, modest, repeatable.</p>
+<h2 id="b2-how-the-markets-work">B2. How the markets work</h2>
+<ul>
+<li>Question split into <strong>temperature buckets</strong> (e.g. ≤70, 71–72, 73–74, 75–76, 77+), each a Yes/No ticket; prices sum to ~100%.</li>
+<li><strong>Resolves on the official NWS Daily Climate Report (CLI) for ONE specific airport station</strong>, listed in the market rules. Settles <strong>8:00 AM ET next day</strong>. ~212 weather markets; cities incl. NYC, London, Guangzhou, Beijing, Shanghai, Miami, Hong Kong, + secondary cities.</li>
+<li><strong>⚠️ The #1 beginner error:</strong> analyzing the city, not the <strong>airport</strong>. NYC resolves at <strong>LaGuardia (KLGA)</strong> — can run <strong>3–5°F cooler</strong> than Midtown. Dallas = <strong>Love Field (KDAL), not DFW</strong>. Always analyze the exact station.</li>
+</ul>
+<h2 id="b3-the-data-all-free">B3. The data (all free)</h2>
+<ul>
+<li><strong>Models:</strong> GFS (US), ECMWF (Europe, sharpest), ICON (Germany), HRRR (US short-range).</li>
+<li><strong>Model runs (your timing edge):</strong> GFS 00/06/12/18 UTC; ECMWF 00/12 UTC. When a new run shifts the forecast, the <em>price lags</em> → trade before it catches up.</li>
+<li><strong>Ensembles = probability:</strong> run the model many times; if 25 of 31 members say "75°F+", that's ~<strong>80%</strong>. Best bots use 30–170+ members.</li>
+<li><strong>Sources:</strong> <strong>Open-Meteo</strong> (free ensembles incl. 31-member GEFS &amp; ECMWF), <strong>api.weather.gov</strong> (NWS forecasts + live <strong>METAR</strong> airport obs), <strong>Windy</strong> ("compare models" GFS/ECMWF/ICON), <strong>Tropical Tidbits</strong> (raw model output).</li>
+</ul>
+<h2 id="b4-the-edge-entry-checklist">B4. The edge &amp; entry checklist</h2>
+<p>Edge = <strong>your ensemble probability − market price.</strong> Buy a bucket only if ALL hold:<br />
+1. Edge <strong>≥ 8 percentage points</strong> (asymmetric ok: ~5pt to fade an overpriced bucket "No", ~15pt to back "Yes").<br />
+2. Lead time <strong>≤ 48 hours</strong> (forecasts reliable).<br />
+3. <strong>GFS &amp; ECMWF ensembles agree within ~1.5°C</strong> (if models fight, sit out).<br />
+4. Market volume <strong>≥ ~$10k</strong> (so you can enter/exit).<br />
+5. <strong>Avoid the coin-flip middle</strong> — leave a <strong>3°F buffer</strong> around the ensemble mean; trade buckets the models clearly favor/reject.<br />
+If one fails → <strong>don't trade.</strong> Skipping is a profitable action.</p>
+<h2 id="b5-advanced-intraday-edge-advection-nowcasting">B5. Advanced intraday edge — advection / nowcasting</h2>
+<p><strong>Advection</strong> = a warm/cold air mass blowing in. The day-ahead forecast guessed; the <strong>live METAR</strong> airport readings show <em>reality</em>. If warm air is arriving faster than forecast, the high will likely beat it → trade before the market notices. "Nowcasting" = using current obs to refine the forecast. (Level-2 skill; free via api.weather.gov.)</p>
+<h2 id="b6-cities-tactics-sizing">B6. Cities, tactics, sizing</h2>
+<ul>
+<li><strong>Trade SECONDARY cities</strong> (Buenos Aires, Cape Town, Dallas, Atlanta): fewer bots, edges last <strong>hours</strong> not 5–15 min. Avoid bot-saturated NYC/London/Hong Kong (edge gone in minutes) — but they have tighter spreads. Trade-off: secondary = bigger edge but wider spread (clear it).</li>
+<li><strong>Laddering:</strong> buy several adjacent cheap buckets (5–15¢); one or two winners cover the rest.</li>
+<li><strong>Barbell (ColdMath):</strong> many tiny long-shot buckets + occasional bigger high-conviction bets.</li>
+<li><strong>Sizing:</strong> learning = flat $1–5; proven = Quarter Kelly, ≤5% bankroll, run <strong>10–30+ city/date combos</strong> small (variance demands volume).</li>
+<li><strong>Costs:</strong> weather taker fee ~1.25%; use <strong>limit orders (0 fee)</strong>; ensure the ≥8pt edge clears fee + spread.</li>
+</ul>
+<h2 id="b7-automate-it-you-have-claude-code">B7. Automate it (you have Claude Code)</h2>
+<p>The bot = the manual routine, tireless, across 30 cities. Best open-source blueprints:<br />
+- <strong><code>natestokens/polymarket-weather-bot</code></strong> (Claude-Code-built, the gold standard): <strong>173-member ensemble</strong> (ECMWF IFS+AIFS, GEFS, ICON via Open-Meteo); <strong>city bias-correction</strong> vs historical ASOS airport data (NYC +1.4°F, Miami −2.2°F); edge = model prob − price, thresholds <strong>5pt (No) / 15pt (Yes)</strong>, "stay out of the middle"; pure Python, no deps; <strong>verified +27% ROI / 61% win</strong>.<br />
+- <strong><code>alteregoeth-ai/weatherbot</code></strong>: ECMWF+HRRR via Open-Meteo, METAR, Visual Crossing, Gamma API; config min EV 0.05, Kelly 0.25, max bet $20, scan hourly; has <strong>simulation/paper mode</strong>.<br />
+- Official plumbing: <strong><code>Polymarket/polymarket-cli</code></strong> (Rust, JSON for agents) or <strong><code>py-clob-client</code></strong> (Python). <strong>Paper-trade for weeks first.</strong></p>
+<h2 id="b8-manual-routine-no-code-realistic-expectations">B8. Manual routine (no code) &amp; realistic expectations</h2>
+<p>Daily: pick city → find its airport station → check Windy compare-models for tomorrow's high → if 3+ models cluster on a range (true prob 70–90%) → open the market → find a bucket the models favor selling cheap (or one they reject selling rich) → run the B4 checklist → place a small <strong>limit</strong> order → <strong>log it</strong> → repeat → review after 100 trades.<br />
+<strong>Expect:</strong> a small grinding edge (~25% ROI / ~60% win at small scale), not a jackpot. Losing days/weeks are normal at 60% win. The "$80k/month" videos are marketing.<br />
+<strong>Common killer:</strong> "had a theory, won a few weeks, called it an edge, then lost." Validate with logged data, not vibes.</p>
+<h1 id="part-c-sports-value-betting">PART C — SPORTS VALUE-BETTING</h1>
+<h2 id="c1-why-its-the-most-logically-bulletproof">C1. Why it's the most logically bulletproof</h2>
+<p><strong>Pinnacle's closing line ≈ true probability.</strong> Hard evidence: across <strong>397,935 football games, r² = 0.997</strong> between Pinnacle's closing line and actual outcomes; optimal prediction puts <strong>95–100% weight on Pinnacle</strong> over all other books. Why: Pinnacle's <strong>"winner's welcome"</strong> policy invites sharp bettors and uses their money to price lines (other books <em>ban</em> winners, so their lines are softer). <strong>Polymarket sports prices are set by slow retail money.</strong> The gap between de-vigged Pinnacle and Polymarket = your edge. Documented human: <strong>"swisstony" ~$3.7M</strong> doing exactly this. The premise is the hardest in this whole field to argue with — the only real flaws are <em>execution and access</em>, both of which you control.</p>
+<h2 id="c2-the-full-mechanic">C2. The full mechanic</h2>
+<ol>
+<li>Get the <strong>sharp line</strong> (Pinnacle, or Betfair Exchange / PS3838) for the game.</li>
+<li><strong>De-vig</strong> it → true probability (C3).</li>
+<li>Compare to the <strong>Polymarket price</strong>.</li>
+<li>If Polymarket price &lt; true prob by <strong>≥ your threshold (after costs)</strong> → buy that side, <strong>HOLD TO RESOLUTION</strong> (don't try to flip — exit liquidity is poor).<br />
+<em>Worked example:</em> Pinnacle implies Lakers 70% (de-vigged). Polymarket "Lakers win" = <strong>62¢</strong>. Edge = 70 − 62 = <strong>+8 points</strong> → buy at 62¢, hold. If your prob source is right, this is +EV; over hundreds of such bets you profit.</li>
+</ol>
+<h2 id="c3-de-vig-strip-the-bookmaker-margin">C3. De-vig (strip the bookmaker margin)</h2>
+<p>Raw book odds include a margin ("vig") so implied probs sum to &gt;100%. Remove it:<br />
+- <strong>Multiplicative</strong> (default, 2-way): each side's implied prob ÷ sum of all implied probs. <em>e.g. 0.55 &amp; 0.50 sum 1.05 → 52.4% &amp; 47.6%.</em><br />
+- <strong>Power:</strong> exponent-based; handles favorite/longshot asymmetry; between multiplicative and Shin.<br />
+- <strong>Shin</strong> (most theoretically sound): assumes part of the vig is insider info; allocates more margin to longshots; iterative; <strong>best for heavy favorites, player props, multi-way markets.</strong><br />
+- <strong>Rule:</strong> multiplicative for simple 2-way; Shin/power for heavy-favorite or multi-outcome. Free devig calculators: OddsJam, gamblingcalc, edgeslip.</p>
+<h2 id="c4-which-markets-and-the-threshold">C4. Which markets (and the threshold)</h2>
+<ul>
+<li>Polymarket sports: <strong>NFL, NBA, MLB, NHL, soccer, UFC, boxing, tennis, F1, Olympics, World Cup</strong>; markets = game winners, season/championship, MVP, some props.</li>
+<li><strong>Edge threshold: ≥5%</strong> commonly cited; you need <strong>~2.2–3.0% just to cover</strong> the 2% winner fee + gas + slippage, so demand more than that.</li>
+<li>Best opportunities: <strong>less-liquid / less-watched markets</strong> where Polymarket lags <strong>minutes–hours</strong> after news (injuries, lineups). Avoid racing bots on the obvious 15–60s edges.</li>
+</ul>
+<h2 id="c5-closing-line-value-clv-your-proof-of-edge">C5. Closing Line Value (CLV) — your proof of edge</h2>
+<p>The <strong>closing line</strong> (final odds before kickoff) bakes in <em>all</em> info → the gold-standard "true probability." <strong>If you consistently get a better price than the closing line, you are mathematically profitable long-term</strong> (Law of Large Numbers) — <em>before</em> results even confirm it.<br />
+- <strong>Beat it by:</strong> (1) <strong>line-shop</strong> the best price, (2) <strong>bet EARLY</strong> (soft lines before sharp money moves them), (3) make genuine +EV bets.<br />
+- <strong>Track:</strong> log your entry price + the closing line for 100+ bets; compute % positive-CLV and average CLV.<br />
+- <strong>Benchmarks:</strong> any positive CLV = beating the market; <strong>+5% avg CLV = excellent</strong>; <strong>60–65% of bets beating CLV over 200+</strong> = a confirmed, durable edge. <em>This is how you KNOW you have an edge without waiting months for variance to resolve.</em></p>
+<h2 id="c6-sizing-tools">C6. Sizing &amp; tools</h2>
+<ul>
+<li><strong>Kelly:</strong> f = (b·p − q)/b; use <strong>Quarter Kelly</strong>; ≤5% bankroll/bet; flat tiny stakes while learning.</li>
+<li><strong>Tools:</strong> <strong>OddsJam</strong> (edge feed + devig + CLV + prediction-market trader tracker), <strong>PredictEngine</strong> (arb/value scanner), <strong>Pinnacle Odds Dropper</strong>, odds APIs (oddspapi). Trackers: polysight.app, polytraders.io. Repos: <code>Alirun/polymarket-trader</code>, <code>jon-becker/prediction-market-analysis</code> (36GB Polymarket+Kalshi history for <strong>backtesting</strong>).</li>
+</ul>
+<h2 id="c7-step-by-step-workflow">C7. Step-by-step workflow</h2>
+<ol>
+<li>Pick a sport/league you understand. 2. Pull Pinnacle (or Betfair) lines. 3. De-vig → true prob. 4. Scan Polymarket for the same games; find price &lt; true prob by ≥5% (after costs). 5. Place a <strong>limit</strong> order (0 fee) and <strong>hold to resolution</strong>. 6. <strong>Log entry price + closing line</strong> → track CLV. 7. After 100–200 bets, check CLV%: beating it 60%+ → real edge, scale slowly with Quarter Kelly. Not beating it → fix your inputs before risking more.</li>
+</ol>
+<h2 id="c8-flaws-mitigations-honest">C8. Flaws &amp; mitigations (honest)</h2>
+<ul>
+<li><strong>Bots own the fast/big edges</strong> (15–60s) → don't race them; value-bet slower markets and hold.</li>
+<li><strong>Liquidity:</strong> fewer markets than a sportsbook; low-liquidity markets are easy to <strong>buy, hard to sell</strong> → hold to resolution, size to available depth.</li>
+<li><strong>Wash trading</strong> inflates Polymarket volume (Columbia study) → don't trust volume blindly; check real two-sided depth.</li>
+<li><strong>Rising efficiency</strong> = fewer easy edges over time; <strong>costs</strong> (2% fee + spread) must be cleared; value betting is the <strong>highest skill bar</strong> (~3% of accounts skilled).</li>
+<li><strong>Access:</strong> Polymarket blocked in AU (same gate as weather).</li>
+</ul>
+<hr />
+<h1 id="part-d-weather-vs-sports-which-when-how-together">PART D — WEATHER vs SPORTS: WHICH, WHEN, HOW TOGETHER</h1>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Weather</strong></th>
+<th><strong>Sports value-betting</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Answer key</td>
+<td>Free ensemble forecasts</td>
+<td>De-vigged Pinnacle (r²=0.997)</td>
+</tr>
+<tr>
+<td>Logic strength</td>
+<td>Strong (objective)</td>
+<td><strong>Strongest (near-unfalsifiable)</strong></td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Automating; objective resolution</td>
+<td>Year-round; if you know sport</td>
+</tr>
+<tr>
+<td>Feedback speed</td>
+<td><strong>Daily</strong> (fast learning)</td>
+<td>Per-game</td>
+</tr>
+<tr>
+<td>Main flaw</td>
+<td>Thin edge; bots in big cities</td>
+<td>Liquidity/exit; bots on fast edges</td>
+</tr>
+<tr>
+<td>Mitigation</td>
+<td>Secondary cities, limit orders</td>
+<td>Less-liquid markets, hold to resolution</td>
+</tr>
+<tr>
+<td>Proof metric</td>
+<td>Logged win% after costs</td>
+<td><strong>CLV</strong> (beat closing line 60%+)</td>
+</tr>
+<tr>
+<td>Automatable?</td>
+<td><strong>Yes</strong> (natestokens template)</td>
+<td>Partly (scanners + manual judgment)</td>
+</tr>
+<tr>
+<td>Edge size</td>
+<td>≥8 pts (model vs price)</td>
+<td>≥5% (true prob vs price)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Which to start with?</strong><br />
+- Want <strong>objective, automatable, fast feedback</strong> → <strong>Weather</strong> (and you have Claude Code to build the bot).<br />
+- <strong>Know a sport deeply</strong> and want the <strong>most bulletproof logic</strong> + year-round volume → <strong>Sports</strong>.<br />
+- Ideal: learn <strong>both</strong> — they share the one skill and diversify your edge across unrelated domains.</p>
+<p><strong>The validation gate (same for both):</strong><br />
+1. <strong>Paper-trade</strong> (fake money) for weeks → prove you can spot edges. 2. <strong>Tiny real money</strong> ($1–5/bet, few-hundred-$ bankroll), <strong>log everything</strong> (sports: track CLV). 3. <strong>100+ trades</strong> → positive after costs / beating CLV 60%+? → scale slowly (Quarter Kelly, ≤5%/bet). 4. Only then <strong>automate / size up.</strong> Each phase must succeed before the next. <strong>Never skip to big money.</strong></p>
+<hr />
+<h1 id="part-e-quick-reference">PART E — QUICK REFERENCE</h1>
+<p><strong>Formulas:</strong> EV = p·(win) − (1−p)·(loss). Kelly f = (b·p − q)/b, use 0.25×. De-vig (mult.) = implied_prob ÷ Σ implied_probs.<br />
+<strong>Edge thresholds:</strong> Weather ≥8 pts; Sports ≥5% (clear ~2.5% costs first).<br />
+<strong>CLV benchmarks:</strong> +5% avg = excellent; 60–65% of bets beating close over 200+ = durable edge.<br />
+<strong>Weather data:</strong> Open-Meteo (ensembles), api.weather.gov (NWS + METAR), Windy (compare models), Tropical Tidbits. Runs: GFS 00/06/12/18 UTC, ECMWF 00/12 UTC. Stations: KLGA (NYC), KDAL (Dallas). Secondary cities: Buenos Aires, Cape Town, Dallas, Atlanta.<br />
+<strong>Sports data:</strong> Pinnacle / Betfair / PS3838 (sharp lines); OddsJam, PredictEngine, Pinnacle Odds Dropper, oddspapi (APIs); devig calcs (oddsjam/gamblingcalc/edgeslip).<br />
+<strong>Repos:</strong> natestokens/polymarket-weather-bot, alteregoeth-ai/weatherbot, Polymarket/polymarket-cli, Polymarket/py-clob-client, Alirun/polymarket-trader, jon-becker/prediction-market-analysis (backtest data).<br />
+<strong>Rules of survival:</strong> bet small (≤5%), limit orders (0 fee), hold to resolution, log everything, validate 100+ trades, never bet what you can't lose, never all-in.<br />
+<strong>Access gate:</strong> Polymarket + Kalshi block Australia — solve venue/legality before funding.<br />
+<strong>Scam watch:</strong> never run commands like <code>powershell irm &lt;site&gt; | iex</code> ("install a bot" = malware); guard your wallet private key; assume "$X/day bot" promos are paid affiliate funnels.</p>
+<p><em>Educational only — not financial advice. Prediction-market trading is risky, zero-sum, and legally restricted in many places including Australia. Never trade money you cannot afford to lose.</em></p></body></html>

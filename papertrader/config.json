@@ -1,0 +1,138 @@
+{
+  "_comment": "PaperTrader config \u2014 edit thresholds and cities here. NEVER put real wallet keys here.",
+  "bankroll_start": 500.0,
+  "stake_per_bet": 5.0,
+  "use_kelly_staking": true,
+  "kelly_fraction": 0.25,
+  "min_stake": 1.0,
+  "max_stake": 25.0,
+  "edge_threshold_pct": 5.0,
+  "_edge_threshold_note": "Lowered from 7.0 to 5.0 on 2026-06-16 to generate paper-bet data faster (backtest showed too few qualifying edges at 7%). Revisit once 30+ paper bets exist to see if 5% holds up as well as 7% did. Revert by setting this back to 7.0.",
+  "near_miss_min_pct": 3.0,
+  "real_money_target_date": "2026-06-30",
+  "_real_money_target_note": "Set 2026-06-16: you said you plan to start real-money betting around two weeks from now. Shown as a countdown in `status` and the weekly digest. Update or remove if your plans change.",
+  "max_exposure_pct": 20.0,
+  "max_hours_to_resolution": 48,
+  "model_agree_max_diff_c": 1.0,
+  "buffer_around_mean_f": 2.0,
+  "fee_on_winnings_pct": 2.0,
+  "cities": [
+    {
+      "name": "Atlanta",
+      "station": "KATL",
+      "lat": 33.6367,
+      "lon": -84.4281,
+      "polymarket_name": "atlanta",
+      "tz": "auto",
+      "wunderground_station": "KATL",
+      "resolution_source": "https://www.wunderground.com/history/daily/katl"
+    },
+    {
+      "name": "Austin",
+      "station": "KAUS",
+      "lat": 30.1945,
+      "lon": -97.6699,
+      "polymarket_name": "austin",
+      "tz": "auto",
+      "wunderground_station": "KAUS",
+      "resolution_source": "https://www.wunderground.com/history/daily/kaus"
+    },
+    {
+      "name": "Chicago",
+      "station": "KORD",
+      "lat": 41.9786,
+      "lon": -87.9048,
+      "polymarket_name": "chicago",
+      "tz": "auto",
+      "wunderground_station": "KORD",
+      "resolution_source": "https://www.wunderground.com/history/daily/kord"
+    },
+    {
+      "name": "Dallas",
+      "station": "KDAL",
+      "lat": 32.8471,
+      "lon": -96.8518,
+      "polymarket_name": "dallas",
+      "tz": "auto",
+      "wunderground_station": "KDAL",
+      "resolution_source": "https://www.wunderground.com/history/daily/kdal"
+    },
+    {
+      "name": "Denver",
+      "station": "KBKF",
+      "lat": 39.7017,
+      "lon": -104.752,
+      "polymarket_name": "denver",
+      "tz": "auto",
+      "wunderground_station": "KBKF",
+      "resolution_source": "https://www.wunderground.com/history/daily/kbkf"
+    },
+    {
+      "name": "Houston",
+      "station": "KHOU",
+      "lat": 29.6454,
+      "lon": -95.2789,
+      "polymarket_name": "houston",
+      "tz": "auto",
+      "wunderground_station": "KHOU",
+      "resolution_source": "https://www.wunderground.com/history/daily/khou"
+    },
+    {
+      "name": "Los Angeles",
+      "station": "KLAX",
+      "lat": 33.9425,
+      "lon": -118.408,
+      "polymarket_name": "los angeles",
+      "tz": "auto",
+      "wunderground_station": "KLAX",
+      "resolution_source": "https://www.wunderground.com/history/daily/klax"
+    },
+    {
+      "name": "Miami",
+      "station": "KMIA",
+      "lat": 25.7932,
+      "lon": -80.2906,
+      "polymarket_name": "miami",
+      "tz": "auto",
+      "wunderground_station": "KMIA",
+      "resolution_source": "https://www.wunderground.com/history/daily/kmia"
+    },
+    {
+      "name": "New York City",
+      "station": "KLGA",
+      "lat": 40.7772,
+      "lon": -73.8726,
+      "polymarket_name": "new york city",
+      "tz": "auto",
+      "wunderground_station": "KLGA",
+      "resolution_source": "https://www.wunderground.com/history/daily/klga"
+    },
+    {
+      "name": "San Francisco",
+      "station": "KSFO",
+      "lat": 37.619,
+      "lon": -122.375,
+      "polymarket_name": "san francisco",
+      "tz": "auto",
+      "wunderground_station": "KSFO",
+      "resolution_source": "https://www.wunderground.com/history/daily/ksfo"
+    },
+    {
+      "name": "Seattle",
+      "station": "KSEA",
+      "lat": 47.449,
+      "lon": -122.309,
+      "polymarket_name": "seattle",
+      "tz": "auto",
+      "wunderground_station": "KSEA",
+      "resolution_source": "https://www.wunderground.com/history/daily/ksea"
+    }
+  ],
+  "gamma_api_base": "https://gamma-api.polymarket.com",
+  "clob_api_base": "https://clob.polymarket.com",
+  "openmeteo_ensemble_url": "https://ensemble-api.open-meteo.com/v1/ensemble",
+  "openmeteo_models": "gfs_seamless,ecmwf_ifs025,icon_seamless,gem_global,ukmo_global_ensemble_20km",
+  "scan_max_offset_pages": 50,
+  "scan_page_size": 100,
+  "_cities_note": "Auto-built 2026-06-16 from live Polymarket data via lib/cities.py (11 US cities, Fahrenheit highest-temp range/open-ended buckets only \u2014 Atlanta, Austin, Chicago, Dallas, Denver, Houston, LA, Miami, NYC, SF, Seattle). Polymarket also runs ~30+ more cities using Celsius + single-value buckets and/or LOWEST-temperature markets \u2014 not yet supported by lib/polymarket.py's bucket parser or the daily-high-only ensemble. Re-run `python papertrader.py cities --apply` after that support lands to pick those up too."
+}
