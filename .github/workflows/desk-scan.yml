@@ -1,0 +1,50 @@
+# Reactive loop, hosted on GitHub Actions (FREE, no server, laptop-independent).
+# Scans Polymarket for weather markets, places FAKE paper bets, settles resolved ones,
+# then commits the updated ledger back to the repo. FAKE MONEY ONLY — no wallet/keys.
+#
+# Schedule: ~model-run cadence (00/06/12/18:40 UTC). Also runnable on demand.
+# Setup: add repo secret GEMINI_API_KEY (optional — without it the desk uses the
+# free deterministic heuristic). See desk/deploy/README-DEPLOY.md.
+
+name: desk-scan
+
+on:
+  schedule:
+    - cron: "40 0,6,12,18 * * *"
+  workflow_dispatch: {}        # manual "Run workflow" button
+
+permissions:
+  contents: write              # needed to commit the ledger snapshot back
+
+concurrency:
+  group: desk-data             # never let scan + cycle race on the same files
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r desk/requirements.txt
+
+      - name: Scan + settle (fake money)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        working-directory: papertrader
+        run: |
+          python papertrader.py scan
+          python papertrader.py settle
+
+      - name: Commit data snapshot
+        run: |
+          git config user.name  "desk-bot"
+          git config user.email "desk-bot@users.noreply.github.com"
+          git add papertrader/data desk/memory/lessons desk/memory/knowledge
+          git commit -m "auto(scan): data snapshot $(date -u +%FT%TZ)" || echo "nothing to commit"
+          git push

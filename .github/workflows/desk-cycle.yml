@@ -1,0 +1,46 @@
+# Reflective loop, hosted on GitHub Actions. Once daily it runs the full desk cycle:
+# autopsy newly-resolved bets -> lessons, consolidate lessons -> semantic principles
+# (the Second Brain), produce briefs, run the (frozen-by-default) overseer gate, and
+# write the digest. Commits the grown memory back. FAKE MONEY ONLY.
+#
+# Self-modification stays OFF (selfmod_config.json kill switch); this job never enables it.
+
+name: desk-cycle
+
+on:
+  schedule:
+    - cron: "15 14 * * *"      # 14:15 UTC daily
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desk-data
+  cancel-in-progress: false
+
+jobs:
+  cycle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r desk/requirements.txt
+
+      - name: Run reflective cycle
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python -m desk.run_cycle
+
+      - name: Commit grown memory
+        run: |
+          git config user.name  "desk-bot"
+          git config user.email "desk-bot@users.noreply.github.com"
+          git add desk/memory/lessons desk/memory/knowledge desk/digest_latest.md papertrader/data
+          git commit -m "auto(cycle): lessons+principles+digest $(date -u +%FT%TZ)" || echo "nothing to commit"
+          git push
