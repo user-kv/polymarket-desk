@@ -1,83 +1,32 @@
 {
-  "generated": "2026-06-19T13:56:06+00:00",
+  "generated": "2026-06-19T14:16:30+00:00",
   "bankroll": {
-    "balance": 470.0,
-    "start": 500.0,
-    "pnl": -30.0,
-    "pnl_pct": -6.0,
+    "balance": 2000.0,
+    "start": 2000.0,
+    "pnl": 0.0,
+    "pnl_pct": 0.0,
     "curve": [
-      500.0,
-      495.0,
-      490.0,
-      485.0,
-      480.0,
-      480.0,
-      475.0,
-      470.0,
-      470.0,
-      470.0,
-      470.0
+      2000.0,
+      2000.0
+    ],
+    "curve_points": [
+      {
+        "b": 2000.0,
+        "ts": "2026-06-20T00:00:00Z",
+        "note": "starting balance"
+      },
+      {
+        "b": 2000.0,
+        "ts": "2026-06-20T00:00:00Z",
+        "note": "budget reset to $2000 (user request 2026-06-20); prior paper run was -$30 over 5 longshot losses. Fake money only. Kelly sizing now active with max_stake $100 so high-conviction edges get allocated more."
+      }
     ],
     "history": [
       {
-        "ts": "2026-06-18T09:34:50Z",
-        "delta": 0.0,
-        "balance": 470.0,
-        "note": "settle highest-temperature-in-nyc-on-june-17-2026-70-71f__2026-06-17T0804 LOST"
-      },
-      {
-        "ts": "2026-06-18T09:34:46Z",
-        "delta": 0.0,
-        "balance": 470.0,
-        "note": "settle highest-temperature-in-denver-on-june-17-2026-87forbelow__2026-06-17T0804 LOST"
-      },
-      {
-        "ts": "2026-06-18T09:34:43Z",
-        "delta": 0.0,
-        "balance": 470.0,
-        "note": "settle highest-temperature-in-san-francisco-on-june-17-2026-76-77f__2026-06-16T0922 LOST"
-      },
-      {
-        "ts": "2026-06-17T08:04:38Z",
-        "delta": -5.0,
-        "balance": 470.0,
-        "note": "paper_bet highest-temperature-in-nyc-on-june-17-2026-70-71f__2026-06-17T0804"
-      },
-      {
-        "ts": "2026-06-17T08:04:22Z",
-        "delta": -5.0,
-        "balance": 475.0,
-        "note": "paper_bet highest-temperature-in-denver-on-june-17-2026-87forbelow__2026-06-17T0804"
-      },
-      {
-        "ts": "2026-06-17T08:03:23Z",
-        "delta": 0.0,
-        "balance": 480.0,
-        "note": "settle highest-temperature-in-miami-on-june-16-2026-96-97f__2026-06-16T0837 LOST"
-      },
-      {
-        "ts": "2026-06-16T09:22:50Z",
-        "delta": -5.0,
-        "balance": 480.0,
-        "note": "paper_bet highest-temperature-in-san-francisco-on-june-17-2026-76-77f__2026-06-16T0922"
-      },
-      {
-        "ts": "2026-06-16T08:37:51Z",
-        "delta": -5.0,
-        "balance": 485.0,
-        "note": "paper_bet highest-temperature-in-miami-on-june-16-2026-96-97f__2026-06-16T0837"
-      },
-      {
-        "ts": "2026-06-14T02:47:12Z",
-        "delta": -5.0,
-        "balance": 490.0,
-        "note": "settle TEST__highest-temperature-in-atlanta-on-june-13-2026-96-97f__2026-06-12T1627 LOST"
-      },
-      {
-        "ts": "2026-06-12T16:27:06Z",
-        "delta": -5.0,
-        "balance": 495.0,
-        "note": "paper_bet TEST__highest-temperature-in-atlanta-on-june-13-2026-96-97f__2026-06-12T1627"
+        "ts": "2026-06-20T00:00:00Z",
+        "delta": 2000.0,
+        "balance": 2000.0,
+        "note": "budget reset to $2000 (user request 2026-06-20); prior paper run was -$30 over 5 longshot losses. Fake money only. Kelly sizing now active with max_stake $100 so high-conviction edges get allocated more."
       }
     ]
   },
@@ -337,39 +286,39 @@
   "brain": {
     "lessons": [
       {
-        "ts": "2026-06-19T12:04:16Z",
+        "ts": "2026-06-19T14:12:52Z",
         "category": "san-francisco",
         "outcome": "LOST",
-        "root_cause": "Actual high 73F missed bucket [76,77] by 3F \u2014 ensemble was confident but off.",
-        "rule": "Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails."
+        "root_cause": "The bet relied on global ensemble forecasts (GFS and ECMWF) to predict a highly precise 2-degree temperature bucket in San Francisco during June, failing to account for the models' systematic inability to resolve localized marine layer cooling (June Gloom), which resulted in a major over-prediction.",
+        "rule": "Do not trade narrow temperature buckets in coastal microclimates during peak marine-layer seasons using only global ensembles, as these models frequently fail to capture localized onshore wind and fog cooling."
       },
       {
-        "ts": "2026-06-19T12:04:16Z",
+        "ts": "2026-06-19T14:14:14Z",
         "category": "new-york-city",
         "outcome": "LOST",
-        "root_cause": "Actual high 79F missed bucket [70,71] by 8F \u2014 ensemble was confident but off.",
-        "rule": "Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails."
+        "root_cause": "Chasing a nominal edge (6.0% vs 0.8% market implied) on a highly specific tail-risk bucket (70-71\u00b0F) that was more than 5\u00b0F below the consensus of both the GFS (78.2\u00b0F) and ECMWF (76.6\u00b0F) ensemble means.",
+        "rule": "Avoid betting on narrow, extreme tail buckets that deviate significantly from the consensus model means, as the absolute probability of success remains extremely low regardless of the nominal calculated edge."
       },
       {
-        "ts": "2026-06-19T12:04:16Z",
+        "ts": "2026-06-19T14:11:51Z",
         "category": "miami",
         "outcome": "LOST",
-        "root_cause": "Actual high 95F missed bucket [96,97] by 1F \u2014 ensemble was confident but off.",
-        "rule": "Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails."
+        "root_cause": "The ensemble probability model overestimated the likelihood of an extreme tail-event temperature (96-97\u00b0F, which is 5.4-6.4\u00b0F above the ensemble mean of 90.6\u00b0F) in a coastal tropical city (Miami) where maritime moderation and sea breezes typically cap maximum temperatures, creating a false edge.",
+        "rule": "For coastal or tropical locations, heavily discount model-derived tail probabilities for extreme high-temperature buckets, as standard ensemble variance fails to account for local physical capping mechanisms like sea breezes and convective cloud cover."
       },
       {
-        "ts": "2026-06-19T12:04:16Z",
+        "ts": "2026-06-19T14:13:05Z",
         "category": "denver",
         "outcome": "LOST",
-        "root_cause": "Actual high 93F missed bucket [-999,87] by 6F \u2014 ensemble was confident but off.",
-        "rule": "Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails."
+        "root_cause": "Bought an extreme cold-tail contract (<= 87\u00b0F) based on an apparent statistical edge (5.1% ensemble probability vs 0.1% market price) when both GFS and ECMWF means strongly agreed on a hot day (> 91.5\u00b0F), ignoring that raw ensemble members often over-disperse and create artificial tail probability in the absence of a real physical cooling mechanism.",
+        "rule": "Do not buy ultra-cheap tail contracts based solely on nominal ensemble probability edge unless there is a physical, synoptic driver (such as a cold front or precipitation) to support the model deviation."
       },
       {
-        "ts": "2026-06-19T11:41:00Z",
+        "ts": "2026-06-19T14:10:40Z",
         "category": "atlanta",
         "outcome": "LOST",
-        "root_cause": "Actual high 93F missed bucket [96,97] by 3F \u2014 ensemble was confident but off.",
-        "rule": "Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails."
+        "root_cause": "Betting on an outcome that the predictive ensemble assigned a zero probability, indicating a complete lack of model support.",
+        "rule": "Never place a bet on an outcome when your primary predictive model ensemble assigns a 0% probability to it."
       }
     ],
     "principles": []

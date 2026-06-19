@@ -46,15 +46,21 @@ def bankroll_state():
     hist = b.get("history", []) or []
     pnl = (bal - start) if (bal is not None and start is not None) else None
     pnl_pct = (pnl / start * 100.0) if (pnl is not None and start) else None
-    curve = []
+    # curve = flat list of balances (kept for back-compat); curve_points = the same
+    # series enriched with date + note so the dashboard can show a tooltip on hover.
+    curve, points = [], []
     if start is not None:
         curve.append(float(start))
+        points.append({"b": float(start), "ts": (hist[0].get("ts") if hist else None),
+                       "note": "starting balance"})
     for h in hist:
         if h.get("balance") is not None:
             curve.append(float(h["balance"]))
+            points.append({"b": float(h["balance"]), "ts": h.get("ts"),
+                           "note": h.get("note", "")})
     return {
         "balance": bal, "start": start, "pnl": pnl, "pnl_pct": pnl_pct,
-        "curve": curve, "history": hist[-12:][::-1],
+        "curve": curve, "curve_points": points, "history": hist[-12:][::-1],
     }
 
 
