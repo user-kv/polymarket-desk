@@ -43,11 +43,15 @@ MODELS = {
                "deep":  os.environ.get("DESK_MODEL_DEEP",  "claude-opus-4-8")},
     "openai": {"cheap": os.environ.get("DESK_OPENAI_CHEAP", "gpt-4o-mini"),
                "deep":  os.environ.get("DESK_OPENAI_DEEP",  "gpt-4o")},
-    # Free-tier models only (no credit card): 2.5 Flash-Lite for routine extraction,
-    # 2.5 Flash for the deeper autopsy/debate reasoning. Both are on the ~1,500 RPD
-    # free quota; 2.5 Pro is deliberately NOT a default (free quota is only ~50/day).
-    "gemini": {"cheap": os.environ.get("DESK_GEMINI_CHEAP", "gemini-2.5-flash-lite"),
-               "deep":  os.environ.get("DESK_GEMINI_DEEP",  "gemini-2.5-flash")},
+    # Gemini values are FALLBACK CHAINS, not single ids: model names churn fast
+    # (2.0 retired Jun 2026, 3.5 Flash now GA) and a stale name would silently fail.
+    # _gemini_complete tries each in order until one works, stable-first. All are
+    # free-tier Flash/Flash-Lite (no credit card; ~hundreds-1,500 RPD). An env
+    # override (DESK_GEMINI_CHEAP/DEEP) is tried first if set.
+    "gemini": {"cheap": [os.environ.get("DESK_GEMINI_CHEAP", ""), "gemini-2.5-flash-lite",
+                         "gemini-3.5-flash", "gemini-2.5-flash", "gemini-flash-lite-latest"],
+               "deep":  [os.environ.get("DESK_GEMINI_DEEP", ""), "gemini-3.5-flash",
+                         "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest"]},
     "ollama": {"cheap": os.environ.get("DESK_OLLAMA_CHEAP", "qwen2:7b"),
                "deep":  os.environ.get("DESK_OLLAMA_DEEP",  "qwen2:7b")},
 }
@@ -147,9 +151,17 @@ def _gemini_complete(system, user, want_json, tier) -> str:
     import google.generativeai as genai  # lazy
     genai.configure(api_key=os.environ["GEMINI_API_KEY"])
     cfg = {"response_mime_type": "application/json"} if want_json else {}
-    model = genai.GenerativeModel(MODELS["gemini"][tier], system_instruction=system,
-                                  generation_config=cfg)
-    return model.generate_content(user).text
+    chain = [m for m in MODELS["gemini"][tier] if m]      # drop empty env override
+    last_err: Exception | None = None
+    for name in chain:
+        try:
+            model = genai.GenerativeModel(name, system_instruction=system,
+                                          generation_config=cfg)
+            return model.generate_content(user).text
+        except Exception as e:                            # 404 stale name / quota -> next
+            last_err = e
+            continue
+    raise last_err or RuntimeError("no gemini model in the fallback chain succeeded")
 
 
 _DISPATCH = {"mock": _mock_complete, "ollama": _ollama_complete, "claude": _claude_complete,
