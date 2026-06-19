@@ -1,4 +1,4 @@
-## LESSON 2026-06-18T23:55:27Z | category: san-francisco | bet: highest-temperature-in-san-francisco-on-june-17-2026-76-77f
+## LESSON 2026-06-19T00:06:07Z | category: san-francisco | bet: highest-temperature-in-san-francisco-on-june-17-2026-76-77f__2026-06-16T0922
 - outcome: LOST
 - thesis: edge=5.56pt prob=0.0856 ask=0.03
 - root_cause: Actual high 73F missed bucket [76,77] by 3F — ensemble was confident but off.

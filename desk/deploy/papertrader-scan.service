@@ -1,0 +1,17 @@
+[Unit]
+Description=PaperTrader reactive scan (fake money only — scan + settle)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/polymarket/papertrader
+# scan places fake paper bets; settle resolves any due markets. Both idempotent.
+ExecStart=/usr/bin/python3 papertrader.py scan
+ExecStartPost=/usr/bin/python3 papertrader.py settle
+# hardening (defense in depth on the VPS)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=%h/polymarket
+ProtectHome=read-only

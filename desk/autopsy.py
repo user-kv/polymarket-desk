@@ -101,13 +101,28 @@ def reason_about(bet: dict) -> dict:
         return _heuristic_reason(bet)
 
 
+def _bet_id(bet: dict) -> str:
+    """Stable unique identifier for a resolved bet (for idempotent autopsies)."""
+    return bet.get("bet_id") or bet.get("slug") or "unknown"
+
+
+def already_autopsied() -> set:
+    """Bet identifiers that already have a stored lesson (so re-runs don't duplicate)."""
+    from desk.memory.store import LESSONS_DIR, _parse_lessons_file
+    seen = set()
+    for md in LESSONS_DIR.glob("*.md"):
+        for f in _parse_lessons_file(md):
+            seen.add(f.get("bet", ""))
+    return seen
+
+
 def autopsy_bet(bet: dict) -> dict:
     """Full Reflexion step for one resolved bet -> stored lesson. Returns a summary."""
     reasoning = reason_about(bet)
     lesson = Lesson(
         ts=_now_iso(),
         category=_category_of(bet),
-        bet=bet.get("slug", bet.get("bet_id", "unknown")),
+        bet=_bet_id(bet),
         outcome=(bet.get("result") or "UNRESOLVED").upper(),
         thesis=f"edge={bet.get('edge_pct')}pt prob={bet.get('ensemble_prob')} "
                f"ask={bet.get('ask_price')}",
@@ -137,15 +152,26 @@ def load_settled_bets(limit: int | None = None) -> list[dict]:
 
 
 def run_autopsies(limit: int | None = None) -> dict:
-    """Autopsy every resolved bet; returns counts. (Cadence calls this on resolve.)"""
+    """
+    Autopsy each NEWLY-resolved bet exactly once (idempotent — cron-safe). Bets that
+    already have a lesson are skipped, so repeated cycles don't duplicate memory.
+    """
     bets = load_settled_bets(limit)
-    stored, blocked = 0, 0
+    seen = already_autopsied()
+    stored, blocked, skipped = 0, 0, 0
     for b in bets:
+        if _bet_id(b) in seen:
+            skipped += 1
+            continue
         res = autopsy_bet(b)
-        stored += 1 if res.get("stored") else 0
-        blocked += 0 if res.get("stored") else 1
+        if res.get("stored"):
+            stored += 1
+            seen.add(_bet_id(b))
+        else:
+            blocked += 1
     return {"resolved_bets": len(bets), "lessons_stored": stored,
-            "blocked_by_write_gate": blocked, "backend": llm.backend()}
+            "skipped_already_done": skipped, "blocked_by_write_gate": blocked,
+            "backend": llm.backend()}
 
 
 if __name__ == "__main__":
