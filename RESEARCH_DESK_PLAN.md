@@ -6,11 +6,21 @@ Supersedes `claude_implementation_guide.md` where research found a better fit. E
 self-improving, guard-railed, cloud-resident paper-trading research desk built on the existing
 `papertrader/` that learns from every resolved trade — FAKE MONEY ONLY.*
 
-> **STATUS (2026-06-19): BUILT.** Phases 0–5 implemented in `desk/` and verified locally —
-> 36 tests pass, 7 git commits (one per phase), full reflective cycle runs on the mock LLM
-> backend. Self-modification is OFF by default. Two human steps remain before it runs live &
-> autonomous: (1) add `desk/.env` with `DESK_LLM=claude`+`ANTHROPIC_API_KEY`; (2) deploy to a
-> VPS (`desk/deploy/`). See `desk/README.md`.
+> **STATUS (2026-06-19): BUILT + WIRED FOR GEMINI & CLOUD.** Phases 0–5 in `desk/`, **41 tests
+> pass**, full reflective cycle runs (idempotent across repeated runs). Self-modification OFF by default.
+> Updates this session:
+> - **Brain = Gemini free tier** (no credit card). `agents/llm.py` auto-detects gemini when
+>   `GEMINI_API_KEY` is set in `desk/.env` (loaded by `desk/config.py`); else the deterministic
+>   heuristic. Stable-first model **fallback chain** survives Gemini's model-name churn; any
+>   failure degrades to the heuristic without crashing. Ollama is opt-in only.
+> - **Second Brain is now 2-tier:** episodic lessons + a **semantic principle tier**
+>   (`memory/knowledge.py`, `consolidate()`/`recall_knowledge()`) wired into the cycle and the brief.
+> - **Hosting = GitHub Actions** (`.github/workflows/`): free, serverless, laptop-independent,
+>   secrets in GitHub Secrets, commits memory back. (VPS/systemd kept as a heavy fallback.)
+>
+> **Two ~5-minute human steps to go live & autonomous:** (1) get a free Gemini key
+> (aistudio.google.com/apikey, no card) → paste into `desk/.env` and add as GH secret
+> `GEMINI_API_KEY`; (2) `gh repo create … --push` to arm the Actions cron. See `desk/deploy/README-DEPLOY.md`.
 
 ## TL;DR
 Build on the existing `papertrader/`. Keep a **single strong agent + a lessons library** as the
