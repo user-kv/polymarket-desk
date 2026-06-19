@@ -10,6 +10,8 @@
   "edge_threshold_pct": 5.0,
   "_edge_threshold_note": "Lowered from 7.0 to 5.0 on 2026-06-16 to generate paper-bet data faster (backtest showed too few qualifying edges at 7%). Revisit once 30+ paper bets exist to see if 5% holds up as well as 7% did. Revert by setting this back to 7.0.",
   "near_miss_min_pct": 3.0,
+  "min_ensemble_prob_pct": 15.0,
+  "_min_prob_note": "Added 2026-06-20 (favorite-longshot guard, engine rule 6). The first 5 paper bets ALL lost; every one was a deep-tail bucket the ensemble itself gave only 0-13.5% (Miami 13.5, SF 8.6, NYC 6, Denver 5.1, Atlanta ~0). A 5pt edge over a 0.1% ask is illusory — you lose ~90%+ of the time. Gemini's 5 autopsies independently concluded the same. This floor blocks bets where the MODEL gives < 15% probability, focusing on buckets adjacent to the mean (where forecast skill is real) not the tails. Tunable: lower toward 10 once real winning data exists; set 0 to disable. This is currently the single biggest lever on win-rate.",
   "real_money_target_date": "2026-06-30",
   "_real_money_target_note": "Set 2026-06-16: you said you plan to start real-money betting around two weeks from now. Shown as a countdown in `status` and the weekly digest. Update or remove if your plans change.",
   "max_exposure_pct": 20.0,

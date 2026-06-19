@@ -45,6 +45,8 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
     max_hours = cfg.get("max_hours_to_resolution", 48)
     model_agree_c = cfg.get("model_agree_max_diff_c", 1.5)
     buffer_f = cfg.get("buffer_around_mean_f", 3.0)
+    # Favorite-longshot guard (added 2026-06-20). 0 = disabled.
+    min_prob = cfg.get("min_ensemble_prob_pct", 0.0) / 100.0
 
     ask = market.get("ask_price")
     hours_left = market.get("hours_left", 999)
@@ -137,6 +139,16 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
                   f"dup={dup} exposure=${exposure:.2f} max=${max_exposure:.2f} {dup_reason}{exp_reason}"))
     all_pass = all_pass and r5
 
+    # Rule 6: Favorite-longshot guard. A 5pt "edge" over a 0.1% ask is still a bet
+    # the MODEL ITSELF thinks is a longshot. All 5 of the first paper losses were
+    # exactly this (ensemble_prob 0.05-0.14 on deep-tail buckets) — Gemini's autopsies
+    # all converged on "don't bet extreme tails without a physical driver." This rule
+    # enforces that lesson: require a minimum absolute probability before betting.
+    r6 = ensemble_prob >= min_prob
+    rules.append(("min_ensemble_prob", r6,
+                  f"prob={ensemble_prob:.3f} min={min_prob:.3f}"))
+    all_pass = all_pass and r6
+
     # --- Determine action ---
     shares = round(stake / ask, 4) if ask > 0 else 0.0
 
@@ -153,6 +165,10 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
         elif not r5:
             action = "SKIP"
             reason = f"Bankroll/dup rule blocked (edge {edge_pct:.1f}pt)"
+        elif not r6:
+            action = "SKIP"
+            reason = (f"Favorite-longshot guard: model prob {ensemble_prob:.1%} < "
+                      f"{min_prob:.0%} floor (edge {edge_pct:.1f}pt is illusory on a tail bucket)")
     else:
         failed = [name for name, passed, _ in rules if not passed]
         reason = f"Skip: failed rules = {', '.join(failed)}"

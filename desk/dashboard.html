@@ -201,10 +201,10 @@ function render(s){
   const b=s.bankroll, bt=s.bets;
   $('#kpis').innerHTML=[
     card('Paper balance', money(b.balance), 'start '+money(b.start)),
-    card('Total P&L', money(b.pnl), pct(b.pnl_pct), cls(b.pnl)),
+    card('Bankroll P&L', money(b.pnl), 'since $2000 reset', cls(b.pnl)),
     card('Win rate', bt.win_rate==null?'—':pct(bt.win_rate), bt.wins+'W · '+bt.losses+'L of '+bt.settled+' settled'),
     card('Open bets', bt.open, bt.total+' total placed'),
-    card('Realised P&L', money(bt.total_pnl), 'from settled bets', cls(bt.total_pnl)),
+    card('Realised P&L', money(bt.total_pnl), 'all-time settled (incl. pre-reset)', cls(bt.total_pnl)),
     card('Scans', s.scans.count, s.scans.latest? ('last found '+(s.scans.latest.found??'—')+' mkts'):'—'),
   ].join('');
 
