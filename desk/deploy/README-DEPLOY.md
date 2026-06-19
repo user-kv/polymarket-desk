@@ -70,7 +70,12 @@ always works). Ollama is opt-in via `DESK_LLM=ollama` (too slow on a typical lap
 - Optional paid brains (`claude`, `openai`) are wired but off; they bill at API rates.
 
 ## Operating it
-- Watch what it does: `desk/digest_latest.md`.
+- **Live dashboard:** open `desk/dashboard.html` in Chrome (double-click). First time, paste a
+  read-only GitHub fine-grained token (Contents: Read + Actions: Read, scoped to this repo) — it's
+  stored only in your browser. It then shows live cloud state (balance/P&L, equity curve, per-city,
+  Actions run status, bets, scans, lessons, principles, digest) and auto-refreshes every 30s. The
+  data comes from `desk/dashboard_state.json`, which `desk/export_state.py` writes on every run.
+- Watch the raw digest any time: `desk/digest_latest.md`.
 - Self-modification is **OFF by default** (`selfmod_config.json` kill switch). After
   ≥30 resolved bets and digests you trust, you *may* set `self_modification_enabled: true`.
   Kill it instantly by setting it back to `false`.

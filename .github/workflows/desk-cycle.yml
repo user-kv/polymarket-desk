@@ -44,10 +44,13 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python -m desk.run_cycle
 
+      - name: Export dashboard snapshot
+        run: python -m desk.export_state
+
       - name: Commit grown memory
         run: |
           git config user.name  "desk-bot"
           git config user.email "desk-bot@users.noreply.github.com"
-          git add desk/memory/lessons desk/digest_latest.md papertrader/data
+          git add desk/memory/lessons desk/digest_latest.md papertrader/data desk/dashboard_state.json
           git commit -m "auto(cycle): lessons+digest $(date -u +%FT%TZ)" || echo "nothing to commit"
           git push

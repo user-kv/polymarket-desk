@@ -48,10 +48,13 @@ jobs:
           python papertrader.py scan
           python papertrader.py settle
 
+      - name: Export dashboard snapshot
+        run: python -m desk.export_state
+
       - name: Commit data snapshot
         run: |
           git config user.name  "desk-bot"
           git config user.email "desk-bot@users.noreply.github.com"
-          git add papertrader/data desk/memory/lessons
+          git add papertrader/data desk/memory/lessons desk/dashboard_state.json
           git commit -m "auto(scan): data snapshot $(date -u +%FT%TZ)" || echo "nothing to commit"
           git push
