@@ -12,8 +12,8 @@ the simplest, cheapest option also the best:
 ## ✅ Recommended: GitHub Actions (free, no server, no credit card)
 
 Two scheduled workflows are already in `.github/workflows/`:
-- **desk-scan.yml** — scan + settle at 00/06/12/18:40 UTC (the model-run latency edge),
-  commits the ledger back.
+- **desk-scan.yml** — scan + settle every hour at :40 UTC (24×/day; hits model-run latency
+  edge on 00/06/12/18Z), commits the ledger back.
 - **desk-cycle.yml** — full reflective cycle daily at 14:15 UTC (autopsy → lessons →
   consolidate into Second-Brain principles → briefs → digest), commits grown memory back.
 

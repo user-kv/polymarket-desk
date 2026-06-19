@@ -2,7 +2,7 @@
 # Scans Polymarket for weather markets, places FAKE paper bets, settles resolved ones,
 # then commits the updated ledger back to the repo. FAKE MONEY ONLY — no wallet/keys.
 #
-# Schedule: ~model-run cadence (00/06/12/18:40 UTC). Also runnable on demand.
+# Schedule: every hour at :40 UTC (24×/day). Hits model-run latency edge on 00/06/12/18Z.
 # Setup: add repo secret GEMINI_API_KEY (optional — without it the desk uses the
 # free deterministic heuristic). See desk/deploy/README-DEPLOY.md.
 
@@ -10,7 +10,7 @@ name: desk-scan
 
 on:
   schedule:
-    - cron: "40 0,6,12,18 * * *"
+    - cron: "40 * * * *"      # every hour at :40 — hits model-run latency edge on 00/06/12/18Z
   workflow_dispatch: {}        # manual "Run workflow" button
 
 permissions:
@@ -29,6 +29,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('desk/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install deps
         run: pip install -r desk/requirements.txt
