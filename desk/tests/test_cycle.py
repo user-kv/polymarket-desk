@@ -1,8 +1,11 @@
 """Integration tests for the orchestrator: idempotent autopsy + safe full cycle."""
 import sys
+import os
 import csv
 import tempfile
 from pathlib import Path
+
+os.environ["DESK_LLM"] = "mock"   # keep tests fast + deterministic regardless of local Ollama
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
