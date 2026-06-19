@@ -18,9 +18,10 @@ from __future__ import annotations
 import json
 import argparse
 from pathlib import Path
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 
 from desk.memory.store import recall
+from desk.memory.knowledge import recall_knowledge
 from desk.agents import llm
 from desk import risk
 
@@ -39,6 +40,7 @@ class Brief:
     rationale: str
     lessons_applied: list
     mode: str                   # 'single' | 'debate'
+    principles_applied: list = field(default_factory=list)  # semantic-tier principles
 
     def as_dict(self) -> dict:
         return asdict(self)
@@ -55,12 +57,15 @@ def _models_disagree_now(fc: dict) -> float:
     return abs(float(gfs) - float(ecmwf))
 
 
-def _baseline_confidence(evaluation: dict, fc: dict, lessons: list) -> tuple[float, str]:
+def _baseline_confidence(evaluation: dict, fc: dict, lessons: list,
+                         principles: list | None = None) -> tuple[float, str]:
     """
     Deterministic confidence used by the MOCK backend (and as a safety floor under
-    the real LLM). Starts from the edge, then applies recalled lessons as discounts —
-    this is where past mistakes actually change present behaviour.
+    the real LLM). Starts from the edge, then applies recalled episodic lessons AND
+    distilled semantic principles as discounts — this is where past mistakes actually
+    change present behaviour.
     """
+    principles = principles or []
     edge = float(evaluation.get("edge_pct", 0.0))
     conf = max(0.0, min(1.0, 0.5 + edge / 40.0))   # 10pt edge -> 0.75
     notes = [f"edge={edge:.1f}pt -> base conf {conf:.2f}"]
@@ -77,17 +82,32 @@ def _baseline_confidence(evaluation: dict, fc: dict, lessons: list) -> tuple[flo
         conf *= 0.8
         notes.append(f"models disagree {disagree:.1f}F -> conf x0.8")
 
+    # Semantic tier: a high-confidence loss-leaning PRINCIPLE about disagreement is
+    # stronger evidence than a single lesson — scale the discount by its confidence.
+    if disagree >= 2.0:
+        dp = next((p for p in principles if p.get("topic") == "model_disagreement"
+                   and str(p.get("outcomes", "")).startswith("LOST")
+                   and float(p.get("confidence", 0)) >= 0.5), None)
+        if dp:
+            factor = 1.0 - 0.4 * float(dp["confidence"])     # up to a further x0.6
+            conf *= factor
+            notes.append(f"principle[{dp['topic']} conf={dp['confidence']}] "
+                         f"-> conf x{factor:.2f}")
+
     has_latency_lesson = any("latency" in (l.get("tags") or "") for l in lessons)
     if has_latency_lesson:
         notes.append("latency lesson on file: prefer fresh model-run scans")
     return round(conf, 3), "; ".join(notes)
 
 
-def _debate(market, evaluation, fc, lessons) -> tuple[float, str]:
-    """Lean Bull/Bear/Risk debate, <=2 rounds (R2). Uses the LLM seam (Opus tier)."""
+def _debate(market, evaluation, fc, lessons, principles=None) -> tuple[float, str]:
+    """Lean Bull/Bear/Risk debate, <=2 rounds (R2). Uses the LLM seam (deep tier)."""
+    principles = principles or []
     facts = {"market": market.get("question"), "edge_pct": evaluation.get("edge_pct"),
              "models_disagree_f": round(_models_disagree_now(fc), 2),
-             "lessons": [l.get("rule") for l in lessons[:3]]}
+             "lessons": [l.get("rule") for l in lessons[:3]],
+             "principles": [f"{p.get('claim')} (conf {p.get('confidence')})"
+                            for p in principles[:3]]}
     sys = ("Three analysts (Bull, Bear, Risk) debate a FAKE-MONEY weather bet for at "
            "most two rounds, then output a confidence 0..1. You cannot turn a SKIP "
            "into a BET. Output strict JSON {\"confidence\":float,\"rationale\":str}.")
@@ -96,24 +116,27 @@ def _debate(market, evaluation, fc, lessons) -> tuple[float, str]:
         raw = llm.complete(sys, user, want_json=True, tier="deep")
         data = json.loads(raw)
         if data.get("_backend") == "mock" or "confidence" not in data:
-            c, note = _baseline_confidence(evaluation, fc, lessons)
+            c, note = _baseline_confidence(evaluation, fc, lessons, principles)
             return c, "debate(mock->baseline): " + note
         return float(data["confidence"]), data.get("rationale", "debate")
     except Exception:
-        c, note = _baseline_confidence(evaluation, fc, lessons)
+        c, note = _baseline_confidence(evaluation, fc, lessons, principles)
         return c, "debate(error->baseline): " + note
 
 
 def build_brief(market: dict, forecast_summary: dict, evaluation: dict,
                 debate: bool = DEBATE_ENABLED) -> Brief:
     engine_action = evaluation.get("action", "SKIP")
-    lessons = recall(_category(market), limit=5)
+    cat = _category(market)
+    lessons = recall(cat, limit=5)
+    principles = recall_knowledge(cat, limit=3)   # semantic tier of the Second Brain
 
     if debate:
-        conf, rationale = _debate(market, evaluation, forecast_summary, lessons)
+        conf, rationale = _debate(market, evaluation, forecast_summary, lessons, principles)
         mode = "debate"
     else:
-        conf, rationale = _baseline_confidence(evaluation, forecast_summary, lessons)
+        conf, rationale = _baseline_confidence(evaluation, forecast_summary, lessons,
+                                               principles)
         mode = "single"
 
     # GROUND-TRUTH AUTHORITY: never upgrade. Only confirm or VETO an engine BET.
@@ -139,6 +162,8 @@ def build_brief(market: dict, forecast_summary: dict, evaluation: dict,
         recommendation=recommendation, confidence=conf, rationale=rationale,
         lessons_applied=[{"rule": l.get("rule"), "weight": l.get("_weight")} for l in lessons],
         mode=mode,
+        principles_applied=[{"topic": p.get("topic"), "claim": p.get("claim"),
+                             "confidence": p.get("confidence")} for p in principles],
     )
 
 

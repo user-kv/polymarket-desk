@@ -4,17 +4,24 @@ desk/agents/llm.py — the single, pluggable LLM seam.
 Everything that needs a language model (brief debate, autopsy reasoning) calls
 `complete()` here. Swap the brain by setting ONE env var, DESK_LLM, to one of:
 
-  * mock   (default fallback) — deterministic, offline, zero-cost. Runs the whole
-           pipeline with no key so everything is testable/dry-runnable.
+  * gemini — Google Gemini API (needs GEMINI_API_KEY). FREE tier, no credit card,
+           no expiry (Google account only). THE DEFAULT self-learning brain: when a
+           key is present the desk uses it automatically. Free models only (Flash /
+           Flash-Lite); ~1,500 requests/day — far more than the desk needs.
   * ollama — a real open model running LOCALLY (http://localhost:11434). FREE, no
-           API key, no metered credits. Best value: real reasoning at $0.
+           API key. Good on a strong machine; too slow on this laptop (falls back).
+  * mock   — deterministic heuristic, offline, zero-cost. Runs the whole pipeline
+           with no key so everything is testable/dry-runnable and always works.
   * claude — Anthropic Messages API (Haiku cheap / Opus deep). Metered credit pool.
   * openai — OpenAI API (needs OPENAI_API_KEY).
-  * gemini — Google Gemini API (needs GEMINI_API_KEY).
 
-Auto-detect when DESK_LLM is unset: if a local Ollama is reachable, use it; else mock.
-So the system is as smart as the environment allows, and never costs money unless you
-deliberately point it at a paid provider.
+Auto-detect when DESK_LLM is unset (smartest-free-first):
+    GEMINI_API_KEY present  -> gemini   (free, real reasoning)
+    else local Ollama up    -> ollama
+    else                    -> mock     (heuristic; never costs money, never crashes)
+
+Secrets come from desk/.env via desk/config.py (imported below), so just pasting a
+key into desk/.env switches the brain on — no code change, no shell config.
 
 Model routing: 'cheap' tier -> a small/fast model, 'deep' tier -> the strong model,
 to respect cost (research round 4).
@@ -27,14 +34,20 @@ import socket
 import hashlib
 import urllib.request
 
+from desk import config as _config  # loads desk/.env into os.environ on import
+_ = _config  # (imported for its side effect; keep the reference so linters are happy)
+
 # ---- model routing per backend (override any of these via env) ---------------
 MODELS = {
     "claude": {"cheap": os.environ.get("DESK_MODEL_CHEAP", "claude-haiku-4-5-20251001"),
                "deep":  os.environ.get("DESK_MODEL_DEEP",  "claude-opus-4-8")},
     "openai": {"cheap": os.environ.get("DESK_OPENAI_CHEAP", "gpt-4o-mini"),
                "deep":  os.environ.get("DESK_OPENAI_DEEP",  "gpt-4o")},
-    "gemini": {"cheap": os.environ.get("DESK_GEMINI_CHEAP", "gemini-1.5-flash"),
-               "deep":  os.environ.get("DESK_GEMINI_DEEP",  "gemini-1.5-pro")},
+    # Free-tier models only (no credit card): 2.5 Flash-Lite for routine extraction,
+    # 2.5 Flash for the deeper autopsy/debate reasoning. Both are on the ~1,500 RPD
+    # free quota; 2.5 Pro is deliberately NOT a default (free quota is only ~50/day).
+    "gemini": {"cheap": os.environ.get("DESK_GEMINI_CHEAP", "gemini-2.5-flash-lite"),
+               "deep":  os.environ.get("DESK_GEMINI_DEEP",  "gemini-2.5-flash")},
     "ollama": {"cheap": os.environ.get("DESK_OLLAMA_CHEAP", "qwen2:7b"),
                "deep":  os.environ.get("DESK_OLLAMA_DEEP",  "qwen2:7b")},
 }
@@ -63,8 +76,12 @@ def backend() -> str:
         if choice == "gemini" and not os.environ.get("GEMINI_API_KEY"):
             return "mock"
         return choice
-    # auto: prefer a free local Ollama if it's up, else mock
-    return "ollama" if _ollama_reachable() else "mock"
+    # auto-detect: Gemini if a free key is present, else the instant heuristic.
+    # Ollama is opt-in (DESK_LLM=ollama) only — on weak hardware a local 7B model
+    # hangs for minutes and then falls back anyway, so we don't auto-select it.
+    if os.environ.get("GEMINI_API_KEY"):
+        return "gemini"
+    return "mock"
 
 
 # ---- backends ----------------------------------------------------------------

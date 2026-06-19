@@ -10,15 +10,28 @@ os.environ["DESK_LLM"] = "mock"   # keep tests fast + deterministic regardless o
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from desk import autopsy, run_cycle
-from desk.memory import store
+from desk.memory import store, knowledge
+
+# capture real paths so isolation never leaks temp lessons into the real Second Brain
+_REAL = {"lessons": store.LESSONS_DIR, "index": store.INDEX_DB,
+         "know_dir": knowledge.KNOW_DIR, "know_db": knowledge.KNOW_DB}
 
 
 def _isolate_memory():
+    """Point BOTH memory tiers (episodic + semantic) at a throwaway temp dir."""
     tmp = Path(tempfile.mkdtemp())
     store.LESSONS_DIR = tmp / "lessons"
     store.LESSONS_DIR.mkdir(parents=True)
     store.INDEX_DB = tmp / "index.sqlite"
+    knowledge.KNOW_DIR = tmp / "knowledge"
+    knowledge.KNOW_DIR.mkdir(parents=True)
+    knowledge.KNOW_DB = tmp / "knowledge.sqlite"
     return tmp
+
+
+def _restore_memory():
+    store.LESSONS_DIR, store.INDEX_DB = _REAL["lessons"], _REAL["index"]
+    knowledge.KNOW_DIR, knowledge.KNOW_DB = _REAL["know_dir"], _REAL["know_db"]
 
 
 def test_autopsy_is_idempotent(monkeypatch=None):
@@ -46,8 +59,14 @@ def test_autopsy_is_idempotent(monkeypatch=None):
         assert r2["lessons_stored"] == 0          # idempotent
         assert r2["skipped_already_done"] == 3
         assert store.rebuild_index(store.INDEX_DB) == 3
+        # semantic tier consolidates the 3 isolated lessons into 1 principle
+        c = knowledge.consolidate()
+        assert c["written"] == 1
+        ks = knowledge.recall_knowledge("dallas", limit=3)
+        assert len(ks) == 1 and ks[0]["evidence_count"] == 3
     finally:
         autopsy.BETS_CSV = orig
+        _restore_memory()          # never leak temp paths into the real Second Brain
 
 
 def test_full_cycle_runs_and_is_safe():
@@ -56,6 +75,7 @@ def test_full_cycle_runs_and_is_safe():
     assert rep["kernel_intact"] is True
     assert rep["self_mod"]["allowed"] is False    # frozen by default
     assert "autopsy" in rep and "digest" in rep
+    assert "consolidate" in rep                   # semantic reflection ran
 
 
 def _run():

@@ -20,7 +20,7 @@ from pathlib import Path
 
 from desk.kernel import invariants as inv
 from desk import autopsy, brief, overseer, digest
-from desk.memory import store
+from desk.memory import store, knowledge
 from desk.agents import llm
 
 DESK = Path(__file__).resolve().parent
@@ -46,6 +46,10 @@ def run_cycle(do_brief: bool = True, use_debate: bool = False) -> dict:
 
     # 3. Connections: reconcile markdown -> index (bounds drift).
     report["lessons_indexed"] = store.rebuild_index()
+
+    # 3b. Reflection: distil episodic lessons -> semantic principles (Second Brain
+    #     upper tier). Idempotent; converges instead of growing without bound.
+    report["consolidate"] = knowledge.consolidate()
 
     # 4. Reason: briefs on the latest scan (advisory; engine stays authority).
     if do_brief:
