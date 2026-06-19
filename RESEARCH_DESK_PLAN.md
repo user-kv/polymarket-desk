@@ -2,9 +2,15 @@
 
 *v1 drafted 2026-06-19. v2 rewritten 2026-06-19 after a 5-round SOTA research loop
 (memory · multi-agent debate · self-improvement safety · orchestration/cloud · domain edge).
-Plan only — nothing built yet. Supersedes `claude_implementation_guide.md` where research found a
-better fit. End goal: a self-improving, guard-railed, cloud-resident paper-trading research desk
-built on the existing `papertrader/` that learns from every resolved trade — FAKE MONEY ONLY.*
+Supersedes `claude_implementation_guide.md` where research found a better fit. End goal: a
+self-improving, guard-railed, cloud-resident paper-trading research desk built on the existing
+`papertrader/` that learns from every resolved trade — FAKE MONEY ONLY.*
+
+> **STATUS (2026-06-19): BUILT.** Phases 0–5 implemented in `desk/` and verified locally —
+> 36 tests pass, 7 git commits (one per phase), full reflective cycle runs on the mock LLM
+> backend. Self-modification is OFF by default. Two human steps remain before it runs live &
+> autonomous: (1) add `desk/.env` with `DESK_LLM=claude`+`ANTHROPIC_API_KEY`; (2) deploy to a
+> VPS (`desk/deploy/`). See `desk/README.md`.
 
 ## TL;DR
 Build on the existing `papertrader/`. Keep a **single strong agent + a lessons library** as the
