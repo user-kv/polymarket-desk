@@ -170,6 +170,32 @@ def recall(category: str, limit: int = 5, db_path: Path = INDEX_DB) -> list[dict
     return scored[:limit]
 
 
+def recall_asof(category: str, asof_ts: str, limit: int = 5,
+                db_path: Path = INDEX_DB) -> list[dict]:
+    """
+    Embargo-aware recall (research round 5, oracle-fallacy guard). Returns only
+    lessons recorded at or before `asof_ts`, so a backtest replaying a decision at
+    time t cannot 'learn' from a bet that only resolved after t. Same recency
+    weighting as recall().
+    """
+    if not db_path.exists():
+        rebuild_index(db_path)
+    con = sqlite3.connect(db_path)
+    con.row_factory = sqlite3.Row
+    rows = con.execute(
+        "SELECT * FROM lessons WHERE category=? AND ts<=? ORDER BY ts DESC",
+        (category, asof_ts),
+    ).fetchall()
+    con.close()
+    scored = []
+    for r in rows:
+        d = dict(r)
+        d["_weight"] = round(_decay_weight(d["ts"]), 4)
+        scored.append(d)
+    scored.sort(key=lambda d: d["_weight"], reverse=True)
+    return scored[:limit]
+
+
 def category_counts(db_path: Path = INDEX_DB) -> dict:
     if not db_path.exists():
         rebuild_index(db_path)
