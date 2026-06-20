@@ -47,6 +47,12 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
     buffer_f = cfg.get("buffer_around_mean_f", 3.0)
     # Favorite-longshot guard (added 2026-06-20). 0 = disabled.
     min_prob = cfg.get("min_ensemble_prob_pct", 0.0) / 100.0
+    # M5: minimum market ask for YES bets. Blocks < 5¢ asks where the longshot
+    # edge is illusory (all 5 first losses were asks of 0.1¢–4.1¢). 0 = disabled.
+    min_ask_for_yes = cfg.get("min_ask_for_yes_pct", 0.0) / 100.0
+    # M5: NBM raw-member veto. Blocks YES when < nbm_min_member_prob_pct of
+    # ensemble members agree the bucket happens. 0 = disabled.
+    nbm_min_prob = cfg.get("nbm_min_member_prob_pct", 0.0) / 100.0
     # M4: NO-side betting (buy NO on cheap overpriced longshots).
     allow_no_side = cfg.get("allow_no_side", False)
     no_longshot_max = cfg.get("no_longshot_max_ask", 0.15)
@@ -150,6 +156,30 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
     rules.append(("min_ensemble_prob", r6,
                   f"prob={ensemble_prob:.3f} min={min_prob:.3f}"))
     all_pass = all_pass and r6
+
+    # Rule 7: Minimum market ask for YES. Markets priced below 5¢ are deep longshots
+    # where even a positive edge is unreliable — the spread/liquidity at these prices
+    # means fills are often at worse prices and the market is pricing in near-zero
+    # probability. All 5 first paper losses had asks of 0.1¢–4.1¢.
+    r7 = (ask >= min_ask_for_yes) if min_ask_for_yes > 0 else True
+    rules.append(("min_ask_for_yes", r7,
+                  f"ask={ask:.3f} min={min_ask_for_yes:.3f}"))
+    all_pass = all_pass and r7
+
+    # Rule 8: NBM raw-member veto. If fewer than nbm_min_member_prob_pct of all
+    # ensemble members put the daily high inside this bucket, the RMSE-weighted
+    # edge is likely driven by a single outlier model, not broad model agreement.
+    if nbm_min_prob > 0:
+        from lib.nbm import should_veto_yes as _nbm_veto
+        nbm_blocked = _nbm_veto(forecast, market, min_prob=nbm_min_prob)
+        r8 = not nbm_blocked
+        member_prob = sum(
+            1 for h in all_highs
+            if market.get("bucket_low_f", -999) <= h < market.get("bucket_high_f", 999)
+        ) / max(len(all_highs), 1)
+        rules.append(("nbm_member_consensus", r8,
+                      f"raw_member_prob={member_prob:.3f} min={nbm_min_prob:.3f}"))
+        all_pass = all_pass and r8
 
     # --- M4: NO-side evaluation (favorite-longshot, buy NO on cheap overpriced buckets) ---
     # YES and NO cannot both qualify on the same market bucket for the same threshold

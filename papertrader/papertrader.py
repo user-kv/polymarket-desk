@@ -19,6 +19,13 @@ import logging
 import argparse
 from datetime import datetime, timezone, date
 
+# ── force UTF-8 console so --explain's ✓/✗/° glyphs don't crash on Windows cp1252 ──
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
+
 # ── path setup so lib/ is importable ──────────────────────────────────────────
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -47,14 +54,40 @@ def load_config():
         return json.load(f)
 
 
-def cmd_scan(cfg, test_mode=False):
+def _print_explain_header():
+    print(f"\n{'Market':<55} {'Ask':>6} {'Prob':>6} {'Edge':>7} {'NO_Edge':>8} {'Action':<12} Reason")
+    print("-" * 130)
+
+
+def _print_explain_row(market, eval_result):
+    q = (market.get("question") or "")[:54]
+    ask = market.get("ask_price", 0.0)
+    prob = eval_result.get("ensemble_prob", 0.0)
+    edge = eval_result.get("edge_pct", 0.0)
+    side = eval_result.get("side", "YES")
+    action = eval_result.get("action", "SKIP")
+    # compute NO edge for display regardless of action
+    no_edge = (ask - prob) * 100 if ask and prob else 0.0
+    reason_short = eval_result.get("reason", "")[:50]
+    action_tag = f"{action}/{side}" if action == "BET" else action
+    print(f"{q:<55} {ask:>6.3f} {prob:>6.1%} {edge:>+7.1f}pt {no_edge:>+7.1f}pt  {action_tag:<14} {reason_short}")
+    # Print rule breakdown in explain mode
+    for rule_name, passed, detail in eval_result.get("all_rules", []):
+        tick = "✓" if passed else "✗"
+        print(f"  {tick} {rule_name:<28} {detail}")
+
+
+def cmd_scan(cfg, test_mode=False, explain=False):
     """
     Scan Polymarket for weather markets, fetch ensemble forecasts,
     evaluate edges, and paper-bet anything that passes all rules.
     """
     log.info("=" * 60)
-    log.info("SCAN starting" + (" [TEST MODE — lowered threshold]" if test_mode else ""))
+    log.info("SCAN starting" + (" [TEST MODE — lowered threshold]" if test_mode else "")
+             + (" [EXPLAIN]" if explain else ""))
     log.info("=" * 60)
+    if explain:
+        _print_explain_header()
 
     # If test mode, temporarily lower edge threshold AND disable buffer/agreement rules
     scan_cfg = dict(cfg)
@@ -151,6 +184,8 @@ def cmd_scan(cfg, test_mode=False):
                 f"prob={eval_result['ensemble_prob']:.1%} | "
                 f"ask={m.get('ask_price', 'N/A')}"
             )
+            if explain:
+                _print_explain_row(m, eval_result)
 
             scan_entry = {
                 "market": m,
@@ -212,6 +247,14 @@ def cmd_scan(cfg, test_mode=False):
             f"{len(real_bets_placed)} new paper bet(s) — {lines}",
         )
 
+    # Regenerate dashboard after every real scan so the browser tab always has fresh data
+    if not test_mode:
+        try:
+            report.generate_dashboard()
+            log.info("Dashboard regenerated.")
+        except Exception as e:
+            log.warning(f"Dashboard regeneration failed: {e}")
+
     if test_mode and bets_placed:
         log.info("")
         log.info("TEST BET VERIFICATION:")
@@ -256,6 +299,12 @@ def cmd_settle(cfg):
         )
     log.info(f"SETTLE COMPLETE: {len(results)} bets settled")
     log.info("=" * 60)
+    # Regenerate dashboard so the open tab reflects settlement results immediately
+    try:
+        report.generate_dashboard()
+        log.info("Dashboard regenerated.")
+    except Exception as e:
+        log.warning(f"Dashboard regeneration failed: {e}")
 
 
 def cmd_report(cfg):
@@ -474,6 +523,75 @@ def cmd_self_correct(cfg, args):
     )
 
 
+def cmd_audit(cfg):
+    """
+    Re-examine all settled bets and print a pattern table.
+    Highlights losses at low ask prices (the root cause of the first 5 losses).
+    """
+    all_bets = ledger.load_bets()
+    real = [b for b in all_bets if b.get("is_test", "N") != "Y"]
+    settled = [b for b in real if b.get("status") == "settled"]
+
+    if not settled:
+        print("\nNo settled bets to audit yet.")
+        return
+
+    print("\n" + "=" * 100)
+    print("  AUDIT: Settled Bets Pattern")
+    print("=" * 100)
+    print(f"  {'bet_id':<35} {'side':4} {'ask':>6} {'prob':>6} {'edge':>7}  {'result':6}  {'pnl':>7}  question")
+    print("-" * 100)
+
+    ask_buckets = {"<5c": [], "5-15c": [], ">15c": []}
+    for b in settled:
+        ask = float(b.get("ask_price", 0))
+        prob = float(b.get("ensemble_prob", 0))
+        edge = float(b.get("edge_pct", 0))
+        side = b.get("side", "YES")
+        result = b.get("result", "?")
+        pnl = float(b.get("pnl", 0))
+        bid = b.get("bet_id", "")[:34]
+        q = (b.get("question") or "")[:40]
+        flag = " << LOST-LONGSHOT" if result == "LOST" and ask < 0.05 else ""
+        print(f"  {bid:<35} {side:4} {ask:>6.3f} {prob:>6.1%} {edge:>+7.1f}pt  {result:6}  {pnl:>+7.2f}  {q}{flag}")
+
+        if ask < 0.05:
+            ask_buckets["<5c"].append(result)
+        elif ask <= 0.15:
+            ask_buckets["5-15c"].append(result)
+        else:
+            ask_buckets[">15c"].append(result)
+
+    print("=" * 100)
+    print("\n  Pattern by ask price bucket:")
+    for bucket, results in ask_buckets.items():
+        if not results:
+            continue
+        wins = results.count("WON")
+        total = len(results)
+        win_pct = f"{wins/total*100:.0f}%" if total else "n/a"
+        print(f"    {bucket:6}  {wins}W/{total-wins}L  ({win_pct} win rate)  {'<-- DANGER ZONE' if bucket == '<5c' else ''}")
+
+    cheap_losses = [b for b in settled if float(b.get("ask_price", 0)) < 0.05 and b.get("result") == "LOST"]
+    if cheap_losses:
+        print(f"\n  Recommendation: {len(cheap_losses)} loss(es) at ask < 5c detected.")
+        print("  => Ensure min_ask_for_yes_pct >= 5.0 is set in config.json")
+        current = cfg.get("min_ask_for_yes_pct", 0.0)
+        print(f"     Current config: min_ask_for_yes_pct = {current}")
+        if current < 5.0:
+            print("     WARNING: guard is not active — update config.json")
+        else:
+            print("     Guard is active. Future scans will skip these markets.")
+    else:
+        print("\n  No cheap-longshot losses detected.")
+
+    # Last settle time
+    settled_sorted = sorted(settled, key=lambda b: b.get("settled_at", ""))
+    if settled_sorted:
+        print(f"\n  Last settle: {settled_sorted[-1].get('settled_at', 'unknown')}")
+    print()
+
+
 def cmd_status(cfg):
     """Quick status: bankroll, open bets, last scan time."""
     br = ledger.load_bankroll(cfg.get("bankroll_start", 500))
@@ -499,7 +617,10 @@ def cmd_status(cfg):
     print(f"  Settled bets   : {len(settled)}  ({len(won)}W / {len(settled)-len(won)}L)")
     win_rate = f"{len(won)/len(settled)*100:.0f}%" if settled else "n/a"
     print(f"  Win rate       : {win_rate}")
-    print(f"  Last scan file : {last_scan}")
+    settled_bets = [b for b in all_bets if b.get("status") == "settled" and b.get("settled_at")]
+    last_settle = max((b.get("settled_at", "") for b in settled_bets), default="never")
+    print(f"  Last scan      : {last_scan}")
+    print(f"  Last settle    : {last_settle}")
     print(f"  Dashboard      : {os.path.join(HERE, 'dashboard.html')}")
     print(f"  Tracker        : {os.path.join(HERE, 'tracker.xlsx')}")
     days_left = _days_until_real_money(cfg)
@@ -508,11 +629,27 @@ def cmd_status(cfg):
     print("=" * 55)
 
     if open_bets:
-        print(f"\n  Open bets:")
+        now_utc = datetime.now(timezone.utc)
+        print(f"\n  Open bets ({len(open_bets)}):")
+        print(f"  {'market_id':<36} {'side':4} {'entry':>7} {'stake':>7} {'days_open':>10}  question")
+        print("  " + "-" * 100)
         for b in open_bets:
             test_tag = " [TEST]" if b.get("is_test") == "Y" else ""
-            print(f"    - {b.get('question', '')[:65]}{test_tag}")
-            print(f"      Edge={b.get('edge_pct')}pt | Ask=${b.get('ask_price')} | Stake=${b.get('stake')} | Resolves {b.get('end_date','')[:10]}")
+            market_id = b.get("market_id", "")[:35] or b.get("slug", "")[:35]
+            side = b.get("side", "YES")
+            ask = float(b.get("ask_price", 0))
+            entry = (1.0 - ask) if side == "NO" else ask
+            stake = float(b.get("stake", 0))
+            # compute days open
+            ts_str = b.get("timestamp", "")
+            try:
+                ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+                days_open = (now_utc - ts).days
+            except Exception:
+                days_open = "?"
+            q = (b.get("question") or "")[:60]
+            print(f"  {market_id:<36} {side:4} ${entry:>6.3f} ${stake:>6.2f} {str(days_open):>9}d  {q}{test_tag}")
+            print(f"  {'':36}      edge={b.get('edge_pct')}pt  resolves={b.get('end_date','')[:10]}")
     print()
 
 
@@ -525,6 +662,8 @@ def main():
     p_scan = sub.add_parser("scan", help="Scan markets and place paper bets")
     p_scan.add_argument("--test", action="store_true",
                         help="Force a bet (lower threshold) for testing purposes")
+    p_scan.add_argument("--explain", action="store_true",
+                        help="Verbose per-market output: show ensemble prob, ask, edge, and which rule caused each skip")
 
     sub.add_parser("settle", help="Settle resolved markets")
     sub.add_parser("report", help="Generate dashboard.html and tracker.xlsx")
@@ -554,6 +693,7 @@ def main():
 
     sub.add_parser("weekly", help="Weekly digest: calibrate + reports + one notification")
 
+    sub.add_parser("audit", help="Re-examine settled bets, print pattern table, flag cheap-longshot losses")
     sub.add_parser("cities", help="Rebuild cities list from live Polymarket data (lib/cities.py)")
 
     p_sc = sub.add_parser("self_correct", help="Live self-correcting loop: scan/settle/tune/calibrate on a timer")
@@ -571,7 +711,8 @@ def main():
     cfg = load_config()
 
     if args.command == "scan":
-        cmd_scan(cfg, test_mode=getattr(args, "test", False))
+        cmd_scan(cfg, test_mode=getattr(args, "test", False),
+                 explain=getattr(args, "explain", False))
     elif args.command == "settle":
         cmd_settle(cfg)
     elif args.command == "report":
@@ -586,6 +727,8 @@ def main():
         cmd_calibrate(cfg, args)
     elif args.command == "weekly":
         cmd_weekly(cfg)
+    elif args.command == "audit":
+        cmd_audit(cfg)
     elif args.command == "cities":
         cmd_cities(cfg, args)
     elif args.command == "self_correct":

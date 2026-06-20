@@ -166,6 +166,7 @@ def generate_dashboard():
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="refresh" content="60">
 <title>PaperTrader Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
