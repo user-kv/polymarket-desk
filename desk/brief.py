@@ -129,7 +129,9 @@ def build_brief(market: dict, forecast_summary: dict, evaluation: dict,
     engine_action = evaluation.get("action", "SKIP")
     cat = _category(market)
     lessons = recall(cat, limit=5)
-    principles = recall_knowledge(cat, limit=3)   # semantic tier of the Second Brain
+    # semantic tier: this city's principles PLUS cross-city meta-principles (the brain's
+    # generalized recurring mistakes) so a lesson learned elsewhere informs this market too.
+    principles = recall_knowledge(cat, limit=3) + recall_knowledge("global", limit=2)
 
     if debate:
         conf, rationale = _debate(market, evaluation, forecast_summary, lessons, principles)

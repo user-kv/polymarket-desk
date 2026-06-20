@@ -39,6 +39,7 @@ MEM_DIR = Path(__file__).resolve().parent
 KNOW_DIR = MEM_DIR / "knowledge"
 KNOW_DB = MEM_DIR / "knowledge.sqlite"
 MIN_EVIDENCE = 2            # a principle needs >=2 supporting lessons before it's trusted
+GLOBAL_MIN_EVIDENCE = 4    # a CROSS-CITY meta-principle needs more corroboration than a per-city one
 CONF_SATURATION = 6.0      # evidence count at which confidence ~saturates toward 1.0
 
 KNOW_DIR.mkdir(parents=True, exist_ok=True)
@@ -181,10 +182,22 @@ def consolidate() -> dict:
     """
     # gather lessons grouped by (category, primary tag)
     clusters: dict[tuple, list] = defaultdict(list)
+    losing: list = []
     for md in store.LESSONS_DIR.glob("*.md"):
         for f in store._parse_lessons_file(md):
             key = (f["category"], _primary_tag(f.get("tags", "")))
             clusters[key].append(f)
+            if (f.get("outcome") or "").upper() == "LOST":
+                losing.append(f)
+
+    # CROSS-CITY META TIER: the brain's biggest recurring mistake, generalized across
+    # ALL cities. The per-city tier above never fires while each city has <2 lessons,
+    # so a pattern repeated once-per-city in five different cities would go unlearned.
+    # LLM-emitted tag strings are too noisy to cluster on (tail-risk vs tail-events vs
+    # coastal-capping), so we group by OUTCOME and let the deep model distil the common
+    # thread. This is what lets the brain generalize a mistake it keeps repeating.
+    if len(losing) >= GLOBAL_MIN_EVIDENCE:
+        clusters[("global", "recurring-loss-pattern")] = losing
 
     latest = _latest_principles()
     written = unchanged = blocked = 0

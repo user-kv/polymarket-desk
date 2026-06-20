@@ -72,6 +72,28 @@ def test_recall_keeps_latest_per_topic():
     assert ks[0]["evidence_count"] == 4             # the latest, highest-evidence one
 
 
+def test_global_meta_principle_generalizes_across_cities():
+    # One losing lesson in each of four different cities: per-city consolidation can
+    # NEVER fire (each city has <2), but the cross-city meta tier should generalize.
+    _isolate()
+    for c in ("dallas", "miami", "denver", "nyc"):
+        store.append_lesson(_lesson(c, "2026-06-10T00:00:00Z", tag="tail-risk"))
+    knowledge.consolidate()
+    assert knowledge.recall_knowledge("dallas") == []     # per-city tier stayed silent
+    g = knowledge.recall_knowledge("global")
+    assert len(g) == 1                                     # but the brain still generalized
+    assert g[0]["evidence_count"] == 4
+    assert g[0]["topic"] == "recurring-loss-pattern"
+
+
+def test_global_meta_principle_needs_enough_evidence():
+    _isolate()
+    for c in ("dallas", "miami", "denver"):               # only 3 losses < GLOBAL_MIN_EVIDENCE
+        store.append_lesson(_lesson(c, "2026-06-10T00:00:00Z"))
+    knowledge.consolidate()
+    assert knowledge.recall_knowledge("global") == []
+
+
 def test_write_gate_blocks_poisoned_principle():
     _isolate()
     from desk.memory.write_gate import WriteGateError
