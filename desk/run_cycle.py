@@ -15,11 +15,13 @@ it is cron-safe. It never places a real order — fake money only.
 
 from __future__ import annotations
 import json
+import subprocess
 import argparse
+from datetime import datetime, timezone
 from pathlib import Path
 
 from desk.kernel import invariants as inv
-from desk import autopsy, brief, overseer, digest
+from desk import autopsy, brief, overseer, digest, export_state
 from desk.memory import store, knowledge
 from desk.agents import llm
 
@@ -72,7 +74,36 @@ def run_cycle(do_brief: bool = True, use_debate: bool = False) -> dict:
     (DESK / "digest_latest.md").write_text(digest.render(d), encoding="utf-8")
     report["digest"] = {"lessons_added": d["lessons_added"],
                         "tools_promoted": len(d["tools_promoted"])}
+
+    # 7. Export: flatten state -> dashboard_state.json and push so the live
+    #    desk/dashboard.html can fetch it from raw.githubusercontent.com.
+    state = export_state.build_state()
+    export_state.OUT.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    pushed = _push_dashboard_state()
+    report["export"] = {"pushed": pushed}
     return report
+
+
+def _push_dashboard_state() -> bool:
+    """Commit and push dashboard_state.json. Returns True on success."""
+    root = DESK.parent
+    state_file = "desk/dashboard_state.json"
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        subprocess.run(["git", "add", state_file], cwd=root, check=True, capture_output=True)
+        result = subprocess.run(
+            ["git", "diff", "--cached", "--quiet"], cwd=root, capture_output=True
+        )
+        if result.returncode == 0:
+            return True  # nothing changed, no commit needed
+        subprocess.run(
+            ["git", "commit", "-m", f"auto: dashboard state {ts}"],
+            cwd=root, check=True, capture_output=True,
+        )
+        subprocess.run(["git", "push"], cwd=root, check=True, capture_output=True)
+        return True
+    except subprocess.CalledProcessError:
+        return False
 
 
 if __name__ == "__main__":
