@@ -114,6 +114,12 @@ def load_bets():
         return []
     with open(BETS_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
+        # Guard against the M4 schema-drift bug: if the file header doesn't match
+        # BETS_COLS, rows misalign silently (NO-side 'status' read as n_members,
+        # breaking dedup + settlement). Fail loud instead of corrupting state.
+        if reader.fieldnames and list(reader.fieldnames) != BETS_COLS:
+            logger.error("bets.csv header does not match BETS_COLS — rows will "
+                         "misalign. Header=%s", reader.fieldnames)
         return [_cast_bet(row) for row in reader]
 
 
