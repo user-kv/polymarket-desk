@@ -188,12 +188,20 @@ def _calibration_bins(scored, value_key):
     return out
 
 
-def run_snapshot_backtest(cfg):
-    """Mode 1. Returns a results dict (also used to render HTML)."""
-    stake = cfg.get("stake_per_bet", 5.0)
-    fee_pct = cfg.get("fee_on_winnings_pct", 2.0) / 100.0
+def score_markets(cfg, get_actual=None):
+    """
+    Replay every scan snapshot, keep the most-informed forecast per market, and
+    score each against the actual observed high. Returns a list of scored rows
+    (each carries raw ensemble_prob, ask_price, won, end_date, city, lead_h).
+
+    This is the shared scoring substrate: run_snapshot_backtest aggregates it,
+    and the walk-forward harness (lib/walkforward.py) splits it out-of-sample.
+    Pure read-only — never touches the ledger or places a bet. Returns
+    (scored, skipped_no_actual).
+    """
     city_lookup = {c["name"]: c for c in cfg["cities"]}
-    get_actual = _make_actual_cache()
+    if get_actual is None:
+        get_actual = _make_actual_cache()
 
     rows = _dedupe_latest(_load_snapshot_rows())
     logger.info(f"Snapshot replay: {len(rows)} unique markets across all scans")
@@ -224,6 +232,15 @@ def run_snapshot_backtest(cfg):
         except Exception:
             pass
         scored.append({**r, "actual_high_f": actual, "won": won, "lead_h": lead_h})
+    return scored, skipped_no_actual
+
+
+def run_snapshot_backtest(cfg):
+    """Mode 1. Returns a results dict (also used to render HTML)."""
+    stake = cfg.get("stake_per_bet", 5.0)
+    fee_pct = cfg.get("fee_on_winnings_pct", 2.0) / 100.0
+
+    scored, skipped_no_actual = score_markets(cfg)
 
     n = len(scored)
     outcomes = [1.0 if s["won"] else 0.0 for s in scored]

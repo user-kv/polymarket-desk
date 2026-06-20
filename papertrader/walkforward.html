@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>PaperTrader Walk-Forward Backtest</title><style>
+  body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; color:#222; }
+  h1 { color: #333; } h2 { color: #555; margin-top: 30px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+  .stat { background: white; border-radius: 8px; padding: 16px 24px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .stat .num { font-size: 26px; font-weight: bold; color: #007bff; }
+  .stat .lbl { color: #888; font-size: 12px; }
+  table { border-collapse: collapse; width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); margin-bottom: 20px; }
+  th { background: #007bff; color: white; padding: 8px 12px; text-align: left; font-size: 13px; }
+  td { padding: 7px 12px; font-size: 12px; border-bottom: 1px solid #eee; }
+  .warning { background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; padding: 10px 16px; margin: 10px 0; font-size: 13px; }
+  .good { color:#1a7f37; font-weight:bold; } .bad { color:#b42318; font-weight:bold; }
+</style></head>
+<body>
+<h1>Walk-Forward Backtest <small style="font-size:14px;color:#888;">— FAKE MONEY / OUT-OF-SAMPLE —</small></h1>
+<p style="color:#888;font-size:13px;">Generated: 2026-06-20 07:30 UTC. Read-only — live bankroll and ledger untouched.</p>
+
+<div class="stats">
+  <div class="stat"><div class="num">194</div><div class="lbl">Markets Scored</div></div>
+  <div class="stat"><div class="num">165</div><div class="lbl">OOS Markets</div></div>
+  <div class="stat"><div class="num">5</div><div class="lbl">Test Folds</div></div>
+  <div class="stat"><div class="num">2</div><div class="lbl">Folds Skipped (&lt;20 train)</div></div>
+  <div class="stat"><div class="num">5.5%</div><div class="lbl">Base YES Rate</div></div>
+</div>
+
+<h2>Probability Accuracy (out-of-sample)</h2>
+<div class="warning">Calibration <span class="bad">does NOT help</span> out-of-sample (Brier: raw 0.051 → calibrated 0.0525). Embargo: 0d.</div>
+<table>
+  <tr><th>Metric</th><th>Raw</th><th>Calibrated</th></tr>
+  <tr><td>Brier (lower = better)</td><td>0.051</td><td>0.0525</td></tr><tr><td>Log-loss (lower = better)</td><td>0.1952</td><td>0.217</td></tr><tr><td>ECE (lower = better)</td><td>0.0091</td><td>0.0089</td></tr>
+</table>
+
+<h2>Strategy P&amp;L (pooled OOS, flat $20/bet)</h2>
+<table>
+  <tr><th>Strategy</th><th>Bets</th><th>Win%</th><th>P&amp;L</th><th>ROI</th></tr>
+  <tr><td>yes_raw (current bot)</td><td>12</td><td>8%</td><td class='good'>$52.54</td><td>21.9%</td></tr><tr><td>yes_cal</td><td>30</td><td>0%</td><td class='bad'>$-600.00</td><td>-100.0%</td></tr><tr><td>both_cal</td><td>88</td><td>60%</td><td class='bad'>$-271.99</td><td>-15.5%</td></tr><tr><td>no_longshot_cal</td><td>8</td><td>100%</td><td class='good'>$20.54</td><td>12.8%</td></tr>
+</table>
+
+<h2>Fold Detail</h2>
+<table>
+  <tr><th>Test Day</th><th>Train Markets</th><th>Test Markets</th></tr>
+  <tr><td>2026-06-15</td><td>29</td><td>15</td></tr><tr><td>2026-06-16</td><td>44</td><td>34</td></tr><tr><td>2026-06-17</td><td>78</td><td>54</td></tr><tr><td>2026-06-19</td><td>132</td><td>22</td></tr><tr><td>2026-06-20</td><td>154</td><td>40</td></tr>
+</table>
+</body></html>

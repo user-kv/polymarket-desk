@@ -23,7 +23,7 @@ from datetime import datetime, timezone, date
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from lib import polymarket, forecasts, engine, ledger, settlement, report, backtest, calibration, notify, tuning, cities as cities_lib
+from lib import polymarket, forecasts, engine, ledger, settlement, report, backtest, calibration, notify, tuning, cities as cities_lib, walkforward
 
 # ── logging ──────────────────────────────────────────────────────────────────
 LOG_DIR = os.path.join(HERE, "logs")
@@ -296,6 +296,29 @@ def cmd_backtest(cfg, args):
     print("Open backtest.html in your browser for the full breakdown.")
 
 
+def cmd_walkforward(cfg, args):
+    """
+    Out-of-sample walk-forward backtest. Fits the probability calibrator on past
+    folds only — never lets a fold see its own future — then reports whether
+    calibration helps and which of the four strategies beats buy-YES.
+      python papertrader.py walkforward
+      python papertrader.py walkforward --embargo 1 --min-train 15
+    """
+    log.info("=" * 60)
+    log.info("WALK-FORWARD starting (read-only — fake money)")
+    log.info("=" * 60)
+    res = walkforward.run_walkforward(
+        cfg,
+        embargo_days=getattr(args, "embargo", 0),
+        n_bins=getattr(args, "bins", 5),
+        kappa=getattr(args, "kappa", 8),
+        min_train=getattr(args, "min_train", 20),
+    )
+    walkforward.print_summary(res)
+    path = walkforward.write_html(res)
+    print(f"\nWalk-forward report saved: {path}")
+
+
 def cmd_calibrate(cfg, args):
     """
     Measure each city's recent forecast bias (forecast vs actual) and save a
@@ -515,6 +538,16 @@ def main():
                            "NOTE: Open-Meteo's ensemble API only retains ~5-6 days "
                            "of actual history regardless of this value — see backtest.html.")
 
+    p_wf = sub.add_parser("walkforward", help="Out-of-sample walk-forward backtest (prob calibration)")
+    p_wf.add_argument("--embargo", type=int, default=0,
+                      help="Embargo days between train and test folds (default 0)")
+    p_wf.add_argument("--bins", type=int, default=5,
+                      help="Calibration bins (default 5)")
+    p_wf.add_argument("--kappa", type=float, default=8.0,
+                      help="Shrinkage toward identity; higher = more conservative (default 8)")
+    p_wf.add_argument("--min-train", type=int, default=20, dest="min_train",
+                      help="Min resolved markets in train window before trusting the fold (default 20)")
+
     p_cal = sub.add_parser("calibrate", help="Measure & save the self-correcting forecast bias")
     p_cal.add_argument("--days", type=int, default=14,
                        help="Days of history to measure bias from (default 14)")
@@ -547,6 +580,8 @@ def main():
         cmd_status(cfg)
     elif args.command == "backtest":
         cmd_backtest(cfg, args)
+    elif args.command == "walkforward":
+        cmd_walkforward(cfg, args)
     elif args.command == "calibrate":
         cmd_calibrate(cfg, args)
     elif args.command == "weekly":
