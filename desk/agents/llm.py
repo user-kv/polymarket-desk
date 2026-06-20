@@ -148,16 +148,20 @@ def _openai_complete(system, user, want_json, tier) -> str:
 
 
 def _gemini_complete(system, user, want_json, tier) -> str:
-    import google.generativeai as genai  # lazy
-    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-    cfg = {"response_mime_type": "application/json"} if want_json else {}
+    # Uses the supported `google-genai` SDK (the old `google-generativeai` is EOL).
+    from google import genai            # lazy
+    from google.genai import types
+    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    gen_cfg = types.GenerateContentConfig(
+        system_instruction=system,
+        response_mime_type="application/json" if want_json else None,
+    )
     chain = [m for m in MODELS["gemini"][tier] if m]      # drop empty env override
     last_err: Exception | None = None
     for name in chain:
         try:
-            model = genai.GenerativeModel(name, system_instruction=system,
-                                          generation_config=cfg)
-            return model.generate_content(user).text
+            resp = client.models.generate_content(model=name, contents=user, config=gen_cfg)
+            return resp.text
         except Exception as e:                            # 404 stale name / quota -> next
             last_err = e
             continue

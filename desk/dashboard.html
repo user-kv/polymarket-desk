@@ -85,17 +85,18 @@
 <!-- ===== setup / settings overlay ===== -->
 <div class="overlay hidden" id="setup">
   <div class="panel">
-    <h2>🌦️ Research Desk — connect</h2>
-    <div class="sub">Reads your private repo's live state. The token stays in this browser only
-      (localStorage) and is sent only to api.github.com.</div>
+    <h2>🌦️ Research Desk — settings</h2>
+    <div class="sub">The repo is <b>public</b>, so no token is needed — just close this and the
+      dashboard reads live cloud state. A token is <b>optional</b>: it speeds up refresh and
+      enables the live runs panel. It stays in this browser only (localStorage).</div>
     <div class="row">
       <div><label>Owner</label><input id="i_owner" placeholder="user-kv"></div>
       <div><label>Repo</label><input id="i_repo" placeholder="polymarket-desk"></div>
     </div>
-    <label>GitHub fine-grained token (read-only)</label>
-    <input id="i_token" type="password" placeholder="github_pat_…" autocomplete="off">
+    <label>GitHub fine-grained token (optional, read-only)</label>
+    <input id="i_token" type="password" placeholder="github_pat_… (leave blank — public repo)" autocomplete="off">
     <div class="steps">
-      <b>Make a token (one time, ~60s):</b><br>
+      <b>Optional token (only for faster refresh + runs panel, ~60s):</b><br>
       1. Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">
          github.com/settings/personal-access-tokens/new</a><br>
       2. <b>Resource owner</b> = your account · <b>Repository access</b> → Only select repositories →
@@ -167,34 +168,57 @@ function ago(iso){if(!iso)return'';const s=(Date.now()-new Date(iso))/1000;
 function esc(t){return(t==null?'':''+t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 
 // ---- GitHub fetch helpers -------------------------------------------------
+// The repo is PUBLIC, so a token is optional. With a token: api.github.com at
+// 5000 req/hr (snappy). Without: unauthenticated api.github.com is capped at 60
+// req/hr per IP, so we (a) read the state file from raw.githubusercontent.com
+// (CORS-ok, unlimited) and (b) throttle the runs call — see maybeRuns().
 async function gh(path, raw){
   const c=cfg();
-  const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}${path}`,{
-    headers:{Authorization:`Bearer ${c.token}`,
-      Accept: raw?'application/vnd.github.raw':'application/vnd.github+json',
-      'X-GitHub-Api-Version':'2022-11-28'},cache:'no-store'});
+  const h={Accept: raw?'application/vnd.github.raw':'application/vnd.github+json',
+      'X-GitHub-Api-Version':'2022-11-28'};
+  if(c.token) h.Authorization=`Bearer ${c.token}`;   // omit header when no token
+  const r=await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}${path}`,
+    {headers:h,cache:'no-store'});
   if(!r.ok){const e=new Error('HTTP '+r.status);e.status=r.status;throw e;}
   return raw? r.text() : r.json();
+}
+
+// State: with a token use the Contents API (freshest); without, hit the raw CDN
+// (no token, no rate limit). Both yield the parsed JSON.
+async function loadState(){
+  const c=cfg();
+  if(c.token) return JSON.parse(await gh('/contents/desk/dashboard_state.json?ref=master', true));
+  const url=`https://raw.githubusercontent.com/${c.owner}/${c.repo}/master/desk/dashboard_state.json?t=${Date.now()}`;
+  const r=await fetch(url,{cache:'no-store'});
+  if(!r.ok){const e=new Error('HTTP '+r.status);e.status=r.status;throw e;}
+  return r.json();
 }
 
 function setLive(ok,msg){$('#dot').className='dot'+(ok?'':' bad');$('#live').textContent=msg;}
 
 // ---- main load ------------------------------------------------------------
 async function refresh(){
-  if(!cfg().token){openSetup();return;}
   let s;
-  try{ s=JSON.parse(await gh('/contents/desk/dashboard_state.json?ref=master', true)); }
+  try{ s=await loadState(); }
   catch(e){
     if(e.status===401){setLive(false,'bad token');setupErr('Token rejected (401). Check it has Contents: Read on this repo.');openSetup();return;}
     if(e.status===404){setLive(false,'no data yet');$('#app').classList.remove('hidden');
       $('#kpis').innerHTML='<div class="card"><h2>Waiting for data</h2><div class="sub">dashboard_state.json isn\'t on the repo yet — it appears after the next scan/cycle run commits.</div></div>';return;}
     setLive(false,'error');return;
   }
-  setLive(true,'live');
+  setLive(true, cfg().token?'live':'live · public (no token)');
   $('#app').classList.remove('hidden');
   $('#updated').textContent='cloud data '+ago(s.generated);
   render(s);
-  loadRuns();
+  maybeRuns();
+}
+
+// Throttle the runs panel so the unauthenticated 60 req/hr cap is never hit:
+// ~every 2 min without a token (30/hr), every refresh with one.
+let _lastRuns=0;
+function maybeRuns(){
+  const gap=cfg().token?25000:115000;
+  if(Date.now()-_lastRuns>=gap){_lastRuns=Date.now();loadRuns();}
 }
 
 function render(s){
@@ -245,7 +269,7 @@ function render(s){
 async function loadRuns(){
   let d;
   try{ d=await gh('/actions/runs?per_page=12', false); }
-  catch(e){ $('#runs').innerHTML='<div class="sub">runs unavailable (token may lack Actions: Read)</div>'; return; }
+  catch(e){ const m=e.status===403?'runs rate-limited — add a token (Actions: Read) for live run status':'runs unavailable'; $('#runs').innerHTML='<div class="sub">'+m+'</div>'; return; }
   const runs=(d.workflow_runs||[]).filter(x=>x.name && x.name.startsWith('desk'));
   if(!runs.length){ $('#runs').innerHTML='<div class="sub">no runs yet</div>'; return; }
   $('#runs').innerHTML=table(['When','Workflow','Trigger','Status','Result'],
@@ -329,13 +353,15 @@ function setupErr(m){$('#setup_err').textContent=m||'';}
 function saveSetup(){
   const t=$('#i_token').value.trim(),o=$('#i_owner').value.trim()||'user-kv',
         r=$('#i_repo').value.trim()||'polymarket-desk';
-  if(!t){setupErr('Paste a token first.');return;}
+  // Token is OPTIONAL (repo is public) — blank is fine; it only speeds refresh.
   localStorage.setItem(LS.tok,t);localStorage.setItem(LS.owner,o);localStorage.setItem(LS.repo,r);
-  $('#setup').classList.add('hidden');setupErr('');setLive(true,'connecting…');refresh();
+  _lastRuns=0;$('#setup').classList.add('hidden');setupErr('');setLive(true,'connecting…');refresh();
 }
 
 // ---- boot -----------------------------------------------------------------
-if(!cfg().token){openSetup();} else {refresh();}
-setInterval(()=>{if(cfg().token)refresh();},30000);
+// Public repo: just load. No token needed; the ⚙ button opens setup to add one
+// (faster refresh + live runs panel) or change owner/repo.
+refresh();
+setInterval(refresh,30000);
 </script>
 </body></html>
