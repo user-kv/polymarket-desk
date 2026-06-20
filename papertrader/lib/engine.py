@@ -47,6 +47,9 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
     buffer_f = cfg.get("buffer_around_mean_f", 3.0)
     # Favorite-longshot guard (added 2026-06-20). 0 = disabled.
     min_prob = cfg.get("min_ensemble_prob_pct", 0.0) / 100.0
+    # M4: NO-side betting (buy NO on cheap overpriced longshots).
+    allow_no_side = cfg.get("allow_no_side", False)
+    no_longshot_max = cfg.get("no_longshot_max_ask", 0.15)
 
     ask = market.get("ask_price")
     hours_left = market.get("hours_left", 999)
@@ -69,16 +72,15 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
         }
 
     # --- Compute ensemble probability for this bucket ---
-    # Equal-weighted by MODEL (GFS/ECMWF/ICON/AIFS each get one vote), not by
-    # raw member count — pooling raw members let ECMWF's 100 combined members
-    # (IFS+AIFS) outweigh GFS's 30 for no meteorological reason. See
-    # lib/forecasts.bucket_probability_by_model.
+    # RMSE-weighted by MODEL (M2): models with lower historical RMSE get more
+    # weight. Falls back to equal-weight when no calibration weights exist yet.
     from lib.forecasts import bucket_probability_by_model, models_agree, near_mean_buffer
     all_highs = forecast.get("all_highs_f", [])
     ensemble_prob = bucket_probability_by_model(
         forecast,
         market["bucket_low_f"],
         market["bucket_high_f"],
+        model_weights=forecast.get("model_weights"),
     )
     edge = ensemble_prob - ask
     edge_pct = edge * 100.0
@@ -149,12 +151,114 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
                   f"prob={ensemble_prob:.3f} min={min_prob:.3f}"))
     all_pass = all_pass and r6
 
+    # --- M4: NO-side evaluation (favorite-longshot, buy NO on cheap overpriced buckets) ---
+    # YES and NO cannot both qualify on the same market bucket for the same threshold
+    # (YES needs prob > ask+thr; NO needs ask > prob+thr — mutually exclusive). So we
+    # check NO only when YES failed rule 1 (edge) — or when YES never had edge at all.
+    # Rules 2-6 (time, model agreement, buffer, exposure, min-prob) still apply to NO.
+    no_side_result = None
+    if allow_no_side and not all_pass and r2 and r3:
+        # NO edge: market overprices YES relative to ensemble — we buy NO at (1 - ask)
+        no_edge = ask - ensemble_prob           # positive when market > model
+        no_edge_pct = no_edge * 100.0
+        no_qualifies = (
+            no_edge >= edge_threshold           # same edge threshold as YES
+            and ask <= no_longshot_max          # only cheap longshots (ask ≤ 15¢)
+            and r4                              # not in coin-flip buffer
+            and r5                              # bankroll/dup ok
+        )
+        if no_qualifies:
+            # Kelly for NO: f* = (ask - ensemble_prob) / ask  (NO payoff = 1/(1-ask)-1 = ask/(1-ask))
+            no_stake = stake
+            if cfg.get("use_kelly_staking", False) and no_edge > 0 and ask > 0:
+                f_star_no = no_edge / ask
+                no_stake = bankroll * cfg.get("kelly_fraction", 0.25) * f_star_no
+                no_stake = max(cfg.get("min_stake", 1.0),
+                               min(no_stake, cfg.get("max_stake", 100.0)))
+            no_entry = 1.0 - ask
+            no_shares = round(no_stake / no_entry, 4) if no_entry > 0 else 0.0
+            no_side_result = {
+                "qualifies": True,
+                "no_edge_pct": round(no_edge_pct, 2),
+                "no_stake": no_stake,
+                "no_shares": no_shares,
+                "no_entry_price": round(no_entry, 4),
+            }
+
+    # --- Brain sizing (M3): only called when all engine rules pass ---
+    brain_result = None
+    is_no_bet = no_side_result is not None and no_side_result.get("qualifies") and not all_pass
+    if (all_pass or is_no_bet) and cfg.get("use_brain", False):
+        from lib import brain as _brain
+        _eval_for_brain = {
+            "ensemble_prob": ensemble_prob, "ask_price": ask,
+            "edge_pct": no_side_result["no_edge_pct"] if is_no_bet else edge_pct,
+            "gfs_mean_f": round(gfs_m, 1), "ecmwf_mean_f": round(ecmwf_m, 1),
+            "combined_mean_f": round(combined_mean, 1), "n_members": len(all_highs),
+        }
+        brain_result = _brain.evaluate_bet(market, forecast, _eval_for_brain, cfg)
+        if brain_result.get("vetoed"):
+            all_pass = False
+            is_no_bet = False
+
+    # Apply brain size multiplier to Kelly stake (YES side)
+    if all_pass and brain_result and brain_result["multiplier"] != 1.0:
+        mult = brain_result["multiplier"]
+        stake = max(cfg.get("min_stake", 1.0),
+                    min(stake * mult, cfg.get("max_stake", 100.0)))
+    # Apply brain multiplier to NO stake if it's a NO bet
+    if is_no_bet and brain_result and brain_result["multiplier"] != 1.0:
+        mult = brain_result["multiplier"]
+        no_side_result["no_stake"] = max(
+            cfg.get("min_stake", 1.0),
+            min(no_side_result["no_stake"] * mult, cfg.get("max_stake", 100.0))
+        )
+
     # --- Determine action ---
     shares = round(stake / ask, 4) if ask > 0 else 0.0
 
     if all_pass:
+        brain_note = ""
+        if brain_result:
+            brain_note = (f" | brain={brain_result['backend']} "
+                          f"x{brain_result['multiplier']:.1f} '{brain_result['rationale']}'")
         action = "BET"
-        reason = f"All rules pass. Edge={edge_pct:.1f}pt, prob={ensemble_prob:.1%}, ask={ask:.3f}"
+        reason = f"All rules pass. Edge={edge_pct:.1f}pt, prob={ensemble_prob:.1%}, ask={ask:.3f}{brain_note}"
+        return {
+            "action": action, "reason": reason,
+            "edge_pct": round(edge_pct, 2), "ensemble_prob": round(ensemble_prob, 4),
+            "ask_price": ask, "gfs_mean_f": round(gfs_m, 1), "ecmwf_mean_f": round(ecmwf_m, 1),
+            "combined_mean_f": round(combined_mean, 1), "n_members": len(all_highs),
+            "all_rules": rules, "shares": shares, "stake": stake, "side": "YES", "brain": brain_result,
+        }
+
+    if is_no_bet:
+        # M4: return a NO-side BET result
+        ns = no_side_result
+        brain_note = ""
+        if brain_result:
+            brain_note = (f" | brain={brain_result['backend']} "
+                          f"x{brain_result['multiplier']:.1f} '{brain_result['rationale']}'")
+        return {
+            "action": "BET",
+            "reason": (f"NO-side: ask={ask:.3f} > prob={ensemble_prob:.3f}+thr "
+                       f"(no_edge={ns['no_edge_pct']:.1f}pt, cheap longshot){brain_note}"),
+            "edge_pct": ns["no_edge_pct"],
+            "ensemble_prob": round(ensemble_prob, 4),
+            "ask_price": ask,
+            "gfs_mean_f": round(gfs_m, 1), "ecmwf_mean_f": round(ecmwf_m, 1),
+            "combined_mean_f": round(combined_mean, 1), "n_members": len(all_highs),
+            "all_rules": rules,
+            "shares": ns["no_shares"],
+            "stake": ns["no_stake"],
+            "side": "NO",
+            "no_entry_price": ns["no_entry_price"],
+            "brain": brain_result,
+        }
+
+    if brain_result and brain_result.get("vetoed"):
+        action = "SKIP"
+        reason = f"Brain VETO: {brain_result['rationale']}"
     elif edge_pct >= near_miss_min * 100 and r2 and r3:
         # Edge 5-10pt (or near miss): log but don't bet
         action = "NEAR_MISS"
@@ -175,18 +279,11 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
         action = "SKIP"
 
     return {
-        "action": action,
-        "reason": reason,
-        "edge_pct": round(edge_pct, 2),
-        "ensemble_prob": round(ensemble_prob, 4),
-        "ask_price": ask,
-        "gfs_mean_f": round(gfs_m, 1),
-        "ecmwf_mean_f": round(ecmwf_m, 1),
-        "combined_mean_f": round(combined_mean, 1),
-        "n_members": len(all_highs),
-        "all_rules": rules,
-        "shares": shares,
-        "stake": stake,
+        "action": action, "reason": reason,
+        "edge_pct": round(edge_pct, 2), "ensemble_prob": round(ensemble_prob, 4),
+        "ask_price": ask, "gfs_mean_f": round(gfs_m, 1), "ecmwf_mean_f": round(ecmwf_m, 1),
+        "combined_mean_f": round(combined_mean, 1), "n_members": len(all_highs),
+        "all_rules": rules, "shares": shares, "stake": stake, "side": "YES", "brain": brain_result,
     }
 
 
@@ -194,16 +291,30 @@ def simulate_fill(market, evaluation, cfg):
     """
     Build a paper-bet record from a BET evaluation.
     Returns a dict ready to append to bets.csv.
+
+    For YES bets: entry price = ask, wins when bucket resolves YES.
+    For NO bets:  entry price = 1 - ask, wins when bucket does NOT resolve.
     """
     fee_pct = cfg.get("fee_on_winnings_pct", 2.0) / 100.0
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
+    side = evaluation.get("side", "YES")
     ask = evaluation["ask_price"]
     stake = evaluation["stake"]
     shares = evaluation["shares"]
-    gross_if_win = shares * 1.0
+
+    if side == "NO":
+        # NO entry price = 1 - ask; shares already set to stake / (1 - ask) by engine
+        gross_if_win = shares * 1.0
+    else:
+        gross_if_win = shares * 1.0  # same formula; entry price baked into shares count
+
     fee_if_win = gross_if_win * fee_pct
-    net_if_win = gross_if_win - fee_if_win - stake  # profit after fee and cost back
+    net_if_win = gross_if_win - fee_if_win - stake
+
+    brain = evaluation.get("brain") or {}
+    brain_mult = brain.get("multiplier", 1.0) if brain else 1.0
+    brain_rationale = brain.get("rationale", "") if brain else ""
 
     return {
         "bet_id": f"{market['slug']}__{now[:16].replace(':', '')}",
@@ -219,6 +330,7 @@ def simulate_fill(market, evaluation, cfg):
         "bucket_high_f": market["bucket_high_f"],
         "is_open_ended_low": market.get("is_open_ended_low", False),
         "is_open_ended_high": market.get("is_open_ended_high", False),
+        "side": side,
         "ask_price": ask,
         "stake": stake,
         "shares": shares,
@@ -231,6 +343,8 @@ def simulate_fill(market, evaluation, cfg):
         "gfs_mean_f": evaluation["gfs_mean_f"],
         "ecmwf_mean_f": evaluation["ecmwf_mean_f"],
         "n_members": evaluation["n_members"],
+        "brain_multiplier": round(brain_mult, 2),
+        "brain_rationale": brain_rationale,
         "status": "open",
         "result": "",
         "actual_high_f": "",

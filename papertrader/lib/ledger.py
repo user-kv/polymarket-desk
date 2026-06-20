@@ -2,12 +2,17 @@
 lib/ledger.py
 Manages the append-only bets.csv and bankroll.json.
 
-bets.csv columns:
+bets.csv columns (M4 adds side, brain_multiplier, brain_rationale):
   bet_id, timestamp, city, station, question, slug, market_id, yes_token,
   end_date, bucket_low_f, bucket_high_f, is_open_ended_low, is_open_ended_high,
-  ask_price, stake, shares, gross_if_win, fee_if_win, net_profit_if_win,
+  side, ask_price, stake, shares, gross_if_win, fee_if_win, net_profit_if_win,
   net_loss_if_lose, ensemble_prob, edge_pct, gfs_mean_f, ecmwf_mean_f,
-  n_members, status, result, actual_high_f, settled_at, pnl, is_test
+  n_members, brain_multiplier, brain_rationale,
+  status, result, actual_high_f, settled_at, pnl, is_test
+
+  side: "YES" (buy YES token) | "NO" (buy NO token at 1-ask)
+  brain_multiplier: Kelly multiplier set by brain (1.0 = no change; 0.0 = vetoed)
+  brain_rationale: one-line reason from the brain (empty if brain disabled)
 
 bankroll.json:
   {"balance": 500.00, "start": 500.00, "history": [{"ts": ..., "balance": ...}]}
@@ -25,9 +30,11 @@ BETS_COLS = [
     "bet_id", "timestamp", "city", "station", "question", "slug", "market_id",
     "yes_token", "end_date", "bucket_low_f", "bucket_high_f",
     "is_open_ended_low", "is_open_ended_high",
+    "side",                                          # M4: "YES" or "NO"
     "ask_price", "stake", "shares", "gross_if_win", "fee_if_win",
     "net_profit_if_win", "net_loss_if_lose",
     "ensemble_prob", "edge_pct", "gfs_mean_f", "ecmwf_mean_f", "n_members",
+    "brain_multiplier", "brain_rationale",           # M3: brain sizing metadata
     "status", "result", "actual_high_f", "settled_at", "pnl", "is_test",
 ]
 

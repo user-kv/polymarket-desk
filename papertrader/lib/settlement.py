@@ -180,7 +180,10 @@ def settle_bet(bet, city_cfg, cfg):
     is_oe_low = str(bet.get("is_open_ended_low", "False")).lower() in ("true", "1")
     is_oe_high = str(bet.get("is_open_ended_high", "False")).lower() in ("true", "1")
 
-    won = did_bucket_win(actual_high_f, low_f, high_f, is_oe_low, is_oe_high)
+    bucket_happened = did_bucket_win(actual_high_f, low_f, high_f, is_oe_low, is_oe_high)
+    # M4: for NO bets the win condition is inverted — we win when the bucket does NOT happen.
+    side = bet.get("side", "YES")
+    won = bucket_happened if side == "YES" else not bucket_happened
 
     stake = float(bet.get("stake", 5.0))
     shares = float(bet.get("shares", 1.0))

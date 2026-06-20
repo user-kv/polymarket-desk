@@ -145,26 +145,40 @@ def compute_daily_high_ensemble(ensemble_data, target_date_str):
     }
 
 
-def bucket_probability_by_model(forecast, low_f, high_f):
+def bucket_probability_by_model(forecast, low_f, high_f, model_weights=None):
     """
-    Equal-weight-by-MODEL bucket probability, not equal-weight-by-member.
+    RMSE-weighted-by-MODEL bucket probability (M2 upgrade from equal-weight).
 
-    Pooling every raw member together (the old approach) silently overweights
-    whichever model Open-Meteo happens to ship more members for — e.g. ECMWF
-    contributes 50 (IFS) + 50 (AIFS) = 100 members vs GFS's 30, so ECMWF's
-    opinion outweighed GFS's by >3-to-1 for no meteorological reason. This
-    computes each available model's own bucket probability, then averages
-    those — so GFS, ECMWF (IFS), ICON, and AIFS each get one equal vote
-    regardless of member count.
+    When `model_weights` is provided (dict keyed by model slug, values summing
+    to 1.0), each model's probability contribution is scaled by its weight — so
+    a model with lower historical RMSE gets a larger vote. Falls back to equal
+    weight when a model has no weight entry or when no weights are given.
+
+    The weight dict uses the same keys as the per-model highs lists below, e.g.
+    {"gfs": 0.35, "ecmwf": 0.40, "icon": 0.10, "aifs": 0.10, "gem": 0.03, "ukmo": 0.02}.
     """
+    _MODEL_KEYS = [
+        ("gfs_highs_f", "gfs"),
+        ("ecmwf_highs_f", "ecmwf"),
+        ("icon_highs_f", "icon"),
+        ("aifs_highs_f", "aifs"),
+        ("gem_highs_f", "gem"),
+        ("ukmo_highs_f", "ukmo"),
+    ]
     probs = []
-    for key in ("gfs_highs_f", "ecmwf_highs_f", "icon_highs_f", "aifs_highs_f", "gem_highs_f", "ukmo_highs_f"):
+    weights = []
+    for key, slug in _MODEL_KEYS:
         highs = forecast.get(key, [])
         if highs:
             probs.append(bucket_probability(highs, low_f, high_f))
+            w = (model_weights or {}).get(slug, 1.0)
+            weights.append(w)
     if not probs:
         return bucket_probability(forecast.get("all_highs_f", []), low_f, high_f)
-    return sum(probs) / len(probs)
+    total_w = sum(weights)
+    if total_w <= 0:
+        return sum(probs) / len(probs)
+    return sum(p * w for p, w in zip(probs, weights)) / total_w
 
 
 def bucket_probability(highs_f, low_f, high_f):
@@ -304,6 +318,11 @@ def get_forecast_for_city(city_cfg, target_date_str, cfg=None, raw_ensembles=Non
             result["combined_mean_f"] += corr
             result["calibration_correction_f"] = corr
             logger.info(f"  Applied {corr:+.2f}°F calibration correction for {city_cfg['name']}")
+        # M2: attach per-model RMSE weights so engine can pass them to
+        # bucket_probability_by_model without re-reading the calibration file.
+        weights = calibration.get_model_weights(city_cfg["name"])
+        if weights:
+            result["model_weights"] = weights
     except Exception as e:
         logger.warning(f"Calibration lookup failed (non-fatal, using uncorrected forecast): {e}")
 
@@ -316,7 +335,12 @@ def get_historical_forecast_for_city(city_cfg, target_date_str, cfg=None):
 
     Same shape as get_forecast_for_city, but queries the ensemble API with
     start_date/end_date so we can measure how the model would have called a day
-    that has since been observed. Used by the historical (Mode 2) backtest.
+    that has since been observed. Used by the historical (Mode 2) backtest and
+    by calibration.py's per-model weight computation (M2).
+
+    Returns a dict with per-model highs (gfs_highs_f, ecmwf_highs_f, etc.)
+    when the archive has sufficient data. Falls back to pooled all_highs_f when
+    GFS or ECMWF members are missing (rate-limited or archive-expired response).
 
     Caveat: the archived run is short-lead, so accuracy from this is an
     optimistic bound on true 2-day-ahead skill.
@@ -328,28 +352,40 @@ def get_historical_forecast_for_city(city_cfg, target_date_str, cfg=None):
         base_url = cfg.get("openmeteo_ensemble_url", base_url)
         main_models = cfg.get("openmeteo_models", main_models)
 
-    # Tolerant aggregation: pool whatever members the archive returns rather than
-    # hard-requiring both GFS and ECMWF (a rate-limited partial response would
-    # otherwise drop the whole day). Mode 2 only needs the pooled member highs.
     raw_main = fetch_ensemble(
         city_cfg, base_url=base_url, models=main_models,
         start_date=target_date_str, end_date=target_date_str,
     )
-    highs = _extract_all_members(raw_main, target_date_str)
-    if not highs:
-        raise ValueError(f"No ensemble members returned for {target_date_str}")
+
+    # Try rich per-model parse first (needed for RMSE weighting in M2).
+    # Falls back to tolerant pooling when the archive only returns partial data.
+    try:
+        result = compute_daily_high_ensemble(raw_main, target_date_str)
+    except ValueError:
+        highs = _extract_all_members(raw_main, target_date_str)
+        if not highs:
+            raise ValueError(f"No ensemble members returned for {target_date_str}")
+        result = {
+            "all_highs_f": highs,
+            "combined_mean_f": sum(highs) / len(highs),
+            "n_members": len(highs),
+            "gfs_highs_f": [],
+            "ecmwf_highs_f": [],
+        }
 
     try:
         raw_aifs = fetch_ensemble(
             city_cfg, base_url=base_url, models=aifs_models,
             start_date=target_date_str, end_date=target_date_str,
         )
-        highs += _extract_all_members(raw_aifs, target_date_str)
+        aifs_highs = _extract_all_members(raw_aifs, target_date_str)
+        if aifs_highs:
+            result["aifs_highs_f"] = aifs_highs
+            result["n_aifs"] = len(aifs_highs)
+            merged = result["all_highs_f"] + aifs_highs
+            result["all_highs_f"] = merged
+            result["combined_mean_f"] = sum(merged) / len(merged)
     except Exception as e:
         logger.warning(f"AIFS historical fetch failed (non-fatal): {e}")
 
-    return {
-        "all_highs_f": highs,
-        "combined_mean_f": sum(highs) / len(highs),
-        "n_members": len(highs),
-    }
+    return result
