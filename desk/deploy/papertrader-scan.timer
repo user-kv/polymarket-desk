@@ -1,13 +1,10 @@
 [Unit]
-Description=PaperTrader reactive scan — fires near model-run publish times (00/06/12/18Z)
-# Research round 5: the documented weather edge is latency to a fresh model run,
-# so we scan shortly after each GFS/ECMWF/AIFS cycle publishes rather than on a flat
-# 2-hour timer. Times are UTC; ~40 min after each synoptic hour to let runs land.
+Description=PaperTrader reactive scan — every 30 minutes
 
 [Timer]
-OnCalendar=*-*-* 00,06,12,18:40:00 UTC
+OnCalendar=*-*-* *:00,30:00 UTC
 Persistent=true
-RandomizedDelaySec=120
+RandomizedDelaySec=60
 
 [Install]
 WantedBy=timers.target

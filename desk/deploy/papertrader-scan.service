@@ -6,9 +6,10 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 WorkingDirectory=%h/polymarket/papertrader
-# scan places fake paper bets; settle resolves any due markets. Both idempotent.
 ExecStart=/usr/bin/python3 papertrader.py scan
 ExecStartPost=/usr/bin/python3 papertrader.py settle
+ExecStartPost=/usr/bin/python3 -m desk.export_state
+ExecStartPost=/bin/bash -c 'cd %h/polymarket && git add papertrader/data desk/dashboard_state.json desk/memory/lessons && git commit -m "auto(scan): $(date -u +%%FT%%TZ)" || true && git push'
 # hardening (defense in depth on the VPS)
 NoNewPrivileges=true
 PrivateTmp=true
