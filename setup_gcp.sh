@@ -54,12 +54,16 @@ vm_ip() {
         --format="get(networkInterfaces[0].accessConfigs[0].natIP)"
 }
 
+# ── remote exec helper: gcloud handles the OS Login user + key propagation ────
+gssh() {
+    gcloud compute ssh "$INSTANCE_NAME" --zone="$ZONE" --project="$PROJECT_ID" \
+        --quiet --ssh-flag="-o StrictHostKeyChecking=no" --command="$1"
+}
+
 # ── --status ─────────────────────────────────────────────────────────────────
 if [[ "${1:-}" == "--status" ]]; then
     gcloud compute instances list --filter="name=$INSTANCE_NAME" --project="$PROJECT_ID"
-    IP=$(vm_ip)
-    ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$VM_USER@$IP" \
-        "tail -n 15 $REPO_DIR/papertrader/logs/cron_scan.log 2>/dev/null || echo 'no scan log yet'"
+    gssh "tail -n 15 $REPO_DIR/papertrader/logs/cron_scan.log 2>/dev/null || echo 'no scan log yet'"
     exit 0
 fi
 
@@ -87,22 +91,19 @@ useradd -m -s /bin/bash papertrader || true
     sleep 30
 fi
 
-# ── step 2: local SSH key to reach the VM ────────────────────────────────────
-if [ ! -f "$SSH_KEY" ]; then
-    echo "==> Generating local SSH key for VM access..."
-    ssh-keygen -t ed25519 -f "$SSH_KEY" -N "" -C "papertrader@gcp"
-    gcloud compute os-login ssh-keys add --key-file="$SSH_KEY.pub" --project="$PROJECT_ID" || true
-    sleep 5
+# ── step 2: pre-create gcloud's SSH key (no passphrase) so gssh runs unattended ─
+if [ ! -f ~/.ssh/google_compute_engine ]; then
+    echo "==> Generating SSH key for gcloud..."
+    ssh-keygen -t rsa -b 2048 -f ~/.ssh/google_compute_engine -N "" -q -C "gcp-papertrader"
 fi
 
 IP=$(vm_ip)
-SSH="ssh -i $SSH_KEY -o StrictHostKeyChecking=no $VM_USER@$IP"
 echo "==> VM external IP: $IP"
 
 # ── step 3: VM deploy key for git push-back ──────────────────────────────────
-echo "==> Ensuring VM has a git deploy key..."
-$SSH 'test -f ~/.ssh/id_ed25519 || ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N "" -C papertrader-gcp'
-DEPLOY_PUBKEY=$($SSH 'cat ~/.ssh/id_ed25519.pub')
+echo "==> Ensuring VM has a git deploy key (first connect may take ~30s)..."
+gssh 'test -f ~/.ssh/id_ed25519 || ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N "" -C papertrader-gcp'
+DEPLOY_PUBKEY=$(gssh 'cat ~/.ssh/id_ed25519.pub' 2>/dev/null | grep '^ssh-ed25519')
 
 if [[ "${1:-}" != "--finish" ]]; then
     echo ""
@@ -119,14 +120,14 @@ fi
 
 # ── step 4 (--finish): clone repo + install deps ─────────────────────────────
 echo "==> Cloning repo on VM (or pulling if present)..."
-$SSH "ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null; \
+gssh "ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null; \
       git config --global user.name '$GIT_USER_NAME'; \
       git config --global user.email '$GIT_USER_EMAIL'; \
       if [ -d $REPO_DIR/.git ]; then cd $REPO_DIR && git pull --rebase --autostash; \
       else git clone $REPO_SSH $REPO_DIR; fi"
 
 echo "==> Installing Python deps..."
-$SSH "pip3 install --user -r $REPO_DIR/desk/requirements.txt"
+gssh "pip3 install --user -r $REPO_DIR/desk/requirements.txt"
 
 # ── step 5: cron — mirrors GitHub Actions (scan/settle 30min, cycle daily) ───
 echo "==> Installing cron jobs..."
@@ -140,12 +141,12 @@ SHELL=/bin/bash
 # weekly digest Sunday 09:00 UTC
 0 9 * * 0 cd $REPO_DIR/papertrader && python3 papertrader.py weekly >> logs/cron_weekly.log 2>&1
 CRONTAB
-$SSH "mkdir -p $REPO_DIR/papertrader/logs && echo '$CRON' | crontab -"
+gssh "mkdir -p $REPO_DIR/papertrader/logs && echo '$CRON' | crontab -"
 
 echo ""
 echo "==> Deploy complete!"
 echo "    VM:      $INSTANCE_NAME ($IP)"
-echo "    SSH:     ssh -i $SSH_KEY $VM_USER@$IP"
+echo "    SSH:     gcloud compute ssh $INSTANCE_NAME --zone=$ZONE"
 echo "    Logs:    $REPO_DIR/papertrader/logs/"
 echo "    Status:  ./setup_gcp.sh --status"
 echo ""
