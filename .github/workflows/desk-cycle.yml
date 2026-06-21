@@ -8,8 +8,11 @@
 name: desk-cycle
 
 on:
-  schedule:
-    - cron: "15 14 * * *"      # 14:15 UTC daily
+  # SCHEDULE DISABLED 2026-06-21: the GCP VM (papertrader-desk) now runs the daily
+  # reflective cycle on its own cron (14:15 UTC). Disabled here to avoid two schedulers
+  # racing on the same files. Kept as a manual fallback if the VM dies.
+  # schedule:
+  #   - cron: "15 14 * * *"      # 14:15 UTC daily
   workflow_dispatch: {}
 
 permissions:

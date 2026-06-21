@@ -9,9 +9,12 @@
 name: desk-scan
 
 on:
-  schedule:
-    - cron: "10,40 * * * *"   # every 30 min at :10 and :40 — hits model-run latency edge on 00/06/12/18Z
-  workflow_dispatch: {}        # manual "Run workflow" button
+  # SCHEDULE DISABLED 2026-06-21: the GCP e2-micro VM (papertrader-desk) is now the
+  # sole scheduler — its cron fires reliably and pushes auto(gcp-scan) commits. Two
+  # schedulers would race on the same files. Kept as a manual fallback if the VM dies.
+  # schedule:
+  #   - cron: "10,40 * * * *"   # every 30 min at :10 and :40
+  workflow_dispatch: {}        # manual "Run workflow" button (fallback)
 
 permissions:
   contents: write              # needed to commit the ledger snapshot back
