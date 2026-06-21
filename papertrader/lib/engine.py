@@ -243,6 +243,9 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
             cfg.get("min_stake", 1.0),
             min(no_side_result["no_stake"] * mult, cfg.get("max_stake", 100.0))
         )
+        no_side_result["no_shares"] = round(
+            no_side_result["no_stake"] / no_side_result["no_entry_price"], 4
+        ) if no_side_result["no_entry_price"] > 0 else 0.0
 
     # --- Determine action ---
     shares = round(stake / ask, 4) if ask > 0 else 0.0

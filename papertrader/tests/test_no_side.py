@@ -109,3 +109,45 @@ def test_no_settlement_loss_when_bucket_happens():
     assert bucket_happened, "Bucket should have happened (actual=89.5, bucket=89-90)"
     no_won = not bucket_happened
     assert not no_won, "NO bet should LOSE when bucket happens"
+
+
+def test_no_shares_recomputed_after_brain_multiplier(monkeypatch):
+    """Regression: when brain scales the NO stake, no_shares must be consistent
+    with the POST-brain stake (not the pre-brain value)."""
+    import lib.brain as brain_mod
+
+    monkeypatch.setattr(
+        forecasts, "bucket_probability_by_model",
+        lambda *a, **k: 0.02,
+    )
+    monkeypatch.setattr(
+        brain_mod, "evaluate_bet",
+        lambda market, forecast, eval_for_brain, cfg: {
+            "vetoed": False,
+            "multiplier": 2.0,
+            "rationale": "test",
+            "backend": "test",
+        },
+    )
+
+    cfg = dict(CFG)
+    cfg["use_brain"] = True
+
+    m = dict(MARKET)  # ask=0.10, produces a qualifying NO bet
+    r = evaluate_bucket(m, dict(FORECAST), [], cfg, 2000.0)
+
+    assert r["action"] == "BET", r
+    assert r["side"] == "NO", r
+
+    # Core invariant: shares must be stake / (1 - ask)
+    expected_shares = round(r["stake"] / (1.0 - r["ask_price"]), 4)
+    assert abs(r["shares"] - expected_shares) < 1e-6, (
+        f"shares={r['shares']} inconsistent with stake={r['stake']} "
+        f"at no_entry={1.0 - r['ask_price']:.4f}; expected {expected_shares}"
+    )
+
+    # Confirm the brain multiplier actually inflated the stake vs the base
+    base_stake = CFG["stake_per_bet"]
+    assert r["stake"] > base_stake, (
+        f"brain multiplier 2.0 should have grown stake above {base_stake}, got {r['stake']}"
+    )
