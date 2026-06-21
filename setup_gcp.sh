@@ -31,7 +31,7 @@
 
 set -euo pipefail
 
-PROJECT_ID="${GCP_PROJECT_ID:-papertrader}"
+PROJECT_ID="${GCP_PROJECT_ID:-friendly-anthem-500014-q7}"   # display name: "papertrader"
 ZONE="${GCP_ZONE:-us-central1-a}"
 INSTANCE_NAME="papertrader-desk"
 MACHINE_TYPE="e2-micro"
