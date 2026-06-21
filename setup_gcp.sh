@@ -1,32 +1,31 @@
 #!/usr/bin/env bash
 # setup_gcp.sh — Deploy PaperTrader + Desk to a GCP e2-micro (free tier).
-#
-# This is a GIT-BASED deploy: the VM clones the repo, and cron jobs pull,
-# run, then commit+push results back — exactly mirroring the GitHub Actions
-# pipeline (scan/settle every 30min, reflective cycle daily, weekly digest).
-# That keeps data/scans/ (the backtest dataset) and the dashboard state in git.
 # FAKE MONEY ONLY — installs no wallet/keys.
 #
-# ─── ONE-TIME PREREQUISITES (on your local machine) ───────────────────────────
-#   1. Create a GCP account + project at console.cloud.google.com (e.g. "papertrader")
-#   2. Enable the Compute Engine API for that project
-#   3. Install gcloud CLI: https://cloud.google.com/sdk/docs/install
-#   4. Run: gcloud auth login && gcloud config set project YOUR_PROJECT_ID
+# ─── WHY THIS IS SSH-FREE ─────────────────────────────────────────────────────
+# Earlier versions used `gcloud compute ssh`, which on Windows routes through
+# PuTTY's plink and broke in a dozen ways (plink rejects -o flags, .ppk missing,
+# OS Login username mismatch, host-key prompts, key-overwrite aborts). So this
+# version does ZERO interactive SSH. Instead:
+#   • the VM runs a STARTUP SCRIPT (as root) that installs everything itself;
+#   • it prints its git deploy key to the SERIAL CONSOLE;
+#   • we read that with `gcloud ... get-serial-port-output` (no SSH);
+#   • the VM clones the repo and pushes results back to GitHub over its own key.
+# Nothing on your Windows box ever opens an SSH connection. plink can't bite us.
 #
-# ─── GIT PUSH-BACK AUTH (required, one-time) ──────────────────────────────────
-#   The VM must push commits back to GitHub. After the first run this script
-#   prints an SSH public key — add it to your repo as a *Deploy key with write
-#   access*:  GitHub repo → Settings → Deploy keys → Add deploy key → tick
-#   "Allow write access". Re-run with --finish once the key is added.
+# ─── ONE-TIME PREREQUISITES (local) ───────────────────────────────────────────
+#   1. GCP account + project (already done: friendly-anthem-500014-q7).
+#   2. Compute Engine API enabled (already done).
+#   3. gcloud CLI installed + `gcloud auth login`.
 #
 # ─── USAGE ────────────────────────────────────────────────────────────────────
-#   chmod +x setup_gcp.sh
-#   ./setup_gcp.sh            # create VM, install, print the deploy key
-#   ./setup_gcp.sh --finish   # after adding the deploy key: clone + schedule cron
-#   ./setup_gcp.sh --status   # show VM + last cron log lines
+#   bash setup_gcp.sh            # create/refresh VM, print the deploy key
+#   <add the printed key to GitHub → Settings → Deploy keys → Allow write access>
+#   bash setup_gcp.sh --finish   # reboot VM so it clones + schedules cron
+#   bash setup_gcp.sh --status   # verify (no SSH): serial tail + last bot commit
 #
-# IMPORTANT: once GCP is confirmed running, DISABLE the GitHub Actions schedule
-# (comment out the `schedule:` block in .github/workflows/desk-scan.yml and
+# IMPORTANT: once GCP is confirmed pushing commits, DISABLE the GitHub Actions
+# schedule (comment out `schedule:` in .github/workflows/desk-scan.yml and
 # desk-cycle.yml) so the two don't both push and fight over the same files.
 
 set -euo pipefail
@@ -39,123 +38,201 @@ IMAGE_FAMILY="debian-12"
 IMAGE_PROJECT="debian-cloud"
 DISK_SIZE="20GB"
 REPO_SSH="${REPO_SSH:-git@github.com:user-kv/polymarket-desk.git}"
-# OS Login forces the SSH username to your Google account (e.g. kaveenkoho_gmail_com).
-VM_USER="${GCP_VM_USER:-kaveenkoho_gmail_com}"
-REPO_DIR="/home/$VM_USER/polymarket"
 GIT_USER_NAME="papertrader-gcp"
 GIT_USER_EMAIL="desk-bot@users.noreply.github.com"
 
-SSH_KEY=~/.ssh/gcp_papertrader
+g() { gcloud "$@" --project="$PROJECT_ID"; }
 
-# ── helper: resolve VM external IP ───────────────────────────────────────────
-vm_ip() {
-    gcloud compute instances describe "$INSTANCE_NAME" \
-        --zone="$ZONE" --project="$PROJECT_ID" \
-        --format="get(networkInterfaces[0].accessConfigs[0].natIP)"
+serial() {
+    g compute instances get-serial-port-output "$INSTANCE_NAME" \
+        --zone="$ZONE" --port=1 2>/dev/null || true
 }
 
-# ── remote exec helper: gcloud handles the OS Login user + key propagation ────
-gssh() {
-    gcloud compute ssh "$INSTANCE_NAME" --zone="$ZONE" --project="$PROJECT_ID" \
-        --quiet --ssh-flag="-o StrictHostKeyChecking=no" --command="$1"
-}
+# ── build the VM startup script (runs as root on every boot, idempotent) ───────
+# Config values are injected via a real-assignment preamble (expanded locally);
+# the quoted body keeps cron's % and $(date) literal for the VM to evaluate.
+build_startup() {
+    local f; f="$(mktemp)"
+    {
+        echo '#!/bin/bash'
+        echo "REPO_SSH='$REPO_SSH'"
+        echo "GIT_USER_NAME='$GIT_USER_NAME'"
+        echo "GIT_USER_EMAIL='$GIT_USER_EMAIL'"
+        cat <<'STARTUP'
+# ---- everything below runs on the VM, as root, on each boot ----
+REPO_DIR=/root/polymarket
+PYBIN=/root/ptenv/bin/python3
+exec >>/var/log/papertrader-setup.log 2>&1
+echo "=====PAPERTRADER_SETUP_START $(date -u +%FT%TZ)====="
 
-# ── --status ─────────────────────────────────────────────────────────────────
-if [[ "${1:-}" == "--status" ]]; then
-    gcloud compute instances list --filter="name=$INSTANCE_NAME" --project="$PROJECT_ID"
-    gssh "tail -n 15 $REPO_DIR/papertrader/logs/cron_scan.log 2>/dev/null || echo 'no scan log yet'"
-    exit 0
-fi
+# 1. deploy key FIRST (no apt needed) so it always reaches the serial console
+mkdir -p /root/.ssh && chmod 700 /root/.ssh
+[ -f /root/.ssh/id_ed25519 ] || ssh-keygen -t ed25519 -f /root/.ssh/id_ed25519 -N "" -C papertrader-gcp
+grep -q github.com /root/.ssh/known_hosts 2>/dev/null || ssh-keyscan github.com >> /root/.ssh/known_hosts 2>/dev/null
+echo "=====DEPLOY_KEY_BEGIN====="
+cat /root/.ssh/id_ed25519.pub
+echo "=====DEPLOY_KEY_END====="
 
-# ── step 1: create VM (skip if exists) ───────────────────────────────────────
-echo "==> Checking for existing VM..."
-if gcloud compute instances describe "$INSTANCE_NAME" --zone="$ZONE" --project="$PROJECT_ID" &>/dev/null; then
-    echo "    VM '$INSTANCE_NAME' already exists. Skipping creation."
+# 2. system packages
+apt-get update -y || true
+apt-get install -y python3 python3-pip python3-venv git || true
+
+# 3. git identity + clone/pull (clone fails until the deploy key is on GitHub —
+#    that's fine; --finish reboots to retry, and cron retries every 30 min)
+git config --global user.name "$GIT_USER_NAME"
+git config --global user.email "$GIT_USER_EMAIL"
+if [ -d "$REPO_DIR/.git" ]; then
+    cd "$REPO_DIR" && git pull --rebase --autostash || true
+    echo "=====CLONE_OK====="
+elif git clone "$REPO_SSH" "$REPO_DIR"; then
+    echo "=====CLONE_OK====="
 else
-    echo "==> Creating e2-micro VM in $ZONE (free tier)..."
-    gcloud compute instances create "$INSTANCE_NAME" \
-        --project="$PROJECT_ID" \
-        --zone="$ZONE" \
-        --machine-type="$MACHINE_TYPE" \
-        --image-family="$IMAGE_FAMILY" \
-        --image-project="$IMAGE_PROJECT" \
-        --boot-disk-size="$DISK_SIZE" \
-        --boot-disk-type="pd-standard" \
-        --tags="papertrader" \
-        --metadata=startup-script='#!/bin/bash
-apt-get update -y
-apt-get install -y python3 python3-pip python3-venv git
-useradd -m -s /bin/bash papertrader || true
-'
-    echo "    VM created. Waiting 30s for startup script..."
-    sleep 30
+    echo "=====CLONE_FAILED_ADD_DEPLOY_KEY_THEN_RERUN_FINISH====="
 fi
 
-# ── step 2: ensure a CLEAN gcloud SSH key set ────────────────────────────────
-#    On Windows gcloud needs three files: google_compute_engine (private),
-#    .pub, and .ppk (PuTTY). If a PARTIAL set exists (e.g. .ppk missing), gcloud
-#    wants to overwrite it — but `--quiet` auto-declines → "Aborted by user".
-#    So if the set is incomplete, wipe it and let gcloud regenerate all three.
-GCE_KEY="$HOME/.ssh/google_compute_engine"
-if [[ -f "$GCE_KEY" && ( ! -f "$GCE_KEY.ppk" || ! -f "$GCE_KEY.pub" ) ]]; then
-    echo "==> Incomplete gcloud SSH key set detected — wiping so it regenerates cleanly..."
-    rm -f "$GCE_KEY" "$GCE_KEY.pub" "$GCE_KEY.ppk"
+# 4. python venv (Debian 12 is PEP-668 'externally managed' — venv avoids the
+#    pip refusal; --system-site-packages keeps stdlib + apt modules visible)
+[ -d /root/ptenv ] || python3 -m venv --system-site-packages /root/ptenv
+if [ -f "$REPO_DIR/desk/requirements.txt" ]; then
+    /root/ptenv/bin/pip install --upgrade pip >/dev/null 2>&1 || true
+    /root/ptenv/bin/pip install -r "$REPO_DIR/desk/requirements.txt" || true
 fi
 
-IP=$(vm_ip)
-echo "==> VM external IP: $IP"
+# 5. cron (mirrors GitHub Actions). Single-quoted heredoc → % and $(date) stay
+#    literal for cron; absolute python/paths so no PATH surprises. export_state
+#    is wrapped in || true so a missing module never blocks the commit+push.
+mkdir -p /root/polymarket/papertrader/logs
+cat > /etc/cron.d/papertrader <<'CRON'
+SHELL=/bin/bash
+PATH=/usr/local/bin:/usr/bin:/bin
+# scan + settle every 30 min, snapshot data back to git
+*/30 * * * * root cd /root/polymarket && git pull --rebase --autostash -q && (cd papertrader && /root/ptenv/bin/python3 papertrader.py scan && /root/ptenv/bin/python3 papertrader.py settle) && (/root/ptenv/bin/python3 -m desk.export_state || true) && git add papertrader/data desk/memory/lessons desk/dashboard_state.json && git commit -m "auto(gcp-scan): $(date -u +\%FT\%TZ)" && git push >> /root/polymarket/papertrader/logs/cron_scan.log 2>&1
+# reflective desk cycle daily 14:15 UTC
+15 14 * * * root cd /root/polymarket && git pull --rebase --autostash -q && /root/ptenv/bin/python3 -m desk.run_cycle && (/root/ptenv/bin/python3 -m desk.export_state || true) && git add desk/memory desk/dashboard_state.json && git commit -m "auto(gcp-cycle): $(date -u +\%FT\%TZ)" && git push >> /root/polymarket/papertrader/logs/cron_cycle.log 2>&1
+# weekly digest Sunday 09:00 UTC
+0 9 * * 0 root cd /root/polymarket/papertrader && /root/ptenv/bin/python3 papertrader.py weekly >> logs/cron_weekly.log 2>&1
+CRON
+chmod 0644 /etc/cron.d/papertrader
+echo "=====PAPERTRADER_SETUP_DONE $(date -u +%FT%TZ)====="
+STARTUP
+    } > "$f"
+    echo "$f"
+}
 
-# ── step 3: VM deploy key for git push-back ──────────────────────────────────
-echo "==> Ensuring VM has a git deploy key (first connect may take ~30s)..."
-gssh 'test -f ~/.ssh/id_ed25519 || ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N "" -C papertrader-gcp'
-DEPLOY_PUBKEY=$(gssh 'cat ~/.ssh/id_ed25519.pub' 2>/dev/null | grep '^ssh-ed25519')
+# ── apply startup script to VM + (re)boot it so the script runs ───────────────
+apply_and_boot() {
+    local sf; sf="$(build_startup)"
+    if g compute instances describe "$INSTANCE_NAME" --zone="$ZONE" &>/dev/null; then
+        echo "==> VM exists — updating startup script + rebooting to run it..."
+        g compute instances add-metadata "$INSTANCE_NAME" --zone="$ZONE" \
+            --metadata-from-file startup-script="$sf"
+        g compute instances reset "$INSTANCE_NAME" --zone="$ZONE"
+    else
+        echo "==> Creating e2-micro VM in $ZONE (free tier)..."
+        g compute instances create "$INSTANCE_NAME" \
+            --zone="$ZONE" \
+            --machine-type="$MACHINE_TYPE" \
+            --image-family="$IMAGE_FAMILY" \
+            --image-project="$IMAGE_PROJECT" \
+            --boot-disk-size="$DISK_SIZE" \
+            --boot-disk-type="pd-standard" \
+            --tags="papertrader" \
+            --metadata-from-file startup-script="$sf"
+    fi
+    rm -f "$sf"
+    local ip
+    ip="$(g compute instances describe "$INSTANCE_NAME" --zone="$ZONE" \
+          --format='get(networkInterfaces[0].accessConfigs[0].natIP)')"
+    echo "==> VM external IP: $ip"
+}
 
-if [[ "${1:-}" != "--finish" ]]; then
+# ── poll the serial console for a marker; print captured block ────────────────
+# wait_for <BEGIN_MARKER> <END_MARKER> <max_polls>  → echoes block between markers
+wait_for() {
+    local begin="$1" end="$2" max="$3" i out block
+    for ((i=1; i<=max; i++)); do
+        out="$(serial)"
+        block="$(printf '%s\n' "$out" | awk -v b="$begin" -v e="$end" '
+            $0 ~ b {c=1; val=""; next}
+            $0 ~ e {c=0; last=val}
+            c {val=val $0 "\n"}
+            END {printf "%s", last}')"
+        if [ -n "$block" ]; then printf '%s' "$block"; return 0; fi
+        sleep 15
+    done
+    return 1
+}
+
+# ── poll for a single marker line existing in serial output ───────────────────
+wait_marker() {
+    local marker="$1" max="$2" i
+    for ((i=1; i<=max; i++)); do
+        if serial | grep -q "$marker"; then return 0; fi
+        sleep 15
+    done
+    return 1
+}
+
+case "${1:-}" in
+# ── --status: verify with NO SSH ─────────────────────────────────────────────
+--status)
+    g compute instances list --filter="name=$INSTANCE_NAME"
+    echo "── last serial lines ─────────────────────────────────"
+    serial | tail -n 20
+    echo "── last bot commit on origin ─────────────────────────"
+    git fetch -q origin 2>/dev/null || true
+    git log origin/master -1 --format='%h  %an  %ar  %s' 2>/dev/null \
+        || echo "(could not read origin/master)"
+    exit 0
+    ;;
+
+# ── --finish: reboot so the VM clones (deploy key now on GitHub) + verify ─────
+--finish)
+    apply_and_boot
+    echo "==> Rebooted. Waiting for the VM to clone the repo (up to ~10 min)..."
+    if wait_marker "CLONE_OK" 40; then
+        echo ""
+        echo "==> ✅ Deploy complete — VM cloned the repo and scheduled cron."
+        echo "    Cron: scan/settle every 30 min, cycle daily 14:15 UTC, digest Sun 09:00 UTC."
+        echo "    Verify anytime:  bash setup_gcp.sh --status"
+        echo "    NEXT: disable the GitHub Actions schedule so the two don't both push."
+    else
+        echo ""
+        echo "==> ⚠️  Did not see CLONE_OK yet. Most likely the deploy key isn't added"
+        echo "    (or lacks write access). Check the serial tail below, fix, re-run --finish:"
+        serial | tail -n 25
+        exit 1
+    fi
+    exit 0
+    ;;
+
+# ── default: create/refresh VM, print the deploy key ─────────────────────────
+"")
+    apply_and_boot
+    echo "==> Waiting for the VM to generate + print its deploy key (up to ~10 min)..."
+    if KEYBLOCK="$(wait_for 'DEPLOY_KEY_BEGIN' 'DEPLOY_KEY_END' 40)"; then
+        KEY="$(printf '%s' "$KEYBLOCK" | grep '^ssh-ed25519' | tail -1 || true)"
+    fi
+    if [ -z "${KEY:-}" ]; then
+        echo "==> ⚠️  Could not read the deploy key from serial yet. Re-run in a minute:"
+        echo "       bash setup_gcp.sh"
+        exit 1
+    fi
     echo ""
     echo "────────────────────────────────────────────────────────────────────"
-    echo " ADD THIS AS A WRITE-ENABLED DEPLOY KEY ON GITHUB, THEN RE-RUN --finish"
-    echo " GitHub repo → Settings → Deploy keys → Add deploy key (Allow write):"
+    echo " ADD THIS AS A WRITE-ENABLED DEPLOY KEY ON GITHUB:"
+    echo " Repo (${REPO_SSH}) → Settings → Deploy keys → Add deploy key"
+    echo " → paste below, TICK \"Allow write access\", Save."
     echo ""
-    echo "   $DEPLOY_PUBKEY"
+    echo "   $KEY"
     echo ""
-    echo " Then run:  ./setup_gcp.sh --finish"
+    echo " Then run:  bash setup_gcp.sh --finish"
     echo "────────────────────────────────────────────────────────────────────"
     exit 0
-fi
+    ;;
 
-# ── step 4 (--finish): clone repo + install deps ─────────────────────────────
-echo "==> Cloning repo on VM (or pulling if present)..."
-gssh "ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null; \
-      git config --global user.name '$GIT_USER_NAME'; \
-      git config --global user.email '$GIT_USER_EMAIL'; \
-      if [ -d $REPO_DIR/.git ]; then cd $REPO_DIR && git pull --rebase --autostash; \
-      else git clone $REPO_SSH $REPO_DIR; fi"
-
-echo "==> Installing Python deps..."
-gssh "pip3 install --user -r $REPO_DIR/desk/requirements.txt"
-
-# ── step 5: cron — mirrors GitHub Actions (scan/settle 30min, cycle daily) ───
-echo "==> Installing cron jobs..."
-read -r -d '' CRON <<CRONTAB || true
-# PaperTrader+Desk on GCP — FAKE MONEY ONLY. Pulls, runs, commits+pushes back.
-SHELL=/bin/bash
-# scan + settle every 30 min, then snapshot data back to git
-*/30 * * * * cd $REPO_DIR && git pull --rebase --autostash -q && (cd papertrader && python3 papertrader.py scan && python3 papertrader.py settle) && python3 -m desk.export_state && git add papertrader/data desk/memory/lessons desk/dashboard_state.json && git commit -m "auto(gcp-scan): \$(date -u +\%FT\%TZ)" && git push >> papertrader/logs/cron_scan.log 2>&1
-# reflective desk cycle once daily at 14:15 UTC
-15 14 * * * cd $REPO_DIR && git pull --rebase --autostash -q && python3 -m desk.run_cycle && python3 -m desk.export_state && git add desk/memory desk/dashboard_state.json && git commit -m "auto(gcp-cycle): \$(date -u +\%FT\%TZ)" && git push >> papertrader/logs/cron_cycle.log 2>&1
-# weekly digest Sunday 09:00 UTC
-0 9 * * 0 cd $REPO_DIR/papertrader && python3 papertrader.py weekly >> logs/cron_weekly.log 2>&1
-CRONTAB
-gssh "mkdir -p $REPO_DIR/papertrader/logs && echo '$CRON' | crontab -"
-
-echo ""
-echo "==> Deploy complete!"
-echo "    VM:      $INSTANCE_NAME ($IP)"
-echo "    SSH:     gcloud compute ssh $INSTANCE_NAME --zone=$ZONE"
-echo "    Logs:    $REPO_DIR/papertrader/logs/"
-echo "    Status:  ./setup_gcp.sh --status"
-echo ""
-echo "    NEXT: disable the GitHub Actions schedule so the two don't both push."
-echo "    Stop VM:  gcloud compute instances stop $INSTANCE_NAME --zone=$ZONE"
-echo "    Start VM: gcloud compute instances start $INSTANCE_NAME --zone=$ZONE"
-echo "    Cost:     \$0/month in free tier (us-central1, e2-micro, < 744 hrs/mo)"
+*)
+    echo "usage: bash setup_gcp.sh [--finish|--status]" >&2
+    exit 2
+    ;;
+esac
