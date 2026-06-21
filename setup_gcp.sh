@@ -91,8 +91,17 @@ useradd -m -s /bin/bash papertrader || true
     sleep 30
 fi
 
-# ── step 2: (gcloud creates its own SSH key set on first connect, incl. the
-#    Windows .ppk — we must NOT pre-create a partial set or it aborts) ──────────
+# ── step 2: ensure a CLEAN gcloud SSH key set ────────────────────────────────
+#    On Windows gcloud needs three files: google_compute_engine (private),
+#    .pub, and .ppk (PuTTY). If a PARTIAL set exists (e.g. .ppk missing), gcloud
+#    wants to overwrite it — but `--quiet` auto-declines → "Aborted by user".
+#    So if the set is incomplete, wipe it and let gcloud regenerate all three.
+GCE_KEY="$HOME/.ssh/google_compute_engine"
+if [[ -f "$GCE_KEY" && ( ! -f "$GCE_KEY.ppk" || ! -f "$GCE_KEY.pub" ) ]]; then
+    echo "==> Incomplete gcloud SSH key set detected — wiping so it regenerates cleanly..."
+    rm -f "$GCE_KEY" "$GCE_KEY.pub" "$GCE_KEY.ppk"
+fi
+
 IP=$(vm_ip)
 echo "==> VM external IP: $IP"
 
