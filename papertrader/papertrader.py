@@ -99,7 +99,12 @@ def cmd_scan(cfg, test_mode=False, explain=False):
 
     # Step 1: Fetch markets
     log.info("Fetching weather markets from Gamma API...")
-    markets = polymarket.fetch_weather_markets(scan_cfg)
+    try:
+        markets = polymarket.fetch_weather_markets(scan_cfg)
+    except Exception as e:
+        log.error(f"Market fetch failed (Gamma API) — skipping scan this cycle so "
+                  f"settle/commit can still run: {e}")
+        return
     log.info(f"Found {len(markets)} weather markets within {scan_cfg.get('max_hours_to_resolution', 48)}h")
 
     if not markets:
@@ -108,7 +113,12 @@ def cmd_scan(cfg, test_mode=False, explain=False):
 
     # Step 2: Enrich with CLOB ask prices
     log.info("Fetching CLOB ask prices...")
-    markets = polymarket.enrich_markets_with_prices(markets, scan_cfg)
+    try:
+        markets = polymarket.enrich_markets_with_prices(markets, scan_cfg)
+    except Exception as e:
+        log.error(f"Price enrichment failed (CLOB) — skipping scan this cycle so "
+                  f"settle/commit can still run: {e}")
+        return
     priced = [m for m in markets if m.get("ask_price") is not None]
     log.info(f"{len(priced)}/{len(markets)} markets have a valid ask price")
 
