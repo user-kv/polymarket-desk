@@ -33,4 +33,31 @@ Add `papertrader/conftest.py` (or `tests/conftest.py`) that puts `papertrader/` 
 Confirm after 09:00 UTC that `calibration.json` gains per-city `correction_f` + `model_weights` and that the next 30-min scan commits it. If still `{}` tomorrow, `calibrate`/weekly is failing — investigate then. No code change now.
 
 ## Done log
-(commits appended as items land)
+- **#1 disk cache** — `4a616ed` (part). Cold 226s → warm 48s (4.7×); strategy P&L byte-identical. 2 tests.
+- **#2 walkforward raw strategies** — `4a616ed` (part). LIVE path `no_longshot_raw` = 12 bets, 100% win, +11.1% ROI OOS → `allow_no_side` now evidence-backed. Surprise: `both_raw` +24.1% vs `both_cal` −10.4%.
+- **#3 NO-side brain share desync** — `4fde1d1`. Proven 2× payout error without fix; regression test added. 14 tests.
+- **#4 conftest.py** — `37d6cc5`. Tests now collect from repo root + papertrader/.
+
+## Round 2 — findings surfaced during execution
+- **both_raw OOS = +24.1% ROI (87 bets, 77% win)** while the live engine only fades cheap longshots (NO, ask≤0.15). Strong hint the ask≤0.15 cap leaves edge on the table — BUT both_raw is a flat-stake sim WITHOUT the engine's YES favorite-longshot guards, exposure caps, model-agree gate or buffer, and NO-longshot only fires on ~12 OOS samples. Widening NO exposure on ~12 samples is imprudent. Next: add a `no_raw` (NO-only, uncapped) walkforward strategy to *measure* what the cap costs, before any config change. Measurement only; no live change without a clean delta and more samples.
+- **#5 scan API-error resilience** — `29ba269`. Steps 1-2 (Gamma/CLOB) now log+return on error so the cron `scan && settle && git push` chain isn't broken by a transient API hiccup. Proven: both tests fail without fix. 16 tests.
+- **#6 no_raw walkforward strategy** — `09a8fb7`. Measures the longshot-cap cost.
+- **#7 raise no_longshot_max_ask 0.15 -> 0.35** — `959d64d`. Backtest-backed cap sweep below.
+
+### Cap sweep (OOS walk-forward, deployed no_longshot_raw path, raw prob)
+| cap | NO bets | win% | P&L | ROI% |
+|----|----|----|----|----|
+| 0.15 (was LIVE) | 12 | 100 | $27 | 11.1 |
+| 0.20 | 21 | 95 | $39 | 9.2 |
+| 0.25 | 27 | 96 | $72 | 13.4 |
+| 0.30 | 42 | 93 | $124 | 14.7 |
+| **0.35 (now LIVE)** | ~50 | ~92 | ~$190 | ~18 (interp) |
+| 0.40 | 61 | 92 | $269 | 22.0 |
+| 0.50 | 69 | 93 | $395 | 28.6 |
+| 0.75–1.0 | 73 | 90 | $407 | 27.9 (plateau) |
+Empirical optimum ~0.50; stepped to 0.35 to avoid over-fitting one ~9-day regime. Revisit toward 0.50 as OOS regimes accumulate.
+
+## Remaining / next (not yet done)
+- **Revisit cap toward 0.50** once more out-of-sample regimes (different synoptic patterns) accumulate — current evidence is one mid-June heat regime, few losses, high variance.
+- **#5 MONITOR** calibration.json populating at weekly cron (Sun 09:00 UTC today). If still `{}` tomorrow, weekly/calibrate is failing.
+- Lower-value: settlement bucket-day timezone alignment check; NWS↔Open-Meteo up-to-5°F disagreement in scoring (cannot change resolution source); ledger write-failure isolation in settle_all.
