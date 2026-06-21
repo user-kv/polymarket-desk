@@ -62,6 +62,9 @@ build_startup() {
 # ---- everything below runs on the VM, as root, on each boot ----
 REPO_DIR=/root/polymarket
 PYBIN=/root/ptenv/bin/python3
+# The GCE startup runner executes as root but with NO $HOME — git --global and
+# git's SSH config both need it. Set it explicitly.
+export HOME=/root
 # Tee to a log AND to stdout — GCE only mirrors startup-script *stdout* to the
 # serial console, which is how this script reads the deploy key (no SSH).
 exec > >(tee -a /var/log/papertrader-setup.log) 2>&1
@@ -86,10 +89,14 @@ git config --global user.email "$GIT_USER_EMAIL"
 if [ -d "$REPO_DIR/.git" ]; then
     cd "$REPO_DIR" && git pull --rebase --autostash || true
     echo "=====CLONE_OK====="
-elif git clone "$REPO_SSH" "$REPO_DIR"; then
-    echo "=====CLONE_OK====="
 else
-    echo "=====CLONE_FAILED_ADD_DEPLOY_KEY_THEN_RERUN_FINISH====="
+    # a previous partial run may have left a non-git dir — clear it so clone works
+    rm -rf "$REPO_DIR"
+    if git clone "$REPO_SSH" "$REPO_DIR"; then
+        echo "=====CLONE_OK====="
+    else
+        echo "=====CLONE_FAILED_ADD_DEPLOY_KEY_THEN_RERUN_FINISH====="
+    fi
 fi
 
 # 4. python venv (Debian 12 is PEP-668 'externally managed' — venv avoids the
@@ -213,7 +220,9 @@ case "${1:-}" in
     apply_and_boot
     echo "==> Waiting for the VM to generate + print its deploy key (up to ~10 min)..."
     if KEYBLOCK="$(wait_for 'DEPLOY_KEY_BEGIN' 'DEPLOY_KEY_END' 40)"; then
-        KEY="$(printf '%s' "$KEYBLOCK" | grep '^ssh-ed25519' | tail -1 || true)"
+        # serial lines carry a syslog prefix, so extract just the key with grep -o
+        KEY="$(printf '%s' "$KEYBLOCK" \
+               | grep -oE 'ssh-ed25519 [A-Za-z0-9+/=]+ papertrader-gcp' | tail -1 || true)"
     fi
     if [ -z "${KEY:-}" ]; then
         echo "==> ⚠️  Could not read the deploy key from serial yet. Re-run in a minute:"
