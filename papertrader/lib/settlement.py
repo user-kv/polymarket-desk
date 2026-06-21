@@ -238,25 +238,31 @@ def settle_all(cfg, city_lookup):
             logger.warning(f"No city config for '{city_name}', skipping")
             continue
 
-        result = settle_bet(bet, city_cfg, cfg)
-        if result is None:
-            continue  # not ready yet
+        # Isolate each bet: a malformed row or a single failed ledger write must
+        # NOT abort settlement of the remaining open bets this cycle.
+        try:
+            result = settle_bet(bet, city_cfg, cfg)
+            if result is None:
+                continue  # not ready yet
 
-        update_bet(bet["bet_id"], result)
-        pnl = result["pnl"]
-        if bet.get("is_test", "N") != "Y":
-            update_bankroll(result.get("bankroll_delta", pnl), note=f"settle {bet['bet_id']} {result['result']}")
+            update_bet(bet["bet_id"], result)
+            pnl = result["pnl"]
+            if bet.get("is_test", "N") != "Y":
+                update_bankroll(result.get("bankroll_delta", pnl), note=f"settle {bet['bet_id']} {result['result']}")
 
-        logger.info(
-            f"SETTLED {bet['bet_id']}: {result['result']} | "
-            f"actual={result['actual_high_f']}F | P&L=${pnl:+.2f}"
-        )
-        settled.append({
-            "bet_id": bet["bet_id"],
-            "question": bet.get("question"),
-            "result": result["result"],
-            "actual_high_f": result["actual_high_f"],
-            "pnl": pnl,
-        })
+            logger.info(
+                f"SETTLED {bet['bet_id']}: {result['result']} | "
+                f"actual={result['actual_high_f']}F | P&L=${pnl:+.2f}"
+            )
+            settled.append({
+                "bet_id": bet["bet_id"],
+                "question": bet.get("question"),
+                "result": result["result"],
+                "actual_high_f": result["actual_high_f"],
+                "pnl": pnl,
+            })
+        except Exception as e:
+            logger.error(f"Failed to settle bet {bet.get('bet_id', '?')}: {e}")
+            continue
 
     return settled
