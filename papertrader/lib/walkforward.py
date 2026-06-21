@@ -187,6 +187,11 @@ def run_walkforward(cfg, scored=None, n_bins=pc.DEFAULT_BINS, kappa=pc.DEFAULT_K
                                      allow_yes=False, no_longshot_max=longshot_max_ask),
         "no_longshot_cal": _simulate(oos, "cal_prob", stake, fee, thr,
                                      allow_yes=False, no_longshot_max=longshot_max_ask),
+        # NO-only with NO ask cap — measures what the ask<=longshot_max cap costs
+        # vs no_longshot_raw (same but capped). Decision input for tuning the cap;
+        # NOT a deployed strategy.
+        "no_raw": _simulate(oos, "raw_prob", stake, fee, thr,
+                            allow_yes=False, no_longshot_max=None),
     }
     out["reliability_raw"] = pc.reliability_table(list(zip(raw_probs, outcomes)), n_bins=n_bins)
     out["stake"] = stake
@@ -236,8 +241,9 @@ def print_summary(res):
         "both_cal": "both_cal",
         "no_longshot_raw": "no_longshot_raw (LIVE)",
         "no_longshot_cal": "no_longshot_cal",
+        "no_raw": "no_raw (uncapped)",
     }
-    for key in ("yes_raw", "yes_cal", "both_raw", "both_cal", "no_longshot_raw", "no_longshot_cal"):
+    for key in ("yes_raw", "yes_cal", "both_raw", "both_cal", "no_longshot_raw", "no_longshot_cal", "no_raw"):
         s = res["strategies"][key]
         print(f"    {labels[key]:18}{s['bets']:>5}{s['win_rate']:>6.0f}%"
               f"{s['pnl']:>10.2f}{s['roi']:>7.1f}%")
@@ -281,8 +287,9 @@ Keep scanning — more resolution days will unlock this report.</div>"""
             "both_cal": "both_cal",
             "no_longshot_raw": "no_longshot_raw (LIVE — deployed path)",
             "no_longshot_cal": "no_longshot_cal",
+            "no_raw": "no_raw (uncapped, not deployed)",
         }
-        for key in ("yes_raw", "yes_cal", "both_raw", "both_cal", "no_longshot_raw", "no_longshot_cal"):
+        for key in ("yes_raw", "yes_cal", "both_raw", "both_cal", "no_longshot_raw", "no_longshot_cal", "no_raw"):
             s = res["strategies"][key]
             pnl_cls = "good" if s["pnl"] >= 0 else "bad"
             strat_rows += (
