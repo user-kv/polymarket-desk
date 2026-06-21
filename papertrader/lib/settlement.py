@@ -160,13 +160,25 @@ def settle_bet(bet, city_cfg, cfg):
         logger.warning(f"Bad end_date: {end_date}")
         return None
 
+    # Polymarket sets end_date to ~noon UTC ON the weather day, which is still
+    # morning in continental-US timezones — the daily HIGH has not occurred yet.
+    # Settling on the old `end_dt + 1h` guard fetched a confident *partial-day*
+    # high (verified 2026-06-21: Dallas returned 91.4°F at 05:27 UTC, before the
+    # afternoon peak) and resolved bets wrong. Gate instead on 08:00 UTC the day
+    # AFTER the weather day — past local midnight for every continental-US tz
+    # (UTC-4..UTC-8), with margin for the archive/observations to finalize.
+    weather_day = end_dt.date()
+    settle_after = datetime.combine(
+        weather_day + timedelta(days=1),
+        datetime.min.time(),
+        tzinfo=timezone.utc,
+    ) + timedelta(hours=8)
     now = datetime.now(timezone.utc)
-    # Only settle if end_date has passed (plus 1h buffer for data to appear)
-    if now < end_dt + timedelta(hours=1):
+    if now < settle_after:
         return None
 
     # The resolution date is the day of end_date
-    target_date = end_dt.date().isoformat()
+    target_date = weather_day.isoformat()
 
     actual_high_f, source, cross_diff = fetch_observed_high(city_cfg, target_date)
 
@@ -226,25 +238,31 @@ def settle_all(cfg, city_lookup):
             logger.warning(f"No city config for '{city_name}', skipping")
             continue
 
-        result = settle_bet(bet, city_cfg, cfg)
-        if result is None:
-            continue  # not ready yet
+        # Isolate each bet: a malformed row or a single failed ledger write must
+        # NOT abort settlement of the remaining open bets this cycle.
+        try:
+            result = settle_bet(bet, city_cfg, cfg)
+            if result is None:
+                continue  # not ready yet
 
-        update_bet(bet["bet_id"], result)
-        pnl = result["pnl"]
-        if bet.get("is_test", "N") != "Y":
-            update_bankroll(result.get("bankroll_delta", pnl), note=f"settle {bet['bet_id']} {result['result']}")
+            update_bet(bet["bet_id"], result)
+            pnl = result["pnl"]
+            if bet.get("is_test", "N") != "Y":
+                update_bankroll(result.get("bankroll_delta", pnl), note=f"settle {bet['bet_id']} {result['result']}")
 
-        logger.info(
-            f"SETTLED {bet['bet_id']}: {result['result']} | "
-            f"actual={result['actual_high_f']}F | P&L=${pnl:+.2f}"
-        )
-        settled.append({
-            "bet_id": bet["bet_id"],
-            "question": bet.get("question"),
-            "result": result["result"],
-            "actual_high_f": result["actual_high_f"],
-            "pnl": pnl,
-        })
+            logger.info(
+                f"SETTLED {bet['bet_id']}: {result['result']} | "
+                f"actual={result['actual_high_f']}F | P&L=${pnl:+.2f}"
+            )
+            settled.append({
+                "bet_id": bet["bet_id"],
+                "question": bet.get("question"),
+                "result": result["result"],
+                "actual_high_f": result["actual_high_f"],
+                "pnl": pnl,
+            })
+        except Exception as e:
+            logger.error(f"Failed to settle bet {bet.get('bet_id', '?')}: {e}")
+            continue
 
     return settled
