@@ -64,15 +64,44 @@ def _mean(vals):
 # ──────────────────────────────────────────────────────────────────────────────
 # observed-high cache (one fetch per city+date, shared across both modes)
 # ──────────────────────────────────────────────────────────────────────────────
+_OBSERVED_CACHE_FILE = os.path.join(DATA_DIR, "observed_highs_cache.json")
+
+
 def _make_actual_cache():
-    cache = {}
+    # Load existing disk cache into memory; corrupt/missing file starts empty.
+    mem: dict = {}
+    try:
+        with open(_OBSERVED_CACHE_FILE, encoding="utf-8") as _f:
+            mem = json.load(_f)
+    except Exception:
+        pass
+
+    def _persist(key: str, high: float) -> None:
+        """Write key→high to disk if the entry is stable (past day, non-None)."""
+        today = datetime.now(timezone.utc).date().isoformat()
+        # key format: "CityName|YYYY-MM-DD"
+        date_part = key.split("|", 1)[1] if "|" in key else ""
+        if high is None or not date_part or date_part >= today:
+            return
+        mem[key] = high
+        # Build disk-eligible subset (all non-None, past-date entries already in mem)
+        disk_data = {k: v for k, v in mem.items() if v is not None and k.split("|", 1)[1] < today}
+        try:
+            os.makedirs(DATA_DIR, exist_ok=True)
+            tmp = _OBSERVED_CACHE_FILE + ".tmp"
+            with open(tmp, "w", encoding="utf-8") as _f:
+                json.dump(disk_data, _f)
+            os.replace(tmp, _OBSERVED_CACHE_FILE)
+        except Exception as exc:
+            logger.warning(f"observed_highs_cache: write failed — {exc}")
 
     def get_actual(city_cfg, date_str):
-        key = (city_cfg["name"], date_str)
-        if key not in cache:
+        key = f"{city_cfg['name']}|{date_str}"
+        if key not in mem:
             high, source, diff = settlement.fetch_observed_high(city_cfg, date_str)
-            cache[key] = high
-        return cache[key]
+            mem[key] = high
+            _persist(key, high)
+        return mem[key]
 
     return get_actual
 
