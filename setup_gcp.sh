@@ -87,7 +87,8 @@ apt-get install -y python3 python3-pip python3-venv git || true
 git config --global user.name "$GIT_USER_NAME"
 git config --global user.email "$GIT_USER_EMAIL"
 if [ -d "$REPO_DIR/.git" ]; then
-    cd "$REPO_DIR" && git pull --rebase --autostash || true
+    # Use the wedge-proof sync if it's already checked out; fall back otherwise.
+    cd "$REPO_DIR" && (bash desk/deploy/vm_sync.sh 2>/dev/null || git pull --rebase --autostash || true)
     echo "=====CLONE_OK====="
 else
     # a previous partial run may have left a non-git dir — clear it so clone works
@@ -115,9 +116,9 @@ cat > /etc/cron.d/papertrader <<'CRON'
 SHELL=/bin/bash
 PATH=/usr/local/bin:/usr/bin:/bin
 # scan + settle every 30 min, snapshot data back to git
-*/30 * * * * root cd /root/polymarket && git pull --rebase --autostash -q && (cd papertrader && /root/ptenv/bin/python3 papertrader.py scan && /root/ptenv/bin/python3 papertrader.py settle) && (/root/ptenv/bin/python3 -m desk.export_state || true) && git add papertrader/data desk/memory/lessons desk/dashboard_state.json && git commit -m "auto(gcp-scan): $(date -u +\%FT\%TZ)" && git push >> /root/polymarket/papertrader/logs/cron_scan.log 2>&1
+*/30 * * * * root cd /root/polymarket && bash desk/deploy/vm_sync.sh && (cd papertrader && /root/ptenv/bin/python3 papertrader.py scan && /root/ptenv/bin/python3 papertrader.py settle) && (/root/ptenv/bin/python3 -m desk.export_state || true) && git add papertrader/data desk/memory/lessons desk/dashboard_state.json && git commit -m "auto(gcp-scan): $(date -u +\%FT\%TZ)" && git push >> /root/polymarket/papertrader/logs/cron_scan.log 2>&1
 # reflective desk cycle daily 14:15 UTC
-15 14 * * * root cd /root/polymarket && git pull --rebase --autostash -q && /root/ptenv/bin/python3 -m desk.run_cycle && (/root/ptenv/bin/python3 -m desk.export_state || true) && git add desk/memory desk/dashboard_state.json && git commit -m "auto(gcp-cycle): $(date -u +\%FT\%TZ)" && git push >> /root/polymarket/papertrader/logs/cron_cycle.log 2>&1
+15 14 * * * root cd /root/polymarket && bash desk/deploy/vm_sync.sh && /root/ptenv/bin/python3 -m desk.run_cycle && (/root/ptenv/bin/python3 -m desk.export_state || true) && git add desk/memory desk/dashboard_state.json && git commit -m "auto(gcp-cycle): $(date -u +\%FT\%TZ)" && git push >> /root/polymarket/papertrader/logs/cron_cycle.log 2>&1
 # weekly digest Sunday 09:00 UTC
 0 9 * * 0 root cd /root/polymarket/papertrader && /root/ptenv/bin/python3 papertrader.py weekly >> logs/cron_weekly.log 2>&1
 CRON
