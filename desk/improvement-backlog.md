@@ -43,6 +43,7 @@ Confirm after 09:00 UTC that `calibration.json` gains per-city `correction_f` + 
 - **#5 scan API-error resilience** — `29ba269`. Steps 1-2 (Gamma/CLOB) now log+return on error so the cron `scan && settle && git push` chain isn't broken by a transient API hiccup. Proven: both tests fail without fix. 16 tests.
 - **#6 no_raw walkforward strategy** — `09a8fb7`. Measures the longshot-cap cost.
 - **#7 raise no_longshot_max_ask 0.15 -> 0.35** — `959d64d`. Backtest-backed cap sweep below.
+- **#8 settlement timing gate (CORRECTNESS)** — `86d6f22`. **Highest-severity find this session.** Polymarket `end_date` is ~noon UTC ON the weather day (still morning in US tz); old `now < end_dt+1h` guard settled bets mid-morning local against a confident PARTIAL-day high (verified: Dallas 91.4°F at 05:27 UTC, pre-peak). Now gates on 08:00 UTC the day AFTER the weather day. Directly prevented an imminent wrong settlement of the open Miami bet (resolves today noon UTC). 3 regression tests; suite 19 passed.
 
 ### Cap sweep (OOS walk-forward, deployed no_longshot_raw path, raw prob)
 | cap | NO bets | win% | P&L | ROI% |
