@@ -62,7 +62,9 @@ build_startup() {
 # ---- everything below runs on the VM, as root, on each boot ----
 REPO_DIR=/root/polymarket
 PYBIN=/root/ptenv/bin/python3
-exec >>/var/log/papertrader-setup.log 2>&1
+# Tee to a log AND to stdout — GCE only mirrors startup-script *stdout* to the
+# serial console, which is how this script reads the deploy key (no SSH).
+exec > >(tee -a /var/log/papertrader-setup.log) 2>&1
 echo "=====PAPERTRADER_SETUP_START $(date -u +%FT%TZ)====="
 
 # 1. deploy key FIRST (no apt needed) so it always reaches the serial console
