@@ -39,7 +39,9 @@ IMAGE_FAMILY="debian-12"
 IMAGE_PROJECT="debian-cloud"
 DISK_SIZE="20GB"
 REPO_SSH="${REPO_SSH:-git@github.com:user-kv/polymarket-desk.git}"
-REPO_DIR="/home/papertrader/polymarket"
+# OS Login forces the SSH username to your Google account (e.g. kaveenkoho_gmail_com).
+VM_USER="${GCP_VM_USER:-kaveenkoho_gmail_com}"
+REPO_DIR="/home/$VM_USER/polymarket"
 GIT_USER_NAME="papertrader-gcp"
 GIT_USER_EMAIL="desk-bot@users.noreply.github.com"
 
@@ -56,7 +58,7 @@ vm_ip() {
 if [[ "${1:-}" == "--status" ]]; then
     gcloud compute instances list --filter="name=$INSTANCE_NAME" --project="$PROJECT_ID"
     IP=$(vm_ip)
-    ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "papertrader@$IP" \
+    ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$VM_USER@$IP" \
         "tail -n 15 $REPO_DIR/papertrader/logs/cron_scan.log 2>/dev/null || echo 'no scan log yet'"
     exit 0
 fi
@@ -94,7 +96,7 @@ if [ ! -f "$SSH_KEY" ]; then
 fi
 
 IP=$(vm_ip)
-SSH="ssh -i $SSH_KEY -o StrictHostKeyChecking=no papertrader@$IP"
+SSH="ssh -i $SSH_KEY -o StrictHostKeyChecking=no $VM_USER@$IP"
 echo "==> VM external IP: $IP"
 
 # ── step 3: VM deploy key for git push-back ──────────────────────────────────
@@ -143,7 +145,7 @@ $SSH "mkdir -p $REPO_DIR/papertrader/logs && echo '$CRON' | crontab -"
 echo ""
 echo "==> Deploy complete!"
 echo "    VM:      $INSTANCE_NAME ($IP)"
-echo "    SSH:     ssh -i $SSH_KEY papertrader@$IP"
+echo "    SSH:     ssh -i $SSH_KEY $VM_USER@$IP"
 echo "    Logs:    $REPO_DIR/papertrader/logs/"
 echo "    Status:  ./setup_gcp.sh --status"
 echo ""
