@@ -1,13 +1,10 @@
 """
 lib/report.py
-Generates dashboard.html and tracker.xlsx from the ledger.
+Refreshes the live dashboard's data snapshot + generates tracker.xlsx from the ledger.
 
-dashboard.html includes:
-  - Bankroll curve (current balance + history)
-  - Open bets table
-  - Settled history table with P&L
-  - Win rate, average edge, total P&L after fees
-  - Calibration summary (when model said X%, did it resolve X%?)
+Dashboard: there is now ONE dashboard — desk/dashboard.html (live, reads
+desk/dashboard_state.json). The old standalone papertrader/dashboard.html was retired.
+`generate_dashboard()` now just refreshes that single snapshot via desk/export_state.
 
 tracker.xlsx includes:
   - Weather tab: auto-synced from bets.csv
@@ -15,18 +12,21 @@ tracker.xlsx includes:
 """
 
 import os
+import sys
 import json
 import csv
 import logging
+import subprocess
 from datetime import datetime, timezone
 
 logger = logging.getLogger("report")
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+REPO_ROOT = os.path.dirname(BASE_DIR)
 DATA_DIR = os.path.join(BASE_DIR, "data")
 BETS_PATH = os.path.join(DATA_DIR, "bets.csv")
 BANKROLL_PATH = os.path.join(DATA_DIR, "bankroll.json")
-DASHBOARD_PATH = os.path.join(BASE_DIR, "dashboard.html")
+DESK_DASHBOARD = os.path.join(REPO_ROOT, "desk", "dashboard.html")
 TRACKER_PATH = os.path.join(BASE_DIR, "tracker.xlsx")
 
 
@@ -94,161 +94,23 @@ def _calibration_rows(bets):
 
 
 def generate_dashboard():
-    """Write dashboard.html. Returns path."""
-    bets = _load_bets()
-    br = _load_bankroll()
-    stats = _pnl_stats(bets)
-    calib = _calibration_rows(bets)
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    """Refresh the single live dashboard's data snapshot (desk/dashboard_state.json,
+    which desk/dashboard.html reads). Returns the dashboard path.
 
-    open_bets = [b for b in bets if b.get("status") == "open"]
-    settled_bets = [b for b in bets if b.get("status") == "settled"]
-
-    def row_color(b):
-        r = b.get("result", "")
-        if r == "WON":
-            return "#d4edda"
-        if r == "LOST":
-            return "#f8d7da"
-        return "#fff"
-
-    def fmt_pnl(p):
-        try:
-            v = float(p)
-            return f"+${v:.2f}" if v >= 0 else f"-${abs(v):.2f}"
-        except Exception:
-            return str(p)
-
-    history_js = json.dumps([
-        {"ts": h["ts"][:10], "balance": h["balance"]}
-        for h in br.get("history", [])
-    ])
-
-    open_rows_html = ""
-    for b in open_bets:
-        is_test = b.get("is_test", "N") == "Y"
-        test_badge = ' <span style="background:#ffc107;padding:1px 4px;border-radius:3px;font-size:11px;">TEST</span>' if is_test else ""
-        open_rows_html += f"""<tr>
-          <td>{b.get('city','')}</td>
-          <td title="{b.get('question','')}">{b.get('question','')[:60]}...{test_badge}</td>
-          <td>{b.get('end_date','')[:10]}</td>
-          <td>{b.get('edge_pct','')}pt</td>
-          <td>{float(b.get('ensemble_prob',0)):.0%}</td>
-          <td>${b.get('ask_price','')}</td>
-          <td>{b.get('shares','')}</td>
-          <td>${b.get('stake','')}</td>
-        </tr>"""
-
-    settled_rows_html = ""
-    for b in sorted(settled_bets, key=lambda x: x.get("settled_at", ""), reverse=True):
-        bg = row_color(b)
-        is_test = b.get("is_test", "N") == "Y"
-        test_badge = " [TEST]" if is_test else ""
-        settled_rows_html += f"""<tr style="background:{bg}">
-          <td>{b.get('city','')}</td>
-          <td title="{b.get('question','')}">{b.get('question','')[:50]}...{test_badge}</td>
-          <td>{b.get('result','')}</td>
-          <td>{b.get('actual_high_f','')}°F</td>
-          <td>{b.get('bucket_low_f','')}–{b.get('bucket_high_f','')}°F</td>
-          <td>{b.get('edge_pct','')}pt</td>
-          <td>{fmt_pnl(b.get('pnl',''))}</td>
-          <td>{b.get('settled_at','')[:10]}</td>
-        </tr>"""
-
-    calib_rows_html = ""
-    for row in calib:
-        calib_rows_html += f"""<tr>
-          <td>{row['prob_range']}</td><td>{row['n_bets']}</td>
-          <td>{row['actual_win_pct']}%</td>
-        </tr>"""
-
-    html = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="refresh" content="60">
-<title>PaperTrader Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-  body {{ font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }}
-  h1 {{ color: #333; }} h2 {{ color: #555; margin-top: 30px; }}
-  .stats {{ display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }}
-  .stat {{ background: white; border-radius: 8px; padding: 16px 24px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }}
-  .stat .num {{ font-size: 28px; font-weight: bold; color: #007bff; }}
-  .stat .lbl {{ color: #888; font-size: 12px; }}
-  table {{ border-collapse: collapse; width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); margin-bottom: 20px; }}
-  th {{ background: #007bff; color: white; padding: 8px 12px; text-align: left; font-size: 13px; }}
-  td {{ padding: 7px 12px; font-size: 12px; border-bottom: 1px solid #eee; }}
-  tr:last-child td {{ border-bottom: none; }}
-  .chart-wrap {{ background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.1); max-width: 700px; }}
-  .warning {{ background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; padding: 10px 16px; margin: 10px 0; font-size: 13px; }}
-</style>
-</head>
-<body>
-<h1>PaperTrader Dashboard <small style="font-size:14px;color:#888;">— FAKE MONEY ONLY —</small></h1>
-<p style="color:#888;font-size:13px;">Updated: {now} | Starting bankroll: ${br.get('start', 500):.2f} | Current balance: <strong>${br.get('balance', 500):.2f}</strong></p>
-
-<div class="warning">This is a paper-trading simulation. No real money is involved. Bets marked [TEST] were placed with a temporary low threshold for verification purposes.</div>
-
-<div class="stats">
-  <div class="stat"><div class="num">${br.get('balance', 500):.2f}</div><div class="lbl">Current Bankroll</div></div>
-  <div class="stat"><div class="num">{fmt_pnl(stats['total_pnl'])}</div><div class="lbl">Total P&amp;L (after fees)</div></div>
-  <div class="stat"><div class="num">{stats['win_rate']}%</div><div class="lbl">Win Rate ({stats['n_won']}W / {stats['n_lost']}L)</div></div>
-  <div class="stat"><div class="num">{stats['avg_edge']}pt</div><div class="lbl">Avg Edge</div></div>
-  <div class="stat"><div class="num">{stats['n_open']}</div><div class="lbl">Open Bets</div></div>
-  <div class="stat"><div class="num">{stats['n_settled']}</div><div class="lbl">Settled Bets</div></div>
-</div>
-
-<div class="chart-wrap">
-  <h2 style="margin-top:0">Bankroll Curve</h2>
-  <canvas id="bankrollChart" height="120"></canvas>
-</div>
-<script>
-const histData = {history_js};
-const ctx = document.getElementById('bankrollChart').getContext('2d');
-new Chart(ctx, {{
-  type: 'line',
-  data: {{
-    labels: histData.map(d => d.ts),
-    datasets: [{{
-      label: 'Balance ($)',
-      data: histData.map(d => d.balance),
-      borderColor: '#007bff',
-      fill: true,
-      backgroundColor: 'rgba(0,123,255,0.08)',
-      tension: 0.3,
-      pointRadius: 3,
-    }}]
-  }},
-  options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ y: {{ beginAtZero: false }} }} }}
-}});
-</script>
-
-<h2>Open Bets</h2>
-<table>
-  <tr><th>City</th><th>Market</th><th>Resolves</th><th>Edge</th><th>Model Prob</th><th>Ask</th><th>Shares</th><th>Stake</th></tr>
-  {open_rows_html if open_rows_html else '<tr><td colspan="8" style="color:#888;text-align:center">No open bets</td></tr>'}
-</table>
-
-<h2>Settled Bets</h2>
-<table>
-  <tr><th>City</th><th>Market</th><th>Result</th><th>Actual High</th><th>Bucket</th><th>Edge</th><th>P&amp;L</th><th>Date</th></tr>
-  {settled_rows_html if settled_rows_html else '<tr><td colspan="8" style="color:#888;text-align:center">No settled bets yet</td></tr>'}
-</table>
-
-<h2>Calibration (Model vs Reality)</h2>
-<p style="font-size:12px;color:#888;">When the model said X%, did the bucket actually resolve Y%? Needs 100+ bets to be meaningful.</p>
-<table>
-  <tr><th>Model Prob Range</th><th>Bets</th><th>Actual Win %</th></tr>
-  {calib_rows_html if calib_rows_html else '<tr><td colspan="3" style="color:#888;text-align:center">Not enough settled bets yet</td></tr>'}
-</table>
-</body>
-</html>"""
-
-    with open(DASHBOARD_PATH, "w", encoding="utf-8") as f:
-        f.write(html)
-    logger.info(f"Dashboard written: {DASHBOARD_PATH}")
-    return DASHBOARD_PATH
+    The standalone papertrader/dashboard.html was retired in favour of one live
+    dashboard; this shim keeps every existing call site (post-scan, post-settle,
+    `report`) refreshing that single source of truth. Best-effort: a failed refresh
+    never breaks scan/settle."""
+    try:
+        subprocess.run(
+            [sys.executable, "-m", "desk.export_state"],
+            cwd=REPO_ROOT, check=False,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        logger.info("Dashboard state refreshed (desk/dashboard_state.json).")
+    except Exception as e:
+        logger.warning(f"Dashboard state refresh failed: {e}")
+    return DESK_DASHBOARD
 
 
 def generate_tracker():

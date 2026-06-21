@@ -308,14 +308,14 @@ def cmd_settle(cfg):
 
 
 def cmd_report(cfg):
-    """Generate dashboard.html and tracker.xlsx."""
-    log.info("Generating dashboard and tracker...")
+    """Refresh the live dashboard snapshot and generate tracker.xlsx."""
+    log.info("Refreshing dashboard snapshot and generating tracker...")
     d, t = report.generate_all()
     log.info(f"Dashboard: {d}")
     log.info(f"Tracker  : {t}")
-    print(f"\nDashboard saved: {d}")
+    print(f"\nDashboard      : {d}")
     print(f"Tracker saved  : {t}")
-    print("Open dashboard.html in your browser to view your paper-trading results.")
+    print("Open desk/dashboard.html in your browser for live paper-trading results.")
     print("Open tracker.xlsx in Excel for the full ledger + Sports CLV template.")
 
 
@@ -621,7 +621,7 @@ def cmd_status(cfg):
     last_settle = max((b.get("settled_at", "") for b in settled_bets), default="never")
     print(f"  Last scan      : {last_scan}")
     print(f"  Last settle    : {last_settle}")
-    print(f"  Dashboard      : {os.path.join(HERE, 'dashboard.html')}")
+    print(f"  Dashboard      : {os.path.join(os.path.dirname(HERE), 'desk', 'dashboard.html')}")
     print(f"  Tracker        : {os.path.join(HERE, 'tracker.xlsx')}")
     days_left = _days_until_real_money(cfg)
     if days_left is not None:
