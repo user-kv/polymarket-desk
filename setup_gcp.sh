@@ -91,12 +91,8 @@ useradd -m -s /bin/bash papertrader || true
     sleep 30
 fi
 
-# ── step 2: pre-create gcloud's SSH key (no passphrase) so gssh runs unattended ─
-if [ ! -f ~/.ssh/google_compute_engine ]; then
-    echo "==> Generating SSH key for gcloud..."
-    ssh-keygen -t rsa -b 2048 -f ~/.ssh/google_compute_engine -N "" -q -C "gcp-papertrader"
-fi
-
+# ── step 2: (gcloud creates its own SSH key set on first connect, incl. the
+#    Windows .ppk — we must NOT pre-create a partial set or it aborts) ──────────
 IP=$(vm_ip)
 echo "==> VM external IP: $IP"
 
