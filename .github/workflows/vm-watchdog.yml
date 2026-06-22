@@ -1,0 +1,51 @@
+# VM liveness watchdog — INDEPENDENT, READ-ONLY staleness detector.
+#
+# WHY: on 2026-06-21 the GCP VM silently stopped deploying for ~8h (a git wedge
+# froze its cron) while looking perfectly healthy. The wedge itself is now fixed
+# (desk/deploy/vm_sync.sh), but this is the safety net: if the VM ever goes quiet
+# for ANY reason, this catches it instead of someone noticing hours later.
+#
+# It only READS (git fetch + inspect commit age) and NEVER pushes, so it cannot
+# race the VM's scheduler on shared files (the reason desk-scan/desk-cycle cron
+# was disabled). On staleness it exits non-zero -> the run fails -> GitHub emails
+# the repo owner. No secrets, no wallet, no money. FAKE MONEY PROJECT.
+
+name: vm-watchdog
+
+on:
+  schedule:
+    - cron: "20 * * * *"   # hourly at :20 UTC (read-only, safe to run on free cron)
+  workflow_dispatch: {}     # manual "Run workflow" button
+
+permissions:
+  contents: read            # READ ONLY — never pushes, never races the VM
+
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # need full history to find the last auto(gcp-scan) commit
+
+      - name: Check VM heartbeat (last auto(gcp-scan) commit age)
+        env:
+          MAX_AGE_MIN: "90"   # 3 missed 30-min ticks of grace (cron jitter tolerant)
+        run: |
+          set -euo pipefail
+          # Newest commit whose subject is a VM scan tick.
+          ts=$(git log -1 --grep='^auto(gcp-scan)' --format='%ct' || true)
+          if [ -z "$ts" ]; then
+            echo "::error::No auto(gcp-scan) commit found in history — VM has never pushed?"
+            exit 1
+          fi
+          now=$(date -u +%s)
+          age_min=$(( (now - ts) / 60 ))
+          last=$(git log -1 --grep='^auto(gcp-scan)' --format='%h %ad %s' --date=iso)
+          echo "Last VM tick: $last"
+          echo "Age: ${age_min} min (threshold ${MAX_AGE_MIN} min)"
+          if [ "$age_min" -gt "${MAX_AGE_MIN}" ]; then
+            echo "::error::VM heartbeat STALE — no auto(gcp-scan) commit in ${age_min} min (> ${MAX_AGE_MIN}). The GCP VM may be down or wedged. Check: bash setup_gcp.sh --status"
+            exit 1
+          fi
+          echo "VM heartbeat healthy."
