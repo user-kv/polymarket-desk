@@ -48,6 +48,8 @@ Confirm after 09:00 UTC that `calibration.json` gains per-city `correction_f` + 
 
 - **#10 wedge-proof VM git sync (RELIABILITY)** — `7893728`. Root-caused an ~8h silent outage (2026-06-21): the cron chain began with `git pull --rebase --autostash -q &&`; a delete/modify (DU) conflict aborted the `&&` chain every 30 min and froze HEAD while the VM looked healthy (RUNNING + cron active). Replaced the inline pull in all three cron lines + the startup pull with `desk/deploy/vm_sync.sh`, which clears stale rebase/merge state, pushes unsynced local commits, tries a clean rebase, and on conflict saves HEAD to a `wedge-recovery-<ts>` branch (no data loss) then hard-resets to origin — always exits 0 so a hiccup can't abort cron. Added `.gitattributes` pinning `*.sh` to LF (CRLF would break the shebang on the Linux VM). Tested against a simulated DU wedge; deployed live via `setup_gcp.sh --finish` (metadata + reboot → cron regenerated, future reboots stay correct).
 
+- **#11 VM liveness watchdog (RELIABILITY)** — `01fb8e6`. Independent safety net for the whole silent-outage class. `.github/workflows/vm-watchdog.yml`: hourly READ-ONLY GitHub Actions monitor that fails (→ emails repo owner) if the newest `auto(gcp-scan)` commit is >90 min old. Never pushes, so no scheduler race. First manual run verified green (last tick 4fc05e9, healthy). Complements #10: #10 prevents the wedge, #11 alerts if the VM goes quiet for any other reason.
+
 ### Cap sweep (OOS walk-forward, deployed no_longshot_raw path, raw prob)
 | cap | NO bets | win% | P&L | ROI% |
 |----|----|----|----|----|
