@@ -5,3 +5,10 @@
 - rule: For coastal or tropical locations, heavily discount model-derived tail probabilities for extreme high-temperature buckets, as standard ensemble variance fails to account for local physical capping mechanisms like sea breezes and convective cloud cover.
 - tags: coastal-capping,tail-events,ensemble-variance,maritime-moderation
 
+## LESSON 2026-06-22T14:15:02Z | category: miami | bet: highest-temperature-in-miami-on-june-21-2026-94-95f__2026-06-20T1337
+- outcome: WON
+- thesis: edge=12.31pt prob=0.0269 ask=0.15
+- root_cause: Edge of 12pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
