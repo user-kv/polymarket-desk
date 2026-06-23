@@ -1,0 +1,793 @@
+{
+  "scan_timestamp": "2026-06-23T22:30:24Z",
+  "test_mode": false,
+  "markets_found": 9,
+  "markets_priced": 9,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 92-93\u00b0F on June 24?",
+        "slug": "highest-temperature-in-dallas-on-june-24-2026-92-93f",
+        "market_id": "2646638",
+        "end_date": "2026-06-24T12:00:00Z",
+        "end_dt": "2026-06-24 12:00:00+00:00",
+        "hours_left": 13.5,
+        "yes_token": "20541933561475101541495793812000739819041298380989344341505373235628172440807",
+        "no_token": "97254633368218286892706326016341057495167002381167818644073010612010452334659",
+        "bucket_low_f": 92.0,
+        "bucket_high_f": 93.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/dallas/KDAL",
+        "volume_num": 977.3324890000001,
+        "liquidity_num": 3318.9488,
+        "event_id": "624142",
+        "event_slug": "highest-temperature-in-dallas-on-june-24-2026",
+        "ask_price": 0.29
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 97.574,
+        "ecmwf_mean_f": 94.2044,
+        "combined_mean_f": 94.50631067961169,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, min_ensemble_prob",
+        "edge_pct": -22.37,
+        "ensemble_prob": 0.0663,
+        "ask_price": 0.29,
+        "gfs_mean_f": 97.6,
+        "ecmwf_mean_f": 94.2,
+        "combined_mean_f": 94.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.066 ask=0.290 edge=-22.4pt threshold=5pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=13.5"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=97.6F ecmwf=94.2F diff=1.87C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[92.0,93.0] mean=94.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$373.01 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.066 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.290 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.087 min=0.030"
+          ]
+        ],
+        "shares": 68.9655,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be 61\u00b0F or below on June 24?",
+        "slug": "highest-temperature-in-san-francisco-on-june-24-2026-61forbelow",
+        "market_id": "2646730",
+        "end_date": "2026-06-24T12:00:00Z",
+        "end_dt": "2026-06-24 12:00:00+00:00",
+        "hours_left": 13.5,
+        "yes_token": "102377147808859840337393312881263612268454885710795895263351970084225511869183",
+        "no_token": "65503981817180401775486203724572703254271954108844936743206232833994197572820",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 61.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/san-francisco/KSFO",
+        "volume_num": 971.668228,
+        "liquidity_num": 3509.13581,
+        "event_id": "624157",
+        "event_slug": "highest-temperature-in-san-francisco-on-june-24-2026",
+        "ask_price": 0.006
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 76.844,
+        "ecmwf_mean_f": 73.0616,
+        "combined_mean_f": 69.2766019417476,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": 2.78,
+        "ensemble_prob": 0.0338,
+        "ask_price": 0.006,
+        "gfs_mean_f": 76.8,
+        "ecmwf_mean_f": 73.1,
+        "combined_mean_f": 69.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.034 ask=0.006 edge=2.8pt threshold=5pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=13.5"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=76.8F ecmwf=73.1F diff=2.10C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,61.0] mean=69.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$373.01 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.034 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.006 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.029 min=0.030"
+          ]
+        ],
+        "shares": 2170.3359,
+        "stake": 13.02201519200674,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 84-85\u00b0F on June 24?",
+        "slug": "highest-temperature-in-atlanta-on-june-24-2026-84-85f",
+        "market_id": "2646651",
+        "end_date": "2026-06-24T12:00:00Z",
+        "end_dt": "2026-06-24 12:00:00+00:00",
+        "hours_left": 13.5,
+        "yes_token": "48079351072068824371343058552602768105975523039976734096662458242624294738487",
+        "no_token": "93498359958464805160410765137461138240228026963072522861620651364390131357141",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ga/atlanta/KATL",
+        "volume_num": 966.0266259999997,
+        "liquidity_num": 3097.2393,
+        "event_id": "624143",
+        "event_slug": "highest-temperature-in-atlanta-on-june-24-2026",
+        "ask_price": 0.4
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.228,
+        "ecmwf_mean_f": 84.09560000000002,
+        "combined_mean_f": 84.22708737864077,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -24.85,
+        "ensemble_prob": 0.1515,
+        "ask_price": 0.4,
+        "gfs_mean_f": 89.2,
+        "ecmwf_mean_f": 84.1,
+        "combined_mean_f": 84.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.152 ask=0.400 edge=-24.8pt threshold=5pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=13.5"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=89.2F ecmwf=84.1F diff=2.85C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[84.0,85.0] mean=84.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$373.01 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.152 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.400 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.160 min=0.030"
+          ]
+        ],
+        "shares": 50.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 82-83\u00b0F on June 24?",
+        "slug": "highest-temperature-in-atlanta-on-june-24-2026-82-83f",
+        "market_id": "2646650",
+        "end_date": "2026-06-24T12:00:00Z",
+        "end_dt": "2026-06-24 12:00:00+00:00",
+        "hours_left": 13.5,
+        "yes_token": "50657820345001769408193671851578487217181878027421037450225786540344186386478",
+        "no_token": "1718935624040543700361396786993363889715362525189697392721127106493000536955",
+        "bucket_low_f": 82.0,
+        "bucket_high_f": 83.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ga/atlanta/KATL",
+        "volume_num": 830.061103,
+        "liquidity_num": 3063.2363,
+        "event_id": "624143",
+        "event_slug": "highest-temperature-in-atlanta-on-june-24-2026",
+        "ask_price": 0.11
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.228,
+        "ecmwf_mean_f": 84.09560000000002,
+        "combined_mean_f": 84.22708737864077,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": 4.06,
+        "ensemble_prob": 0.1506,
+        "ask_price": 0.11,
+        "gfs_mean_f": 89.2,
+        "ecmwf_mean_f": 84.1,
+        "combined_mean_f": 84.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.151 ask=0.110 edge=4.1pt threshold=5pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=13.5"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=89.2F ecmwf=84.1F diff=2.85C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[82.0,83.0] mean=84.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$373.01 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.151 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.110 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.165 min=0.030"
+          ]
+        ],
+        "shares": 193.1533,
+        "stake": 21.246860752184766,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 88-89\u00b0F on June 24?",
+        "slug": "highest-temperature-in-atlanta-on-june-24-2026-88-89f",
+        "market_id": "2646653",
+        "end_date": "2026-06-24T12:00:00Z",
+        "end_dt": "2026-06-24 12:00:00+00:00",
+        "hours_left": 13.5,
+        "yes_token": "50785325560622890812236065093570887506404687527050432430047376696031171709414",
+        "no_token": "1313022499868183556321032346337673072276212905122402769190774548296780112742",
+        "bucket_low_f": 88.0,
+        "bucket_high_f": 89.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ga/atlanta/KATL",
+        "volume_num": 796.215259,
+        "liquidity_num": 3387.96593,
+        "event_id": "624143",
+        "event_slug": "highest-temperature-in-atlanta-on-june-24-2026",
+        "ask_price": 0.14
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.228,
+        "ecmwf_mean_f": 84.09560000000002,
+        "combined_mean_f": 84.22708737864077,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -12.33,
+        "ensemble_prob": 0.0167,
+        "ask_price": 0.14,
+        "gfs_mean_f": 89.2,
+        "ecmwf_mean_f": 84.1,
+        "combined_mean_f": 84.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.017 ask=0.140 edge=-12.3pt threshold=5pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=13.5"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=89.2F ecmwf=84.1F diff=2.85C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[88.0,89.0] mean=84.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$373.01 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.017 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.140 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.015 min=0.030"
+          ]
+        ],
+        "shares": 142.8571,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 94-95\u00b0F on June 24?",
+        "slug": "highest-temperature-in-houston-on-june-24-2026-94-95f",
+        "market_id": "2646714",
+        "end_date": "2026-06-24T12:00:00Z",
+        "end_dt": "2026-06-24 12:00:00+00:00",
+        "hours_left": 13.5,
+        "yes_token": "23571823986269438682423074839566278476030633434295452715815619248557870486292",
+        "no_token": "110065847987185115552886337113670503974883071401730523962104170282335433359017",
+        "bucket_low_f": 94.0,
+        "bucket_high_f": 95.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/houston/KHOU",
+        "volume_num": 937.3951890000002,
+        "liquidity_num": 2695.2076,
+        "event_id": "624155",
+        "event_slug": "highest-temperature-in-houston-on-june-24-2026",
+        "ask_price": 0.33
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 96.01999999999998,
+        "ecmwf_mean_f": 90.76999999999998,
+        "combined_mean_f": 93.32233009708742,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, min_ensemble_prob",
+        "edge_pct": -26.81,
+        "ensemble_prob": 0.0619,
+        "ask_price": 0.33,
+        "gfs_mean_f": 96.0,
+        "ecmwf_mean_f": 90.8,
+        "combined_mean_f": 93.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.062 ask=0.330 edge=-26.8pt threshold=5pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=13.5"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=96.0F ecmwf=90.8F diff=2.92C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[94.0,95.0] mean=93.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$373.01 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.062 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.330 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.058 min=0.030"
+          ]
+        ],
+        "shares": 60.6061,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 78-79\u00b0F on June 24?",
+        "slug": "highest-temperature-in-seattle-on-june-24-2026-78-79f",
+        "market_id": "2646614",
+        "end_date": "2026-06-24T12:00:00Z",
+        "end_dt": "2026-06-24 12:00:00+00:00",
+        "hours_left": 13.5,
+        "yes_token": "90670857227461724268696294554035431462994229525771257627209914932751449773469",
+        "no_token": "59658063448523234584538832736764724542895391104963778381342532067128666601717",
+        "bucket_low_f": 78.0,
+        "bucket_high_f": 79.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/wa/seatac/KSEA",
+        "volume_num": 872.9496469999999,
+        "liquidity_num": 2650.06051,
+        "event_id": "624140",
+        "event_slug": "highest-temperature-in-seattle-on-june-24-2026",
+        "ask_price": 0.01
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 86.80400000000002,
+        "ecmwf_mean_f": 86.59760000000001,
+        "combined_mean_f": 83.50184466019412,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Favorite-longshot guard: model prob 4.5% < 15% floor (edge 3.5pt is illusory on a tail bucket)",
+        "edge_pct": 3.5,
+        "ensemble_prob": 0.045,
+        "ask_price": 0.01,
+        "gfs_mean_f": 86.8,
+        "ecmwf_mean_f": 86.6,
+        "combined_mean_f": 83.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.045 ask=0.010 edge=3.5pt threshold=5pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=13.5"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=86.8F ecmwf=86.6F diff=0.11C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[78.0,79.0] mean=83.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$373.01 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.045 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.010 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.044 min=0.030"
+          ]
+        ],
+        "shares": 1648.4177,
+        "stake": 16.48417714646465,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 80-81\u00b0F on June 24?",
+        "slug": "highest-temperature-in-seattle-on-june-24-2026-80-81f",
+        "market_id": "2646615",
+        "end_date": "2026-06-24T12:00:00Z",
+        "end_dt": "2026-06-24 12:00:00+00:00",
+        "hours_left": 13.5,
+        "yes_token": "11050988165379431925182544482245301460739886323207014971987699842076920616719",
+        "no_token": "28053606791580696447133422715600558414146789666701822582919233102032641377557",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 81.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/wa/seatac/KSEA",
+        "volume_num": 832.3300650000001,
+        "liquidity_num": 1789.56219,
+        "event_id": "624140",
+        "event_slug": "highest-temperature-in-seattle-on-june-24-2026",
+        "ask_price": 0.02
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 86.80400000000002,
+        "ecmwf_mean_f": 86.59760000000001,
+        "combined_mean_f": 83.50184466019412,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 2.93,
+        "ensemble_prob": 0.0493,
+        "ask_price": 0.02,
+        "gfs_mean_f": 86.8,
+        "ecmwf_mean_f": 86.6,
+        "combined_mean_f": 83.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.049 ask=0.020 edge=2.9pt threshold=5pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=13.5"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=86.8F ecmwf=86.6F diff=0.11C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[80.0,81.0] mean=83.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$373.01 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.049 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.020 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.034 min=0.030"
+          ]
+        ],
+        "shares": 696.3909,
+        "stake": 13.927817313143205,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 88-89\u00b0F on June 24?",
+        "slug": "highest-temperature-in-denver-on-june-24-2026-88-89f",
+        "market_id": "2646702",
+        "end_date": "2026-06-24T12:00:00Z",
+        "end_dt": "2026-06-24 12:00:00+00:00",
+        "hours_left": 13.5,
+        "yes_token": "1765849122480175061710470214359264157535680628368612129268566545438687342835",
+        "no_token": "43492892183563079134871725463571650841786819071539891942354468971489989838613",
+        "bucket_low_f": 88.0,
+        "bucket_high_f": 89.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "resolution_source": "https://www.wunderground.com/history/daily/us/co/aurora/KBKF",
+        "volume_num": 828.2814840000001,
+        "liquidity_num": 1898.20702,
+        "event_id": "624154",
+        "event_slug": "highest-temperature-in-denver-on-june-24-2026",
+        "ask_price": 0.15
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.92999999999999,
+        "ecmwf_mean_f": 83.0768,
+        "combined_mean_f": 84.80815533980586,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": -5.98,
+        "ensemble_prob": 0.0902,
+        "ask_price": 0.15,
+        "gfs_mean_f": 89.9,
+        "ecmwf_mean_f": 83.1,
+        "combined_mean_f": 84.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.090 ask=0.150 edge=-6.0pt threshold=5pt"
+          ],
+          [
+            "within_48h",
+            true,
+            "hours_left=13.5"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=89.9F ecmwf=83.1F diff=3.81C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[88.0,89.0] mean=84.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$373.01 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.090 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.150 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.078 min=0.030"
+          ]
+        ],
+        "shares": 133.3333,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
