@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-23T14:00:30+00:00",
+  "generated": "2026-06-23T14:15:02+00:00",
   "bankroll": {
     "balance": 1865.0669,
     "start": 2000.0,
@@ -395,6 +395,13 @@
   "brain": {
     "lessons": [
       {
+        "ts": "2026-06-23T14:15:02Z",
+        "category": "seattle",
+        "outcome": "LOST",
+        "root_cause": "Lost despite a clean signal \u2014 likely normal variance or stale pricing before our scan.",
+        "rule": "Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced."
+      },
+      {
         "ts": "2026-06-19T14:12:52Z",
         "category": "san-francisco",
         "outcome": "LOST",
@@ -402,11 +409,25 @@
         "rule": "Do not trade narrow temperature buckets in coastal microclimates during peak marine-layer seasons using only global ensembles, as these models frequently fail to capture localized onshore wind and fog cooling."
       },
       {
+        "ts": "2026-06-23T14:15:02Z",
+        "category": "new-york-city",
+        "outcome": "WON",
+        "root_cause": "Edge of 16pt converted as expected.",
+        "rule": "Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined."
+      },
+      {
         "ts": "2026-06-19T14:14:14Z",
         "category": "new-york-city",
         "outcome": "LOST",
         "root_cause": "Chasing a nominal edge (6.0% vs 0.8% market implied) on a highly specific tail-risk bucket (70-71\u00b0F) that was more than 5\u00b0F below the consensus of both the GFS (78.2\u00b0F) and ECMWF (76.6\u00b0F) ensemble means.",
         "rule": "Avoid betting on narrow, extreme tail buckets that deviate significantly from the consensus model means, as the absolute probability of success remains extremely low regardless of the nominal calculated edge."
+      },
+      {
+        "ts": "2026-06-23T14:15:02Z",
+        "category": "miami",
+        "outcome": "WON",
+        "root_cause": "Edge of 14pt converted as expected.",
+        "rule": "Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined."
       },
       {
         "ts": "2026-06-22T14:15:02Z",
@@ -439,16 +460,32 @@
     ],
     "principles": [
       {
+        "ts": "2026-06-23T14:15:02Z",
+        "category": "global",
+        "topic": "recurring-loss-pattern",
+        "claim": "Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.",
+        "confidence": 1.0,
+        "evidence_count": 6
+      },
+      {
         "ts": "2026-06-21T04:00:38Z",
         "category": "global",
         "topic": "recurring-loss-pattern",
         "claim": "Do not buy ultra-cheap tail contracts based solely on nominal ensemble probability edge unless there is a physical, synoptic driver (such as a cold front or precipitation) to support the model deviation.",
         "confidence": 0.908,
         "evidence_count": 5
+      },
+      {
+        "ts": "2026-06-23T14:15:02Z",
+        "category": "miami",
+        "topic": "general",
+        "claim": "Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.",
+        "confidence": 0.633,
+        "evidence_count": 2
       }
     ]
   },
   "digest": {
-    "text": "# Desk daily digest \u2014 2026-06-22T14:15:02Z (last 24h)\n\n- kernel intact: True  (kernel intact)\n- self-modification: frozen (kill switch off)\n- lessons added: 1\n- tools promoted: 0\n\n## New lessons\n- [WON] miami: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.\n\n## Category win-rates\n- miami: 100%\n- new-york-city: n/a\n- seattle: n/a"
+    "text": "# Desk daily digest \u2014 2026-06-23T14:15:02Z (last 24h)\n\n- kernel intact: True  (kernel intact)\n- self-modification: frozen (kill switch off)\n- lessons added: 3\n- tools promoted: 0\n\n## New lessons\n- [LOST] seattle: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.\n- [WON] new-york-city: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.\n- [WON] miami: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.\n\n## Category win-rates\n- miami: 100%\n- new-york-city: 100%\n- seattle: 0%"
   }
 }
