@@ -5,3 +5,10 @@
 - rule: Avoid betting on narrow, extreme tail buckets that deviate significantly from the consensus model means, as the absolute probability of success remains extremely low regardless of the nominal calculated edge.
 - tags: tail-risk,model-deviation,edge-trap,temperature-bucket
 
+## LESSON 2026-06-23T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-june-22-2026-78-79f__2026-06-21T1400
+- outcome: WON
+- thesis: edge=15.96pt prob=0.0404 ask=0.2
+- root_cause: Edge of 16pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
