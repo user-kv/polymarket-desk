@@ -5,3 +5,10 @@
 - rule: Never place a bet on an outcome when your primary predictive model ensemble assigns a 0% probability to it.
 - tags: Probability Assessment,Model Adherence,Negative Expected Value,Zero Probability
 
+## LESSON 2026-06-26T14:15:02Z | category: atlanta | bet: highest-temperature-in-atlanta-on-june-25-2026-88-89f__2026-06-24T1200
+- outcome: WON
+- thesis: edge=18.32pt prob=0.0998 ask=0.283
+- root_cause: Edge of 18pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+

@@ -5,3 +5,10 @@
 - rule: Do not trade narrow temperature buckets in coastal microclimates during peak marine-layer seasons using only global ensembles, as these models frequently fail to capture localized onshore wind and fog cooling.
 - tags: microclimate,coastal-bias,narrow-bucket,marine-layer,model-limitations
 
+## LESSON 2026-06-26T14:15:02Z | category: san-francisco | bet: highest-temperature-in-san-francisco-on-june-25-2026-63forbelow__2026-06-24T0230
+- outcome: LOST
+- thesis: edge=9.9pt prob=0.172 ask=0.073
+- root_cause: Actual high 70F missed bucket [-999,63] by 7F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
