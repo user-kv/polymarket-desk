@@ -59,7 +59,7 @@ PARAM_BOUNDS = {
     "model_agree_max_diff_c": {"min": 0.25, "max": 3.0},
     "max_exposure_pct":       {"min": 1.0,  "max": 25.0},   # cannot risk >25% bankroll
     "stake_per_bet":          {"min": 0.0,  "max": 50.0},
-    "max_stake":              {"min": 0.0,  "max": 50.0},
+    "max_stake":              {"min": 0.0,  "max": 100.0},  # 5% of the $2000 fake bankroll (user-approved 2026-06-20)
 }
 
 KERNEL_DIR = Path(__file__).resolve().parent

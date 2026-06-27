@@ -15,6 +15,7 @@ it is cron-safe. It never places a real order — fake money only.
 
 from __future__ import annotations
 import json
+import os
 import subprocess
 import argparse
 from datetime import datetime, timezone
@@ -85,7 +86,13 @@ def run_cycle(do_brief: bool = True, use_debate: bool = False) -> dict:
 
 
 def _push_dashboard_state() -> bool:
-    """Commit and push dashboard_state.json. Returns True on success."""
+    """Commit and push dashboard_state.json. Returns True on success.
+
+    Set DESK_NO_PUSH=1 to write the snapshot locally without committing/pushing —
+    use this for any ad-hoc local run so it can't become a second pusher racing the
+    VM's cron (the single-pusher discipline; see memory: deployment-reality)."""
+    if os.environ.get("DESK_NO_PUSH"):
+        return True  # snapshot already written; intentionally skip git
     root = DESK.parent
     state_file = "desk/dashboard_state.json"
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")

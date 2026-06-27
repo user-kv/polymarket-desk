@@ -216,6 +216,9 @@ def cmd_scan(cfg, test_mode=False, explain=False):
                     bet_record["bet_id"] = "TEST__" + bet_record["bet_id"]
                 ledger.append_bet(bet_record)
                 open_bets.append(bet_record)  # update local list for dup check
+                # append_bet already debited bankroll.json; this mirrors that debit
+                # in-memory ONLY (never written back) so later bets in this same scan
+                # size against available cash, not the pre-scan balance. No double-deduct.
                 bankroll -= float(bet_record["stake"])
                 bets_placed.append(bet_record)
                 log.info(f"  >>> BET PLACED: {bet_record['bet_id']}")

@@ -2,14 +2,22 @@
 lib/engine.py
 Applies the discipline rules and decides whether to paper-bet each bucket.
 
-All five rules must pass for a bet to be placed:
- 1. Edge >= threshold (ensemble_prob - ask_price >= edge_threshold_pct / 100)
- 2. <=48h to resolution
- 3. GFS/ECMWF means agree within 1.5°C
- 4. Bucket not in the 3°F buffer zone around the ensemble mean
- 5. Open exposure check (no dup, and total open bets < 20% of bankroll)
+The YES side must pass every rule below (all thresholds are config-driven, not
+hardcoded — the values in parentheses are the kernel rule names, see
+desk/kernel/invariants.py::DISCIPLINE_RULES):
+ 1. edge_gte_threshold   — ensemble_prob - ask >= edge_threshold_pct
+ 2. within_max_hours     — hours_left <= max_hours_to_resolution
+ 3. models_agree         — |GFS - ECMWF| <= model_agree_max_diff_c
+ 4. outside_mean_buffer  — bucket not within buffer_around_mean_f of the mean
+ 5. bankroll_ok          — no duplicate slug; open exposure <= max_exposure_pct
+ 6. min_ensemble_prob    — favorite-longshot guard (M5): prob >= min_ensemble_prob_pct
+ 7. min_ask_for_yes      — block sub-threshold-cent longshot asks (M5)
+ 8. nbm_member_consensus — NBM raw-member veto (M5; only when enabled)
 
-Near-misses (edge 5-10 pts) are logged to the scan snapshot but NOT bet.
+The NO side (M4) is evaluated when YES fails on edge: qualifies when
+ask > prob + threshold AND ask <= no_longshot_max_ask, reusing rules 2-6.
+
+Near-misses (edge in the near_miss band) are logged to the scan snapshot but NOT bet.
 """
 
 import logging
@@ -104,8 +112,8 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
 
     # Rule 2: Time to resolution
     r2 = 0 < hours_left <= max_hours
-    rules.append(("within_48h", r2,
-                  f"hours_left={hours_left:.1f}"))
+    rules.append(("within_max_hours", r2,
+                  f"hours_left={hours_left:.1f} max={max_hours}"))
     all_pass = all_pass and r2
 
     # Rule 3: Model agreement
