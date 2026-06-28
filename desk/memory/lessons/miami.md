@@ -19,3 +19,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-06-28T14:15:02Z | category: miami | bet: highest-temperature-in-miami-on-june-27-2026-92-93f__2026-06-26T0900
+- outcome: WON
+- thesis: edge=22.42pt prob=0.0958 ask=0.32
+- root_cause: Edge of 22pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
