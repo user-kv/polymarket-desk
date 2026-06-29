@@ -42,6 +42,27 @@ class MapCell:
 
 
 @dataclass
+class Strategy:
+    """A candidate predictor proposed from the map (CONSTITUTION §11C).
+
+    Carries the causal mechanism it claims (Gate 2) and walks the cell
+    lifecycle via `status` as it passes/fails each gate.
+    """
+    id: str
+    archetype: str
+    baseline: str               # resolvable in baselines or sports registry
+    params: dict = field(default_factory=dict)
+    mechanism: str = ""         # a MECHANISMS key (gates.mechanism); "" = none stated
+    hypothesis: str = ""        # human-readable claim
+    status: str = "proposed"    # proposed|held_gate2|rejected_gate3|gate1_insufficient|paper|rejected_gate1
+    metrics: dict = field(default_factory=dict)
+    ts: str = ""
+
+    def dict(self):
+        return asdict(self)
+
+
+@dataclass
 class Trial:
     """Trial-registry skeleton (CONSTITUTION §5). Populated for real in A2."""
     id: str
