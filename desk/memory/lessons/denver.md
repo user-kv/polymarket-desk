@@ -5,3 +5,10 @@
 - rule: Do not buy ultra-cheap tail contracts based solely on nominal ensemble probability edge unless there is a physical, synoptic driver (such as a cold front or precipitation) to support the model deviation.
 - tags: tail-risk,ensemble-dispersion,pricing-trap,denver
 
+## LESSON 2026-06-29T14:15:02Z | category: denver | bet: highest-temperature-in-denver-on-june-28-2026-92-93f__2026-06-28T0930
+- outcome: WON
+- thesis: edge=12.56pt prob=0.0344 ask=0.16
+- root_cause: Edge of 13pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
