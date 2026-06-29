@@ -1,4 +1,4 @@
-"""institute CLI — A1: map | classify | status.  A2: gate.  A3: propose | pipeline | paper.
+"""institute CLI — A1: map | classify | status.  A2: gate.  A3: propose | pipeline | paper.  A4: book.
 
     python -m institute.cli map        # build & print the predictability map
     python -m institute.cli classify "<question>"
@@ -7,6 +7,7 @@
     python -m institute.cli propose    # propose strategies from the map
     python -m institute.cli pipeline   # run cells through Gates 1-3
     python -m institute.cli paper      # show open paper positions
+    python -m institute.cli book      # build the risk-managed book (Gates 4-7)
 """
 import os
 import sys
@@ -78,6 +79,12 @@ def cmd_paper():
         print(f"  {sid}: {paper.forward_count(sid)}")
 
 
+def cmd_book():
+    from institute.portfolio import book
+    b = book.build_book()
+    print(book.render(b))
+
+
 def main(argv=None):
     argv = argv if argv is not None else sys.argv[1:]
     cmd = argv[0] if argv else "status"
@@ -95,6 +102,8 @@ def main(argv=None):
         cmd_pipeline()
     elif cmd == "paper":
         cmd_paper()
+    elif cmd == "book":
+        cmd_book()
     else:
         cmd_status()
 
