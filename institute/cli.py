@@ -1,4 +1,4 @@
-"""institute CLI — A1: map | classify | status.  A2: gate.  A3: propose | pipeline | paper.  A4: book.  A5: crypto-snapshot | crypto-settle.
+"""institute CLI — A1: map | classify | status.  A2: gate.  A3: propose | pipeline | paper.  A4: book.  A5: crypto-snapshot | crypto-settle.  A6: forecast | cycle.
 
     python -m institute.cli map              # build & print the predictability map
     python -m institute.cli classify "<question>"
@@ -10,6 +10,8 @@
     python -m institute.cli book             # build the risk-managed book (Gates 4-7)
     python -m institute.cli crypto-snapshot  # snapshot live crypto-daily markets
     python -m institute.cli crypto-settle    # settle open crypto markets past end_date
+    python -m institute.cli forecast         # forecast open markets (Alpha Engine, A6)
+    python -m institute.cli cycle            # full cadence loop: forecast + book (A6)
 """
 import os
 import sys
@@ -112,6 +114,52 @@ def cmd_crypto_settle():
     print(f"settled {len(done)} crypto markets")
 
 
+def _live_forecast_enabled():
+    """A real forecast is only honest if a real model is behind the seam.
+
+    forecast_open() is idempotent: the FIRST forecast on a market is frozen
+    forever (point-in-time integrity). So writing a deterministic placeholder
+    (mock) forecast onto a live market permanently BURNS that irreplaceable
+    slot with a number we do not believe. We therefore refuse to forecast
+    unless INSTITUTE_LIVE_FORECAST is explicitly set -- a single, auditable
+    cord to pull once the real provider is wired behind agents/llm.complete.
+    """
+    import os
+    return os.environ.get("INSTITUTE_LIVE_FORECAST", "").strip().lower() in ("1", "true", "yes")
+
+
+def cmd_forecast():
+    """A6: forecast open markets via the Alpha Engine across all wired stores."""
+    if not _live_forecast_enabled():
+        print("forecast skipped: INSTITUTE_LIVE_FORECAST not set "
+              "(refusing to freeze placeholder forecasts on live markets)")
+        return
+
+    from institute.alpha.forecast_store import forecast_open
+    from institute.sensor.crypto import CRYPTO_STORE
+
+    stores = {"crypto": CRYPTO_STORE}
+    total = 0
+    for label, path in stores.items():
+        newly = forecast_open(path, mock=False)
+        total += len(newly)
+        print(f"forecast {len(newly)} open markets across {label}")
+    if not total:
+        print("forecast 0 open markets across all stores")
+
+
+def cmd_cycle():
+    """A6: full cadence loop — forecast open markets, then build the book."""
+    from institute import cadence
+    from institute.portfolio import book as _book
+
+    live = _live_forecast_enabled()
+    out = cadence.run_cycle(mock=not live, forecast=live)
+    rendered = _book.render(out["book"])
+    assert rendered.isascii(), "render() produced non-ASCII output"
+    print(rendered)
+
+
 def main(argv=None):
     argv = argv if argv is not None else sys.argv[1:]
     cmd = argv[0] if argv else "status"
@@ -135,6 +183,10 @@ def main(argv=None):
         cmd_crypto_snapshot()
     elif cmd == "crypto-settle":
         cmd_crypto_settle()
+    elif cmd == "forecast":
+        cmd_forecast()
+    elif cmd == "cycle":
+        cmd_cycle()
     else:
         cmd_status()
 

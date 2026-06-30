@@ -81,7 +81,29 @@ def evaluate(rows, baseline_fn, use_realized=False, **kw):
     }
 
 
+def research(rm, edge=0.05, std_ceiling=0.20):
+    """Bet our model's edge vs the market, but only when confident and decisive.
+
+    Reads the point-in-time forecast frozen at snapshot.  No forecast -> abstain.
+    std_ceiling: if the swarm is too divided (high p_std) we abstain.
+    edge: minimum divergence |p_final - q_yes| required to place a bet.
+    """
+    meta = rm.get("meta", {})
+    p = meta.get("p_final")
+    if p is None:
+        return rm["q_yes"], None                # never forecast -> abstain
+    if meta.get("p_std", 1.0) > std_ceiling:
+        return p, None                          # swarm too divided -> abstain
+    q = rm["q_yes"]
+    if p - q > edge:
+        return p, "YES"
+    if q - p > edge:
+        return p, "NO"
+    return p, None
+
+
 BASELINES = {
     "price_follow": (price_follow, {}, False),
     "longshot_fade": (longshot_fade, {}, True),
+    "research": (research, {}, True),
 }

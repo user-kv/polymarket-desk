@@ -122,7 +122,7 @@ PATH=/usr/local/bin:/usr/bin:/bin
 # can never wedge the proven papertrader pipeline). Captures live q while markets
 # are OPEN (irreplaceable decision-time prior), settles y once they close, and
 # persists the append-only market stores to git so a VM rebuild keeps the history.
-5,35 * * * * root cd /root/polymarket && bash desk/deploy/vm_sync.sh && /root/ptenv/bin/python3 -m institute.cli crypto-snapshot && /root/ptenv/bin/python3 -m institute.cli crypto-settle && git add institute/data && (git diff --cached --quiet || (git commit -m "auto(institute): $(date -u +\%FT\%TZ)" && git push)) >> /root/polymarket/papertrader/logs/cron_institute.log 2>&1
+5,35 * * * * root cd /root/polymarket && bash desk/deploy/vm_sync.sh && /root/ptenv/bin/python3 -m institute.cli crypto-snapshot && /root/ptenv/bin/python3 -m institute.cli forecast && /root/ptenv/bin/python3 -m institute.cli crypto-settle && git add institute/data && (git diff --cached --quiet || (git commit -m "auto(institute): $(date -u +\%FT\%TZ)" && git push)) >> /root/polymarket/papertrader/logs/cron_institute.log 2>&1
 # reflective desk cycle daily 14:15 UTC
 15 14 * * * root cd /root/polymarket && bash desk/deploy/vm_sync.sh && /root/ptenv/bin/python3 -m desk.run_cycle && (/root/ptenv/bin/python3 -m desk.export_state || true) && git add desk/memory desk/dashboard_state.json && git commit -m "auto(gcp-cycle): $(date -u +\%FT\%TZ)" && git push >> /root/polymarket/papertrader/logs/cron_cycle.log 2>&1
 # weekly digest Sunday 09:00 UTC

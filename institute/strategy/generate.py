@@ -31,6 +31,10 @@ BASELINE_MECHANISM = {
         "model_vs_crowd",
         "power-rating model disagrees with crowd-driven PM price",
     ),
+    "research": (
+        "model_vs_crowd",
+        "independent ensemble forecast diverges from the PM price; bet the edge",
+    ),
 }
 
 

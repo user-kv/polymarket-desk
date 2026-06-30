@@ -5,10 +5,12 @@ touching callers. The mock default keeps tests fully offline and deterministic.
 """
 
 ROUTING = {
-    "reason":   "claude-opus-4-8",      # strategy-gen, red-team, allocator
-    "judge":    "claude-opus-4-8",      # mechanism judging
-    "classify": "claude-haiku-4-5",
-    "index":    "claude-haiku-4-5",
+    "reason":    "claude-opus-4-8",      # strategy-gen, red-team, allocator
+    "judge":     "claude-opus-4-8",      # mechanism judging
+    "classify":  "claude-haiku-4-5",
+    "index":     "claude-haiku-4-5",
+    "forecast":  "claude-sonnet-4-6",   # Alpha Engine swarm workers (A6)
+    "supervise": "claude-opus-4-8",     # Alpha Engine supervisor reconciliation (A6)
 }
 
 
