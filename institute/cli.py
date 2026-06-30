@@ -1,4 +1,4 @@
-"""institute CLI — A1: map | classify | status.  A2: gate.  A3: propose | pipeline | paper.  A4: book.  A5: crypto-snapshot | crypto-settle.  A6: forecast | cycle.
+"""institute CLI — A1: map | classify | status.  A2: gate.  A3: propose | pipeline | paper.  A4: book.  A5: crypto-snapshot | crypto-settle.  A6: forecast | cycle.  B1: cpi-snapshot | cpi-settle.
 
     python -m institute.cli map              # build & print the predictability map
     python -m institute.cli classify "<question>"
@@ -12,6 +12,8 @@
     python -m institute.cli crypto-settle    # settle open crypto markets past end_date
     python -m institute.cli forecast         # forecast open markets (Alpha Engine, A6)
     python -m institute.cli cycle            # full cadence loop: forecast + book (A6)
+    python -m institute.cli cpi-snapshot     # snapshot live US CPI MoM markets (B1)
+    python -m institute.cli cpi-settle       # settle open CPI markets past end_date (B1)
 """
 import os
 import sys
@@ -114,6 +116,20 @@ def cmd_crypto_settle():
     print(f"settled {len(done)} crypto markets")
 
 
+def cmd_cpi_snapshot():
+    """B1: snapshot live US CPI MoM range markets from Gamma."""
+    from institute.verticals.cpi import sensor as cpi_sensor
+    new = cpi_sensor.snapshot()
+    print(f"snapshotted {len(new)} CPI range markets")
+
+
+def cmd_cpi_settle():
+    """B1: settle open CPI markets past end_date using BLS data."""
+    from institute.verticals.cpi import sensor as cpi_sensor
+    done = cpi_sensor.settle()
+    print(f"settled {len(done)} CPI markets")
+
+
 def _live_forecast_enabled():
     """A real forecast is only honest if a real model is behind the seam.
 
@@ -187,6 +203,10 @@ def main(argv=None):
         cmd_forecast()
     elif cmd == "cycle":
         cmd_cycle()
+    elif cmd == "cpi-snapshot":
+        cmd_cpi_snapshot()
+    elif cmd == "cpi-settle":
+        cmd_cpi_settle()
     else:
         cmd_status()
 

@@ -35,6 +35,10 @@ BASELINE_MECHANISM = {
         "model_vs_crowd",
         "independent ensemble forecast diverges from the PM price; bet the edge",
     ),
+    "cpi_nowcast": (
+        "model_vs_crowd",
+        "free macro nowcast ensemble diverges from the crowd's CPI-bucket price; bet the edge",
+    ),
 }
 
 

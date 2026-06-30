@@ -102,8 +102,27 @@ def research(rm, edge=0.05, std_ceiling=0.20):
     return p, None
 
 
+def cpi_nowcast(rm, edge=0.05):
+    """Bet our calibrated CPI nowcast vs the crowd on a CPI range bucket.
+
+    Reads the point-in-time p_model frozen at snapshot (never re-computed here).
+    No frozen forecast -> abstain (never invent a bet).
+    """
+    meta = rm.get("meta", {})
+    p = meta.get("p_model")
+    if p is None:
+        return rm["q_yes"], None
+    q = rm["q_yes"]
+    if p - q > edge:
+        return p, "YES"
+    if q - p > edge:
+        return p, "NO"
+    return p, None
+
+
 BASELINES = {
     "price_follow": (price_follow, {}, False),
     "longshot_fade": (longshot_fade, {}, True),
     "research": (research, {}, True),
+    "cpi_nowcast": (cpi_nowcast, {}, True),   # B1: macro CPI nowcasting vertical
 }

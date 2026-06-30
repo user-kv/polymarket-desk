@@ -125,6 +125,10 @@ PATH=/usr/local/bin:/usr/bin:/bin
 5,35 * * * * root cd /root/polymarket && bash desk/deploy/vm_sync.sh && /root/ptenv/bin/python3 -m institute.cli crypto-snapshot && /root/ptenv/bin/python3 -m institute.cli forecast && /root/ptenv/bin/python3 -m institute.cli crypto-settle && git add institute/data && (git diff --cached --quiet || (git commit -m "auto(institute): $(date -u +\%FT\%TZ)" && git push)) >> /root/polymarket/papertrader/logs/cron_institute.log 2>&1
 # reflective desk cycle daily 14:15 UTC
 15 14 * * * root cd /root/polymarket && bash desk/deploy/vm_sync.sh && /root/ptenv/bin/python3 -m desk.run_cycle && (/root/ptenv/bin/python3 -m desk.export_state || true) && git add desk/memory desk/dashboard_state.json && git commit -m "auto(gcp-cycle): $(date -u +\%FT\%TZ)" && git push >> /root/polymarket/papertrader/logs/cron_cycle.log 2>&1
+# B1: CPI macro-nowcasting vertical -- daily at 12:20 UTC (CPI is monthly; daily
+# re-run picks up newly-listed markets; idempotent on already-snapshotted ones).
+# snapshot freezes p_model from free BLS/FRED data; settle fills y after BLS release.
+20 12 * * * root cd /root/polymarket && bash desk/deploy/vm_sync.sh && /root/ptenv/bin/python3 -m institute.cli cpi-snapshot && /root/ptenv/bin/python3 -m institute.cli cpi-settle && git add institute/data && (git diff --cached --quiet || (git commit -m "auto(cpi): $(date -u +\%FT\%TZ)" && git push)) >> /root/polymarket/papertrader/logs/cron_institute.log 2>&1
 # weekly digest Sunday 09:00 UTC
 0 9 * * 0 root cd /root/polymarket/papertrader && /root/ptenv/bin/python3 papertrader.py weekly >> logs/cron_weekly.log 2>&1
 CRON

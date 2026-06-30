@@ -15,6 +15,7 @@ CELL_FACTORS = {
     "crypto-daily":  {"crypto_beta": 1.0, "macro": 0.3},
     "sports-game":   {"sports": 1.0},
     "econ-release":  {"macro": 1.0},
+    "econ-cpi":      {"macro": 1.0},  # B1: CPI nowcast vertical (CONSTITUTION Seam 2)
 }
 
 
