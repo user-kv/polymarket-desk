@@ -1,3 +1,10 @@
 data/
+# Exception: the live market stores are append-only, irreplaceable decision-time
+# priors (a live q_yes can NEVER be recaptured once a market closes). Persist them
+# in git so a VM rebuild does not reset the Gate-4 lockbox clock to zero.
+!data/
+data/*
+!data/crypto_markets.jsonl
+!data/weather_markets.jsonl
 __pycache__/
 *.pyc
