@@ -94,6 +94,36 @@ Phase 3 (needs engines + template) -> Phase 4 (needs a track record from Phase 3
 - **G3:** approve the premium-data budget at launch (~$350-460/mo) and which feeds.
 - **G4:** approve ANY real-money activation (hard gate, never automated).
 
+## v2 — POST-HARDENING RECONCILIATION (2026-06-30, supersedes conflicts above)
+The red-team pass changed several load-bearing assumptions. Where this section conflicts
+with the phases above, THIS wins:
+- **Favorite-longshot bias is CONTESTED on Polymarket** (SSRN 2025 finds no general
+  market-level FLB here; the robust FLB is on Kalshi). So **B4 is reframed: VALIDATE the
+  behavioral edge on Polymarket's own resolved data BEFORE deploying it venue-wide.** If the
+  null holds, pivot to favorite-underpricing / round-number / overreaction sub-biases. FLB is
+  no longer assumed — it is a hypothesis to test cheaply first. (This is the single biggest
+  change: our presumed "most reliable edge" needs re-confirmation on THIS venue.)
+- **New early verticals (best net-edge-per-build-hour):** GEOPOLITICS (0% taker fee makes
+  thin edges viable) and FDA drug approvals (ADCOM->decision correlation, free, 4-14% net,
+  domain-expertise barrier) move to Tier 1 / Phase 3 front. Macro (CPI/Fed) stays Tier 1.
+- **Engines 3 & 4 DEMOTED, gated on beating cost:** Engine 3 (news swarm) is likely marginal
+  net of token cost except on long-tail illiquid markets — enable per-vertical ONLY after an
+  EV-vs-token-cost check passes. Engine 4 (copy-flow) is likely negative-EV on a cron due to
+  entry slippage — relegate to CONFIRMATION-ONLY until a WebSocket feed exists. So Phase 2
+  order = Engine 1 (quant) + behavioral-validation first; 3 & 4 are provisional.
+- **Risk hardening (Phase 0/4):** add `MACRO_CAP = 0.15` (macro cells co-move; the 25%
+  cluster cap still permits a 25% correlated drawdown and the book-halt fires AFTER the
+  shock). Gate 4 now requires NET-OF-FEE positive EV. Welch-z decay window raised to n>=50.
+- **Cost:** corrected to ~$0.63 base / ~$3 worst-case per 50-market pass; swarm workers =
+  Haiku (not Sonnet); hard per-pass cost circuit breaker required in B5.
+- **EXISTENTIAL pre-live checkpoint (before ANY real money):** AU-via-VPN detection = permanent
+  suspension + FULL balance forfeiture, no appeal. At small bankroll this is a single-event
+  total loss that can exceed all trading edge. The real-money cord (O4) must confront this
+  explicitly — it may argue for staying paper-only, or a different venue/route entirely.
+- **Context/memory (doc 11):** the runtime uses tiered memory (numeric state direct, per-task
+  retrieval, GraphRAG only for periodic meta-learning) — build B5 against that, not naive
+  context-stuffing.
+
 ## Token/continuation note
 The full reasoning lives in 01-08. This roadmap + 99_DECISIONS_LOG are the entry points to
 resume the BUILD. Each `Bn` is a milestone in the proven Opus-spec -> Sonnet-build ->

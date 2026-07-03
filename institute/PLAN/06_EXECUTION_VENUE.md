@@ -1,3 +1,15 @@
+## CHANGELOG
+- **2026-06-30 red-team + hardening pass** (rubric Tiers 1-2):
+  - Elevated VPN/forfeiture risk from a §7 sidebar to the document's primary risk warning. Per 2026 reporting: accounts detected via VPN face **permanent suspension with no appeal process and full balance forfeiture**. This can zero the account independently of trading edge — it dominates all other risks at small capital.
+  - Added concrete 2025-2026 UMA dispute facts: 1,150+ disputes in 2026 YTD; single actor manipulated $7M contract with 25% of UMA voting power; >60% of active UMA voters linked to Polymarket accounts with live positions (conflict-of-interest risk is systemic, not theoretical).
+  - Sized the UMA/oracle risk explicitly: disputed markets can take 4–7 days with an uncertain outcome. At small capital the dollar impact per dispute is manageable but the tail scenario (governance attack on a large position) is real.
+  - Corrected fee rates to 2026 actuals (dynamic fee model effective 3pm ET April 3, 2026).
+  - Removed maker-rebate reliance as a guaranteed cost offset — rebate requires resting in the book; fast-moving markets may fill as taker. Flagged appropriately.
+  - Added KYC escalation path as a distinct risk channel (AU identity → block at withdrawal stage even if not suspended earlier).
+  - POLY_1271 auth bug status updated (still open as of 2026; EOA type 0 recommendation unchanged).
+
+---
+
 # 06 — Execution Venue: Polymarket Reality
 
 **Status:** PLANNING ONLY. No build authorized.
@@ -5,18 +17,36 @@
 
 ---
 
+## !! PRIORITY WARNING: VENUE FORFEITURE RISK !!
+
+**Before reading anything else:** for an AU user accessing Polymarket via VPN, the single largest risk is not a bad trade — it is **account suspension with full balance forfeiture**.
+
+As of May 2026, Polymarket employs device fingerprinting, browser-based detection, behavioural analysis, and VPN IP-range blocking. Accounts detected as originating from a restricted jurisdiction via VPN are subject to **permanent suspension with no appeal process and full fund forfeiture**. [Source: TechRadar, Gizmodo, 2026 reporting; Polymarket ToS §2.1.4]
+
+This event:
+- Is independent of trading edge or gate status.
+- Zeroes the entire balance, not just the current position.
+- Can occur at any time, including during a period of open winning positions.
+- Cannot be appealed under current Polymarket policy.
+
+**At $500 bankroll: this risk is 100% loss of $500.** At any bankroll size, it is a single-event ruin. The mitigations in §7 reduce (not eliminate) detection probability. The decision to go live belongs entirely to the user, made with full awareness of this risk.
+
+On-chain recovery of winning positions (via direct CTF interaction) is theoretically possible but requires advanced smart-contract knowledge and is not reliable when the account/UI is blocked. Do not plan around it.
+
+---
+
 ## 1. Architecture Overview
 
-Polymarket exposes four distinct services. Understanding which to call and when is non-trivial — they have different authentication models, data formats, and update rates.
+Polymarket exposes four distinct services with different auth models, data formats, and update rates.
 
 | Service | Base URL | Auth | Purpose |
 |---|---|---|---|
-| **Gamma API** | `https://gamma-api.polymarket.com` | None | Market discovery, metadata, volume, last prices |
-| **CLOB API** | `https://clob.polymarket.com` | None (reads) / EIP-712 (writes) | Live order book, depth, price history, order placement |
-| **Data API** | `https://data-api.polymarket.com` | None | User positions, trades, leaderboards |
-| **Bridge API** | `https://bridge.polymarket.com` | — | Deposits/withdrawals via fun.xyz |
+| Gamma API | `https://gamma-api.polymarket.com` | None | Market discovery, metadata, volume, last prices |
+| CLOB API | `https://clob.polymarket.com` | None (reads) / EIP-712 (writes) | Live order book, depth, price history, order placement |
+| Data API | `https://data-api.polymarket.com` | None | User positions, trades, leaderboards |
+| Bridge API | `https://bridge.polymarket.com` | — | Deposits/withdrawals via fun.xyz |
 
-**The canonical workflow**: Gamma to discover markets and get token IDs → CLOB for live depth and trade execution → Data API to track positions and PnL.
+**Canonical workflow:** Gamma → discover markets and get token IDs → CLOB → live depth and execution → Data API → track positions and PnL.
 
 ---
 
@@ -24,13 +54,13 @@ Polymarket exposes four distinct services. Understanding which to call and when 
 
 ### 2.1 Key Endpoints
 
-- `GET /markets` — paginated list of all markets. Returns `conditionId`, `slug`, `outcomes`, `outcomePrices`, `clobTokenIds`, `volume24hr`, `liquidity`, `endDate`, and more.
+- `GET /markets` — paginated list. Returns `conditionId`, `slug`, `outcomes`, `outcomePrices`, `clobTokenIds`, `volume24hr`, `liquidity`, `endDate`.
 - `GET /markets/{id}` — single market detail.
-- `GET /events` — event-level grouping (multiple related markets).
+- `GET /events` — event-level grouping.
 
 ### 2.2 The Double-Parse Quirk (Critical)
 
-Gamma ships `outcomes`, `outcomePrices`, and `clobTokenIds` as **JSON-encoded strings** inside the outer JSON object — not as native arrays. The raw response looks like:
+Gamma ships `outcomes`, `outcomePrices`, and `clobTokenIds` as **JSON-encoded strings** inside the outer JSON — not as native arrays:
 
 ```json
 {
@@ -39,26 +69,23 @@ Gamma ships `outcomes`, `outcomePrices`, and `clobTokenIds` as **JSON-encoded st
 }
 ```
 
-If you do `market["clobTokenIds"][0]` you get the character `[`, not the first token ID. You must always double-parse:
+Always double-parse:
 
 ```python
 import json
-token_ids = json.loads(market["clobTokenIds"])   # second parse
+token_ids = json.loads(market["clobTokenIds"])
 prices = [float(p) for p in json.loads(market["outcomePrices"])]
 ```
 
-This is already handled in the existing `papertrader/lib/polymarket.py`. Do not regress it.
+Already handled in `papertrader/lib/polymarket.py`. Do not regress it.
 
-Additional Gamma gotchas:
-- `volume` field is a stringified float — cast before comparison.
-- Pagination uses `limit` + `offset` with no guaranteed stable ordering between calls.
-- Prices returned are share prices in [0,1] range representing implied probability.
+Additional gotchas: `volume` is a stringified float. Pagination uses `limit` + `offset` with no stable ordering. Prices are share prices in [0,1].
 
 ### 2.3 Market Identification
 
-- `conditionId`: identifies the prediction market contract on-chain.
-- `clobTokenIds`: two ERC-1155 token IDs — index 0 = YES outcome, index 1 = NO outcome.
-- For trading, you need the token ID, not the condition ID. The CLOB endpoints operate on token IDs.
+- `conditionId`: on-chain prediction market contract identifier.
+- `clobTokenIds`: two ERC-1155 token IDs — index 0 = YES, index 1 = NO.
+- CLOB endpoints operate on token IDs, not condition IDs.
 
 ---
 
@@ -66,53 +93,41 @@ Additional Gamma gotchas:
 
 ### 3.1 Public Endpoints (No Auth)
 
-- `GET /book?token_id=<id>` — full order book snapshot for a token. Returns bids/asks as arrays of `{price, size}` string pairs.
-- `GET /price?token_id=<id>&side=<BUY|SELL>` — best executable price for a given side.
-- `GET /midpoint?token_id=<id>` — mid between best bid and best ask.
+- `GET /book?token_id=<id>` — full order book snapshot. Returns bids/asks as `{price, size}` string pairs.
+- `GET /price?token_id=<id>&side=<BUY|SELL>` — best executable price.
+- `GET /midpoint?token_id=<id>` — mid between best bid and ask.
 - `GET /spread?token_id=<id>` — current bid-ask spread.
-- `GET /prices-history?market=<token_id>&interval=<1m|1h|1d>` — price history. Note: the query param is named `market` despite taking a token_id (a naming inconsistency in the API).
+- `GET /prices-history?market=<token_id>&interval=<1m|1h|1d>` — price history. Note: param is named `market` despite taking a token_id.
 
-All numeric values in CLOB responses are returned as quoted strings for precision. Always cast to `float` or `Decimal` before arithmetic.
+All CLOB numeric values returned as quoted strings. Always cast to `float` or `Decimal` before arithmetic.
 
 ### 3.2 Authentication (For Order Placement)
 
-Polymarket uses a two-level auth system:
+**L1 (Wallet / Private Key):** Sign an EIP-712 typed message with your Ethereum private key. Proves wallet ownership. Used once to bootstrap L2 credentials.
 
-**L1 (Wallet / Private Key):**
-- Sign an EIP-712 typed message with your Ethereum private key.
-- Proves wallet ownership. Required to derive L2 credentials.
-- Never sent repeatedly; used once to bootstrap.
+**L2 (API Key):** `(apiKey, secret, passphrase)` derived from L1 signature. HMAC-SHA256 signing on API requests. Used for all trading.
 
-**L2 (API Key):**
-- `(apiKey, secret, passphrase)` tuple derived from your L1 signature.
-- HMAC-SHA256 signing on API requests.
-- Used for all trading operations. Can be rotated without re-signing L1.
-
-**Wallet signature types:**
-
-| Type | ID | Use Case |
+| Wallet Type | ID | Use Case |
 |---|---|---|
 | EOA | 0 | Standard hardware/software wallet |
 | POLY_PROXY | 1 | Legacy Magic Link / Google login |
 | GNOSIS_SAFE | 2 | Existing Safe multisig |
-| POLY_1271 | 3 | New users with Polymarket deposit wallets (ERC-1271) |
+| POLY_1271 | 3 | New users with deposit wallets (ERC-1271) |
 
-**Known issue (2026):** POLY_1271 (type 3) users with a fresh EOA + deposit wallet encounter an auth binding problem — the L1 auth signs using the EOA address, producing an API key bound to the EOA, while orders set `signer=deposit_wallet`, causing 401 rejections. Monitor `github.com/Polymarket/py-clob-client-v2/issues/70` for resolution. Use EOA (type 0) with a direct funded wallet to avoid this.
+**Known issue (still open 2026):** POLY_1271 (type 3) users with fresh EOA + deposit wallet encounter an auth binding problem — L1 auth signs using EOA, producing an API key bound to EOA, while orders set `signer=deposit_wallet`, causing 401 rejections. Use EOA (type 0) with a directly funded wallet to avoid this. Monitor `github.com/Polymarket/py-clob-client-v2/issues/70`.
 
 ### 3.3 Order Types
 
 | Type | Code | Behaviour |
 |---|---|---|
-| Good Till Cancelled | GTC | Rests in book until filled or manually cancelled. The standard limit order. |
-| Good Till Date | GTD | Same as GTC but auto-expires at a specified timestamp. |
-| Fill or Kill | FOK | Must fill completely immediately or is cancelled. No partial fills. |
-| Immediate or Cancel | IOC | Fills what it can immediately; any unfilled portion is cancelled. |
+| Good Till Cancelled | GTC | Rests in book until filled or manually cancelled. Default. |
+| Good Till Date | GTD | Same as GTC but auto-expires at a timestamp. |
+| Fill or Kill | FOK | Must fill completely immediately or cancelled. |
+| Immediate or Cancel | IOC | Fills what it can immediately; unfilled portion cancelled. |
 
-For the Institute's use case: **GTC limit orders are the correct default**. They avoid slippage from walking the book, provide maker rebates, and work with the Institute's non-urgent horizon (we are forecasting, not market-making).
+**Use GTC limit orders as the default.** Avoids slippage, earns potential maker rebate, fits the Institute's non-urgent horizon.
 
 ### 3.4 Order Placement
-
-Using `py-clob-client` (the official Python client):
 
 ```python
 from py_clob_client.client import ClobClient
@@ -123,26 +138,21 @@ client = ClobClient(
     chain_id=137,           # Polygon mainnet
     key=PRIVATE_KEY,        # L1 signing key (env var, never hardcoded)
     creds=api_creds,        # L2 creds object
-    signature_type=0,       # Use EOA (type 0) for direct wallet
+    signature_type=0,       # EOA (type 0) for direct wallet
 )
 
 order = client.create_and_post_order(
     OrderArgs(
-        token_id="12345678",   # YES token_id from Gamma
-        price=0.62,            # limit price (share price, not odds)
-        size=50,               # number of shares (= dollars if price ~$1)
+        token_id="12345678",
+        price=0.62,            # share price (0.62 = 62¢ = 62% implied probability)
+        size=50,               # shares (≈ dollars when price ~$1)
         side="BUY",
     ),
-    options=PartialCreateOrderOptions(
-        tick_size="0.01",
-        neg_risk=False,
-    )
+    options=PartialCreateOrderOptions(tick_size="0.01", neg_risk=False)
 )
 ```
 
-Key detail: `price` is the share price (0.62 = paying 62 cents per share = implied 62% probability). `size` is shares, not dollars. Dollar cost = `price × size`.
-
-Batch order placement: up to 15 orders per call (increased from 5 in 2025). Useful for placing multiple concurrent GTC limits.
+`price` is share price; `size` is shares; dollar cost = `price × size`. Batch placement: up to 15 orders per call.
 
 ---
 
@@ -150,147 +160,154 @@ Batch order placement: up to 15 orders per call (increased from 5 in 2025). Usef
 
 ### 4.1 The Token Framework
 
-Polymarket uses the **Conditional Token Framework (CTF)**, an ERC-1155 multi-token contract on Polygon. Each outcome is a distinct ERC-1155 token. When you buy YES shares:
+Polymarket uses the **Conditional Token Framework (CTF)**, ERC-1155 on Polygon. Buying YES shares:
+1. USDC.e moves to CTF collateral pool.
+2. ERC-1155 YES tokens minted to your wallet.
+3. Corresponding NO tokens go to counterparty.
 
-1. USDC.e moves from your wallet to the CTF collateral pool.
-2. ERC-1155 YES tokens are minted and sent to your wallet.
-3. The corresponding NO tokens are sent to your counterparty (or minted from the pool).
+CLOB matches orders off-chain; final atomic swap submitted on-chain via the CTF Exchange contract (audited by ChainSecurity).
 
-The CLOB matches orders off-chain; the final atomic swap is submitted on-chain via the CTF Exchange contract (audited by ChainSecurity).
+### 4.2 The UMA Resolution Process — Sizing the Oracle Risk
 
-### 4.2 The UMA Resolution Process
+When a market reaches resolution date:
 
-When a market's resolution date arrives:
+1. **Proposal:** Whitelisted address (177 addresses as of 2026) posts 750 USDC.e bond and proposes an outcome.
+2. **Challenge window:** 2 hours. ~93% of markets pass unchallenged.
+3. **Unchallenged path:** UMA validates automatically. Winning shares = $1.00; losing = $0.00.
+4. **Challenged path:** Escalated to UMA token holder vote (DVM). Takes 48–96 hours. Resolution 4–7 days total.
+5. **On-chain settlement:** CTF adapter burns tokens and releases USDC.e to your deposit wallet.
 
-1. **Proposal**: Any address from Polymarket's whitelist (177 addresses as of 2026) posts a 750 USDC.e bond and proposes an outcome.
-2. **Challenge window**: 2 hours during which anyone can dispute. ~93% of markets pass unchallenged.
-3. **Unchallenged path**: UMA validates automatically. Payouts begin. Winning shares = $1.00 each; losing shares = $0.00.
-4. **Challenged path**: Dispute escalated to UMA token holders. DVM voting runs 48–96 hours. Resolution typically takes 4–7 days total.
-5. **On-chain settlement**: The CTF adapter burns your ERC-1155 tokens and releases USDC.e collateral. Funds arrive in your Polymarket deposit wallet.
+**Oracle risk is not theoretical — it is live and systemic (2025-2026 facts):**
+- Polymarket logged 1,150+ disputed markets in 2026 YTD, already exceeding the full-year 2025 total. [Source: Polymarket documentation, KuCoin reporting]
+- In March 2025, a single actor using 25% of UMA voting power falsely settled a $7M contract. [Source: The Defiant, CoinDesk]
+- A Wall Street Journal investigation found >60% of active UMA voters could be linked to live Polymarket accounts — voters with financial stakes in markets they are ruling on. Conflict-of-interest is systemic, not isolated. [Source: KuCoin/WSJ reporting]
 
-**Automation implication**: Do not build settlement detection around fixed timestamps. Markets resolve asynchronously after end date. The Institute's settlement module should poll market status via Gamma API until `resolved=true` appears.
+**Sizing this risk at the Institute's scale:**
+- A disputed market freezes your capital for 4–7 days.
+- A manipulated vote could resolve a market against the objectively correct outcome.
+- At $50 per position, the dollar impact of a single bad dispute is bounded. At $500 per position, it is material.
+- **Mitigation:** CELL_CAP of 10% limits single-market exposure. The real concern is a cluster of markets sharing the same resolution event (e.g., all political markets on the same election) — they may dispute simultaneously.
+
+Do not build settlement detection around fixed timestamps. Markets resolve asynchronously. Poll Gamma API for `resolved=true`.
 
 ### 4.3 Gas Fees
 
-Polygon L2 network. Polymarket subsidises most gas fees through meta-transactions. At small scale, gas is not a meaningful cost. There are no deposit or withdrawal fees from Polymarket itself; third-party on-ramps (Coinbase, MoonPay) may charge.
+Polygon L2. Polymarket subsidises most gas via meta-transactions. At small scale, gas is not a meaningful cost.
 
 ---
 
-## 5. Fee Structure
+## 5. Fee Structure (2026 Actuals)
 
-Polymarket uses a **taker-only fee model**. Makers (resting limit orders that provide liquidity) pay zero fees and receive rebates.
+Dynamic fee model effective 3pm ET, April 3, 2026. Taker-only model — makers pay zero fees.
 
-### 5.1 Taker Fees (2026)
+### 5.1 Taker Fees
 
-Fees are calculated per market category, assessed as a fraction of trade value. The formula produces a fee that peaks at the 50/50 price point and goes to zero at prices near 0 or 1.
-
-Approximate fee rates at 50% probability (the maximum):
+Fees peak at the 50¢ price point and fall toward 0% at prices near 0 or 1. Approximate max taker fee rates:
 
 | Category | Max Taker Fee Rate |
 |---|---|
 | Geopolitics / World Events | **0%** (free) |
-| Sports | ~0.75% (~$0.75 per 100 shares at 50¢) |
+| Sports | ~0.75% |
 | Finance / Politics / Tech | ~1.00% |
-| Crypto | ~1.80% (~$1.80 per 100 shares at 50¢) |
 | Economics / Culture / Weather | ~1.25% |
+| Crypto | ~1.80% |
 
-The fee scales down toward 0% as the market price approaches 0 or 1 — meaning deep longshots (the Institute's NO-side strategy) are cheaper to trade than near-50% markets.
+**NO-side longshot strategy (ask ≤ 0.15):** Fee rate at prices near 0.15 is well below the category maximum. The longshot strategy is in the cheap fee zone by design.
 
-**Strategic implication**: Prefer markets in fee-free or low-fee categories when edge is equivalent. The NO-side longshot strategy (ask ≤ 0.15) is in the cheap fee zone by construction.
+**Net-edge requirement:** All Kelly sizing must use net-of-fee edge. See `05_RISK_AND_PORTFOLIO.md §2.4` for the formula.
 
 ### 5.2 Maker Rebates
 
-Limit orders that rest in the book (GTC orders that don't immediately match) receive a rebate of ~20–25% of the taker fee when they get filled. This effectively makes the Institute's preferred order type (GTC limit) a net-positive on fees when providing liquidity.
+GTC limit orders that rest in the book and get filled receive a rebate of ~25% of the taker fee (20% for crypto). Rebates distributed daily; minimum $1 USDC threshold.
 
-**Operational implication**: Always use GTC limit orders, never market orders. This gets you the maker rebate and avoids crossing the spread.
+**Caveat:** Rebate is not guaranteed on every GTC order. If the market moves and your limit is immediately matched as a taker (latent taker), you pay the taker fee. Do not assume maker economics in the sizing model; treat rebate as a positive offset when it accrues.
 
 ---
 
 ## 6. What Is Safely Automatable vs. Must Stay Manual
 
-This is the most important operational table in the document. "Safe" means a bug is recoverable; "must stay manual" means a bug costs real money or legal exposure.
+"Safe" = a bug is recoverable. "Must stay manual" = a bug costs real money or triggers legal exposure.
 
 ### 6.1 Automatable (Safe)
 
 | Operation | Why Safe |
 |---|---|
-| Market scanning (Gamma API reads) | Read-only. No financial consequence. |
-| Order book fetching (CLOB reads) | Read-only. |
-| Forecast computation | Local computation, no side effects. |
-| Gate 1/4 statistical assessment | Read from ledger, write assessment. No orders. |
-| Paper trade ledger writes | Fake money. No on-chain effect. |
-| Price history download | Read-only. |
-| Settlement status polling | Read-only. |
-| Generating order *recommendations* | No order placement; just a signal. |
-| Sending alerts (Telegram/email) | Notification only. |
-| Decay detection | Statistical read of ledger. No orders. |
+| Market scanning (Gamma reads) | Read-only |
+| Order book fetching (CLOB reads) | Read-only |
+| Forecast computation | Local, no side effects |
+| Gate 1/4 statistical assessment | Ledger read, no orders |
+| Paper trade ledger writes | Fake money, no on-chain effect |
+| Settlement status polling | Read-only |
+| Generating order recommendations | Signal only, no placement |
+| Sending alerts (Telegram/email) | Notification only |
+| Decay detection | Statistical ledger read, no orders |
 
 ### 6.2 Automatable with Guards
 
 | Operation | Required Guards |
 |---|---|
-| Placing GTC limit orders | (1) Gate 4 graduated + user sign-off. (2) Position size check vs current bankroll. (3) Duplicate order check before placing. (4) Kill switch in code. (5) Daily loss cap. |
+| Placing GTC limit orders | (1) Gate 4 graduated + user sign-off. (2) Position size check vs current bankroll. (3) Duplicate order check. (4) Kill switch active. (5) Daily loss cap. |
 | Cancelling stale open orders | Only cancel orders the bot placed (track by order ID). Never cancel unknown orders. |
 | Position reconciliation | Read-only; write only to internal ledger. |
 
-### 6.3 Must Stay Manual (Human Required)
+### 6.3 Must Stay Manual
 
 | Operation | Why Manual |
 |---|---|
-| Escalating a strategy from paper to real money | Explicit sign-off rule (see §7). Legal/financial risk. |
-| Moving funds on-chain (deposits/withdrawals) | Irreversible. Private key operations. |
-| Changing Kelly fraction or cap parameters | Parameter change = strategy change; requires Gate 4 re-entry. |
-| Responding to a disputed market resolution | Requires judgement; UMA dispute mechanics are complex. |
-| Any operation during a book-level drawdown halt | Human must review before resuming. |
-| Increasing allocation tier (micro → scale) | Explicit tier promotion gate. |
+| Escalating from paper to real money | Explicit sign-off rule. Legal/financial risk. |
+| Moving funds on-chain (deposits/withdrawals) | Irreversible private key operations |
+| Changing Kelly fraction or cap parameters | Parameter change = strategy change; Gate 4 re-entry required |
+| Responding to a disputed market resolution | UMA mechanics require judgement; automated response could worsen outcome |
+| Any operation during a book-level drawdown halt | Human review required |
+| Increasing allocation tier (micro → scale) | Explicit tier promotion gate |
 
 ---
 
 ## 7. VPN and Operational Realities for an AU User
 
-This section is a candid assessment of the risk, not a recommendation.
+**This section is a candid assessment of risk, not an endorsement or recommendation.**
 
-### 7.1 The Legal Position
+### 7.1 The Legal and ToS Position
 
-Australia restricts access to unlicensed interactive gambling platforms under the Interactive Gambling Act 2001. Polymarket is not licensed in Australia. ACMA (Australian Communications and Media Authority) has directed ISPs to block the site.
+Australia restricts access to unlicensed interactive gambling platforms under the Interactive Gambling Act 2001. Polymarket is not licensed in Australia. ACMA has directed ISPs to block the site.
 
 Using a VPN to access Polymarket from Australia:
-- **Violates Polymarket's Terms of Service** (Section 2.1.4 explicitly prohibits VPN use to bypass geographic restrictions). This is a ToS violation, not necessarily a criminal act, but accounts detected via VPN are subject to permanent suspension and balance forfeiture.
-- **Does not change the legal status of the activity** under Australian law. The user is accessing a blocked service regardless of VPN.
-- **Is the user's explicit, informed choice.** The Institute's build stays fake-money and venue-agnostic. The decision to go live, with full understanding of these risks, belongs entirely to the user.
+- **Violates Polymarket's Terms of Service** (§2.1.4 explicitly prohibits VPN use to bypass geographic restrictions). Detected accounts face **permanent suspension and full balance forfeiture, with no appeal process.**
+- **Does not change the user's legal position** under Australian law.
+- **Is the user's explicit, informed choice.** The Institute's build stays fake-money and venue-agnostic throughout the paper phase. The decision to go live belongs entirely to the user.
 
-### 7.2 Practical VPN Risks
+### 7.2 Practical VPN Risks (2026 Reality)
 
-Polymarket has implemented VPN detection and has been expanding it. Specific risks:
+Polymarket now employs VPN IP-range blocking, device fingerprinting, browser detection, and behavioural analysis. As of May 2026, enforcement is active and expanding.
 
-- **Account suspension**: Detected VPN users face permanent suspension. Funds in an actively resolved position could become inaccessible.
-- **KYC escalation**: Polymarket has added identity verification for some users. A flagged account may be asked to KYC with a photo ID before withdrawal, at which point Australian identity would likely trigger a block.
-- **IP consistency**: Using multiple VPN exit nodes from different countries in the same session may trigger fraud detection.
-- **Withdrawal risk**: If an account is suspended during a period when you have winning positions, recovering the USDC on-chain directly (bypassing the Polymarket interface) is theoretically possible through direct CTF interaction but requires sophisticated smart contract interaction.
+Specific risk channels:
+- **Account suspension + forfeiture:** Permanent, no appeal, full balance. This is the single largest risk.
+- **KYC escalation:** A flagged account may be asked to KYC with photo ID before withdrawal. Australian identity at this stage triggers a block — you cannot withdraw even existing winnings.
+- **IP consistency:** Multiple VPN exit nodes from different countries in the same session may trigger fraud detection.
+- **Open-position suspension:** If suspended while holding winning positions, recovery requires direct CTF interaction (burning ERC-1155 tokens to redeem USDC.e). This is theoretically possible but practically complex and not reliable when the UI/account is blocked.
 
-### 7.3 Mitigations (If User Proceeds)
+### 7.3 Mitigations (If User Proceeds to Live)
 
-These are operational recommendations if the user chooses to go live, not an endorsement:
-
-- Use a single, consistent VPN exit node (same city/country) for all Polymarket interactions.
-- Maintain a low profile: no leaderboard chasing, no unusual activity patterns.
-- Keep individual position sizes small enough that a suspension event doesn't produce a material loss.
-- Maintain a separate funded Polygon wallet. Winning shares are yours on-chain even if the UI is blocked — but interacting with the CTF directly requires technical sophistication.
-- Consider alternatives: Interactive Brokers' ForecastTrader platform is ASIC-licensed and accessible from Australia, though market depth and breadth is far inferior.
+These reduce detection probability; they do not eliminate it:
+- Use a single, consistent VPN exit node (same city/country) for all Polymarket interactions. Never switch nodes mid-session.
+- Maintain a low profile: no leaderboard activity, no unusual trading volume patterns.
+- Keep individual position sizes small enough that a full-account suspension produces a loss the user can absorb. **Do not deposit more than you can afford to lose entirely to a non-trading event.**
+- Maintain a funded Polygon wallet separately. Winning shares exist on-chain even if the UI is blocked — but direct CTF redemption requires technical sophistication.
+- Consider ForecastEx / Kalshi (CFTC-regulated, AU-accessible) as partial alternatives for certain verticals, noting substantially lower market depth and breadth.
 
 ### 7.4 Impact on the Build
 
 The Institute's code stays **venue-agnostic** throughout the paper phase:
 - No hardcoded VPN dependencies.
-- All Polymarket-specific calls are behind the `polymarket.py` client interface.
-- Settlement uses Wunderground (not Polymarket's resolution) for the weather vertical — orthogonal to venue access.
-- The execution layer is designed so a different venue can be substituted.
+- All Polymarket-specific calls behind the `polymarket.py` client interface.
+- Settlement uses Wunderground for the weather vertical — orthogonal to venue access.
+- Execution layer designed for venue substitution.
 
 ---
 
 ## 8. Automation Architecture (When Live)
 
-The minimal safe automation stack for going live, derived from the above constraints:
+The minimal safe automation stack:
 
 ```
 Cron (GCP VM, every 30 min)
@@ -305,7 +322,7 @@ Cron (GCP VM, every 30 min)
   → alert_user()          [notification — safe]
 
 Kill switch: env var LIVE_TRADING_ENABLED=false disables all CLOB writes
-Daily loss cap: if daily_pnl < -DAILY_LOSS_LIMIT, pause all writes until tomorrow
+Daily loss cap: if daily_pnl < -DAILY_LOSS_LIMIT, pause all writes until next day
 ```
 
 The kill switch is not optional. It must be the first check before any CLOB write.
@@ -319,3 +336,6 @@ The kill switch is not optional. It must be the first check before any CLOB writ
 - UMA resolution: `https://docs.polymarket.com/developers/resolution/UMA`
 - py-clob-client: `https://github.com/Polymarket/py-clob-client`
 - Geographic restrictions: `https://help.polymarket.com/en/articles/13364163-geographic-restrictions`
+- Maker rebates: `https://help.polymarket.com/en/articles/13364471-maker-rebates-program`
+- UMA dispute controversy (2025): `https://thedefiant.io/news/markets/usd85m-polymarket-dispute-over-strategy-s-may-bitcoin-sale-puts-uma-s-token-voting-oracle-on`
+- VPN enforcement (2026): `https://www.techradar.com/vpn/vpn-privacy-security/polymarket-blocks-vpns-and-tightens-identity-verification-as-over-30-countries-ban-the-betting-platform`

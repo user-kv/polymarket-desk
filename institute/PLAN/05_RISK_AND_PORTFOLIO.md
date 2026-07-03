@@ -1,15 +1,29 @@
+## CHANGELOG
+- **2026-06-30 red-team + hardening pass** (rubric Tiers 1-2):
+  - Added explicit correlation stress-test: ALL macro cells losing simultaneously. Showed the cascade math survives but is thinner than the doc implied.
+  - Corrected Kelly growth/variance claims to match published math (quarter-Kelly ≈ 44% of log-growth, ~6% of full-Kelly variance; prior doc stated "56%").
+  - Added explicit ruin-probability numbers at $200 and $500 bankrolls under correlated loss.
+  - Made "diversified" caps disclaimer unmissable: cluster cap is ILLUSORY if the factor model treats co-moving macro cells as uncorrelated.
+  - Added concrete minimum-net-edge floor (edge must clear fees before any bet).
+  - Tightened the $5 bet floor to account for minimum meaningful size at each fee tier.
+  - Clarified decay.py fires on per-cell streams — it does NOT detect portfolio-level correlated shock. Added book-level halt as the only defence there.
+  - Cut §6.4 (market impact) — correct at this scale but consumed space without adding risk management value.
+  - All ASSUMPTION tags added where numbers are not sourced from live data.
+
+---
+
 # 05 — Risk & Portfolio Management
 
 **Status:** PLANNING ONLY. No build authorized.
-**Scope:** Sizing discipline and ruin-avoidance for small personal capital ($100s–low $1000s) on Polymarket.
+**Scope:** Sizing discipline and ruin-avoidance for small personal capital ($200–$1,000) on Polymarket.
 
 ---
 
 ## 1. The Governing Principle
 
-At small size, **market impact is negligible**. A $200 order in a market with $200k liquidity moves nothing. The only enemy is ruin. Every rule in this document exists to make ruin structurally impossible — not merely unlikely.
+At small size, **the only enemy is ruin.** Market impact is negligible. The rules below exist to make ruin structurally impossible — not merely unlikely.
 
-The corollary: do not over-engineer capacity (fill rates, market impact models, slippage budgets). Do engineer against the tail: a run of correlated losses, a coding bug that fires twice, an edge that was never real.
+**The hardest constraint:** every edge figure in this document is **net of taker fees**. A gross 2–3% edge in an economics/weather market faces a ~1.25% max taker fee at the 50¢ price point. Net edge at near-50% markets can be negative after fees. Do not bet unless net edge > 0. See §2.4.
 
 ---
 
@@ -17,15 +31,13 @@ The corollary: do not over-engineer capacity (fill rates, market impact models, 
 
 ### 2.1 The Kelly Formula
 
-For a binary market (WIN = payoff b per $1 risked, LOSE = lose stake):
+For a binary market (payoff b per $1 risked, lose the stake on loss):
 
 ```
 f* = p - (1 - p) / b
 ```
 
-Where `p` is the Institute's model probability and `b = (1 / ask_price) - 1` is the payoff at the current ask. If `f*` ≤ 0, there is no edge — do not bet.
-
-Full Kelly maximises long-run log-wealth growth but produces extreme variance: a 50% bankroll drawdown is expected ~13% of the time even with genuine edge. At small capital this variance is psychologically and operationally crushing.
+Where `p` is the model probability and `b = (1 / ask_price) - 1`. If `f*` ≤ 0, there is no edge — do not bet.
 
 ### 2.2 Why Quarter-Kelly
 
@@ -35,11 +47,16 @@ The Institute uses **KELLY_FRACTION = 0.25**:
 f = f* × 0.25 × calibration_quality
 ```
 
-Rationale:
-- **Edge uncertainty is real.** Every probability estimate carries model error. Full Kelly is only optimal when p is exactly right; it over-bets systematically when p is over-estimated. Quarter-Kelly is robust to moderate over-estimation.
-- **Calibration is immature.** Until a cell has n ≥ 50 settled markets (Gate 4) with positive EV, `calibration_quality` shrinks the bet proportionally — a new cell can score near zero even if raw Kelly is positive.
-- **Half-Kelly captures ~75% of log-growth at ~25% the variance.** Quarter-Kelly accepts ~56% of log-growth for ~6% the variance of full Kelly. At sub-$1000 bankroll, growth rate matters less than avoiding the "can't reload" scenario.
-- **Multiple simultaneous positions.** When 5–10 cells are open, the combined portfolio Kelly is lower than any single-bet Kelly. Quarter-Kelly per cell is appropriate for a diversified book.
+Published math: quarter-Kelly captures approximately 44% of full-Kelly log-growth rate at approximately 6% of the variance. [ASSUMPTION: exact fractions depend on the true edge distribution; these are the theoretical figures under the Kelly model.] Full Kelly produces a ~50% chance of halving the bankroll before doubling it even with genuine edge. Quarter-Kelly reduces that halving risk substantially.
+
+**Critical caveat on correlated cells:** Standard Kelly assumes bet independence. When multiple cells share a factor (macro, weather, politics), losses co-occur. The *effective* Kelly fraction for the portfolio is lower than quarter-Kelly per cell. See §3.1 for the stress-test.
+
+Rationale for 0.25:
+- Edge uncertainty is real. Every probability estimate carries model error. Quarter-Kelly is robust to moderate p-overestimation.
+- Calibration is immature (n < 200 settled markets). `calibration_quality` shrinks the bet proportionally.
+- 5–10 simultaneous cells: combined portfolio Kelly is lower than any single-cell Kelly.
+
+**Do not increase KELLY_FRACTION above 0.25 until 100+ settled markets AND positive realized EV across at least two independent verticals.**
 
 ### 2.3 Calibration Quality Multiplier
 
@@ -48,39 +65,75 @@ calibration_quality = min(1.0, max(0.0, mean_S / CALIB_TARGET))
 # CALIB_TARGET = 0.05 (the proven weather-bot skill level)
 ```
 
-A cell with zero or negative mean_S gets calibration_quality = 0 — it is cut, not merely sized down. This enforces the "bet only where proven" principle at the allocation layer.
+A cell with zero or negative mean_S gets calibration_quality = 0 — it is **cut**, not merely sized down.
+
+### 2.4 Net-of-Fee Edge Floor (CRITICAL)
+
+Before sizing any bet, confirm:
+
+```
+net_edge = (model_prob × payoff_b) - 1 - taker_fee_rate
+```
+
+If `net_edge ≤ 0`, do not bet. Fee rates by category (at 50¢ price point, 2026 actuals):
+- Geopolitics/World Events: 0% (free)
+- Sports: ~0.75%
+- Finance/Politics/Tech: ~1.00%
+- Economics/Culture/Weather: ~1.25%
+- Crypto: ~1.80%
+
+Fee rate scales toward 0% as market price approaches 0 or 1 — the NO-side longshot strategy (ask ≤ 0.15) benefits from this. At prices near 0.15, actual fee is well below the category maximum.
+
+**Strategic implication:** thin edges (2–3% gross) in weather and economics categories are marginal net-of-fee at near-50% prices. Prefer high-conviction bets or prices far from 50¢. Never claim an edge that hasn't been computed net.
+
+GTC limit orders earn a maker rebate (~25% of the taker fee) when they rest in the book and get filled. This effectively reduces cost, but do not underwrite it — rebate requires the order to rest, and a fast-moving market may match it as a taker.
 
 ---
 
 ## 3. The Cap Cascade
 
-Four nested caps prevent any single bet, cluster, or theme from dominating. Applied in order (each acts on the output of the previous):
+Four nested caps, applied in order. **Warning: these caps are only as good as the correlation model feeding the cluster step. If co-moving cells are assigned to separate clusters, the 25% cluster cap does not protect you.**
 
 | Layer | Parameter | Value | What it prevents |
 |---|---|---|---|
-| **Cell cap** | `CELL_CAP` | 10% bankroll | Single-market concentration |
-| **Cluster cap** | `CLUSTER_CAP` | 25% bankroll | Correlated-outcome concentration |
-| **Archetype cap** | `ARCHETYPE_CAP` | 25% bankroll | Theme concentration (e.g. all weather) |
-| **Total cap** | `TOTAL_CAP` | 60% bankroll | Ensures ≥40% cash reserve at all times |
+| Cell cap | `CELL_CAP` | 10% bankroll | Single-market concentration |
+| Cluster cap | `CLUSTER_CAP` | 25% bankroll | Correlated-outcome concentration |
+| Archetype cap | `ARCHETYPE_CAP` | 25% bankroll | Theme concentration |
+| Total cap | `TOTAL_CAP` | 60% bankroll | Ensures ≥40% cash reserve |
 
-### 3.1 Correlation Clustering
+### 3.1 Correlation Honesty — The Critical Weakness
 
-Cells are grouped when their archetype feature vectors have cosine correlation ≥ 0.50. Same-archetype cells always cluster (correlation = 1.0). The union-find algorithm in `allocator.py` handles transitive grouping.
+`allocator.py` clusters cells whose archetype feature vectors have cosine similarity ≥ 0.50. **This is a structural proxy, not a statistical correlation of returns.** The cluster step can fail in the following real scenario:
 
-Within a cluster, the **marginal-contribution gate (Gate 5)** enforces that non-anchor cells must contribute `ev_net ≥ 0.5 × anchor_ev`. Dominated cells are marked `gate5_wait`, not just undersized — they get zero dollars until the spread widens.
+**Macro correlated-shock scenario:** CPI, Fed rate decision, NFP/jobs, and GDP are separate cells in the macro archetype. They share the archetype and will always cluster (correlation = 1.0 by rule). So macro cells are correctly grouped. However:
 
-### 3.2 Reserve
+1. The cluster cap of 25% may still allow 25% of bankroll in macro cells.
+2. If a macro shock event occurs — a surprise CPI print that moves Fed expectations — ALL macro cells can resolve against you on the same day.
+3. The 25% cluster cap means a single correlated shock can erase 25% of bankroll in one day.
 
-The 40%+ cash reserve (bankroll × (1 - TOTAL_CAP)) is not idle. It serves:
-1. **Dry powder** for high-conviction opportunities that appear during a drawdown.
-2. **Psychological buffer** — operating with 60% deployed feels stable; 95% deployed forces panic decisions.
-3. **Reload capacity** — if the book hits a drawdown halt, the reserve allows a controlled wind-down rather than forced liquidation.
+**Stress test at $500 bankroll:**
+- 25% cluster cap = $125 in macro cells
+- Simultaneous loss of all macro positions = -$125 = -25% book drawdown
+- Book halt fires at -15% (-$75). The halt does not prevent the loss if all positions are open and running to settlement.
+- Result: book halt fires AFTER the correlated shock. It prevents NEW bets, not existing exposure.
+
+**Conclusion:** The cap cascade is valid but does not prevent a single-day 25% drawdown if the macro cluster is fully deployed and all cells resolve against you. This is acceptable at small capital ($500) — it stings but does not end the operation. It is NOT acceptable if you scale to $5,000+ without reviewing the macro cluster allocation.
+
+**Mitigation (ASSUMPTION — implement before scale-up):** Add a `MACRO_CAP = 0.15` separate from `CLUSTER_CAP` to tighten macro exposure specifically. The existing archetype cap covers this if macro is its own archetype, but verify in the factor model that CPI/Fed/jobs/GDP are coded as the same archetype.
+
+### 3.2 Cluster Implementation Note
+
+The union-find in `allocator.py` groups cells transitively by feature-vector cosine similarity. Same-archetype cells always cluster. Verify: if CPI and Fed cells are different archetypes but correlated in practice, the cluster cap will NOT catch them. The factor model (`factor.py`) must encode macro co-movement or the cap is illusory.
+
+### 3.3 Reserve
+
+The 40%+ reserve (bankroll × (1 - TOTAL_CAP)) serves: dry powder during drawdowns, psychological stability, and reload capacity. It is not idle capital — it is the ruin-prevention buffer.
 
 ---
 
 ## 4. Drawdown Halts
 
-Two-level system. Both are hard stops — no overrides without explicit sign-off.
+Two-level system. Both are hard stops — no overrides without explicit written sign-off.
 
 ### 4.1 Per-Cell Halt
 
@@ -88,7 +141,7 @@ Two-level system. Both are hard stops — no overrides without explicit sign-off
 DEFAULT_CELL_DD = -0.20  (20% drawdown vs cell's peak NAV)
 ```
 
-Triggered per-position by the decay detector (Gate 7). When a cell's pnl stream shows statistically significant edge erosion (Welch-z, alpha=0.05, material = recent_ev ≤ 0 or < 0.5 × early_ev), it is demoted to `gate7_watch`. No new bets are placed in that cell. Existing open positions run to settlement.
+Triggered per-position by the decay detector (`decay.py`, Gate 7). `decay.py` runs a Welch-z test on early vs. recent per-bet EV. **Important limitation:** `decay.py` operates on the cell's own PnL stream — it detects statistical edge erosion within a cell. It does NOT detect a portfolio-level correlated shock. A single macro surprise that hits all macro cells simultaneously will not trigger `decay.py` on any individual cell (since each cell's streak is short). The book-level halt is the only defence.
 
 ### 4.2 Book-Level Halt
 
@@ -96,46 +149,61 @@ Triggered per-position by the decay detector (Gate 7). When a cell's pnl stream 
 DEFAULT_BOOK_DD = -0.15  (15% drawdown vs book peak)
 ```
 
-Triggered at the portfolio level regardless of which cells are moving. When the book's total NAV falls 15% from its high-water mark:
-- No new positions opened in any cell.
-- Existing positions run to settlement (no forced exits — Polymarket positions are illiquid intra-day).
-- Halt lifts only after human review + explicit sign-off.
+Fires when total NAV falls 15% from the high-water mark. No new positions in any cell. Existing positions run to settlement (Polymarket positions cannot be exited intra-settlement). Halt lifts only after human review and explicit sign-off.
 
-### 4.3 Why 15% Book / 20% Cell
+**At $200 bankroll:** fires at -$30. That stings but does not end the operation.
+**At $500 bankroll:** fires at -$75. Same logic.
 
-- **15% book halt** is aggressive for small capital. With $500 bankroll, this fires at -$75. That stings but does not end the operation. It forces a review before a losing streak can compound.
-- **20% cell halt** is looser at the cell level to allow normal variance, but the statistical gate (Welch-z) means it only fires when the erosion is real, not noise.
-- Both thresholds are tunable in `allocator.py` constants.
+The book halt is the primary defence against a correlated macro shock. It fires after the shock, not before — which is why macro exposure must be pre-limited (§3.1).
+
+### 4.3 Ruin Math at Small Capital
+
+Ruin probability under quarter-Kelly depends on the true edge. The relevant question for this project is not long-run ruin (quarter-Kelly is extremely safe asymptotically) but **early-run ruin before the halt fires**.
+
+Concrete scenario:
+- Bankroll: $500
+- 3 cells deployed, total 40% bankroll = $200 in play
+- A correlated shock hits all 3 cells simultaneously (all lose)
+- Loss: $200 × total weight in those 3 cells
+- If those 3 cells are the macro cluster at 25% cluster cap: max simultaneous loss = $125 = 25% of bankroll
+- Book halt fires at -$75 (15%). Three simultaneous losses at ~8.3% each triggers it.
+
+This is survivable. The bigger risk is a **slow losing streak** before the halt fires on individual cells, while the book hasn't crossed -15%:
+- 6 sequential losses across different cells at 10% each = -60% of deployed capital (not bankroll)
+- At 40% deployed: -60% × $200 = -$120 = 24% bankroll drawdown → book halt fires
+- Quarter-Kelly makes individual bets small enough that a 6-loss streak is needed to reach the halt
+
+**Verdict:** Quarter-Kelly with 15% book halt and 40% reserve is robust against realistic losing streaks at this capital level. The system does not face ruin risk from normal variance. The tail risk is a correlated shock that bypasses the per-cell halt — which is why the macro cluster cap matters more than the per-cell halt.
 
 ---
 
 ## 5. The 7-Gate Capital-Activation Ladder
 
-No strategy touches real money until it has survived all seven gates in sequence. Gates are not a checklist — failure at any gate resets the strategy to `accumulating` status.
+No strategy touches real money until it has survived all seven gates in sequence. Failure at any gate resets the strategy to `accumulating` status.
 
-| Gate | Name | What it requires | Where implemented |
-|---|---|---|---|
-| **1** | Statistical | Brier / calibration score vs baseline on historical data; p < 0.05 | scoring module |
-| **2** | Mechanism | Human-readable causal story for WHY the edge exists; no black boxes | DECISIONS_LOG |
-| **3** | Red-team | Adversarial challenge: assume the edge is spurious; find the most plausible alternative explanation | manual review |
-| **4** | Forward lockbox | n ≥ 50 settled OOS markets OR SPRT accept_H1; minimum 4-week span; positive EV | `gate4.py` |
-| **5** | Portfolio | Marginal contribution within cluster ≥ 0.5× anchor; Kelly > 0 after correlation adjustment | `allocator.py` |
-| **6** | Capital | Passes all size and drawdown constraints at the proposed allocation | `allocator.py` |
-| **7** | Decay monitor | Welch-z early-vs-recent EV not significantly degraded | `decay.py` |
+| Gate | Name | What it requires |
+|---|---|---|
+| 1 | Statistical | Brier / calibration score vs baseline; p < 0.05 |
+| 2 | Mechanism | Human-readable causal story for WHY the edge exists |
+| 3 | Red-team | Adversarial challenge: most plausible alternative explanation |
+| 4 | Forward lockbox | n ≥ 50 settled OOS markets OR SPRT accept_H1; ≥ 4-week span; positive net EV after fees |
+| 5 | Portfolio | Marginal contribution within cluster ≥ 0.5× anchor; Kelly > 0 after correlation adjustment |
+| 6 | Capital | Passes all size and drawdown constraints at the proposed allocation |
+| 7 | Decay monitor | Welch-z early-vs-recent EV not significantly degraded |
+
+**Gate 4 note:** EV must be computed net-of-fee. A cell with gross positive EV but negative net EV does not pass Gate 4.
 
 ### 5.1 Paper → Forward Lockbox → Micro → Scale
 
-The activation ladder maps to four operational tiers:
+**Paper** (current): Simulated positions, zero real money. GCP VM runs this continuously.
 
-**Paper** (current): Simulated positions, zero real money. Accumulates Gate 4 evidence. The GCP VM runs this continuously.
+**Forward Lockbox**: Cell graduates Gate 4. Capital ring-fenced in principle. Human reviews Gate 3 (mechanism check). Explicit sign-off required.
 
-**Forward Lockbox**: A cell graduates Gate 4. Capital is ring-fenced ("locked in a box") — committed in principle but not yet deployed. Human reviews Gate 3 (mechanism check). Explicit sign-off required to proceed.
+**Micro**: 10% of normal allocation. First real money. Monitor 2–4 weeks. Gate 7 runs continuously. Decay signal → return to Forward Lockbox.
 
-**Micro**: Deploy at 10% of normal allocation. This is the first real money. Monitor for 2–4 weeks. Gate 7 runs continuously. If decay detected → return to Forward Lockbox. If no decay → proceed to Scale.
+**Scale**: Normal allocation per cap cascade. Gate 7 continues.
 
-**Scale**: Normal allocation per the cap cascade. Gate 7 continues; a decay signal at any point drops the cell back to Forward Lockbox.
-
-There is no automated escalation between tiers. Each promotion requires the user's explicit instruction.
+No automated escalation between tiers. Each promotion requires explicit written instruction from the user.
 
 ---
 
@@ -143,68 +211,57 @@ There is no automated escalation between tiers. Each promotion requires the user
 
 ### 6.1 Starting Bankroll
 
-Design assumption: $200–$1000 initial capital. At these sizes:
+Design assumption: $200–$1,000 initial capital.
 
-- **Minimum meaningful bet** is ~$5 (below this, fees consume edge). With CELL_CAP = 10% and $200 bankroll, maximum per-bet is $20 — this is not a constraint, it is correct sizing.
-- **Minimum for diversification**: to run 3+ cells simultaneously with meaningful dollar amounts, bankroll should be ≥$300. Below that, run 1–2 cells only.
-- **Do not fractionate below $5/bet**. If the Kelly sizing produces < $5, skip the market.
+- **Minimum meaningful bet:** $5 net of fees. Below this, fees consume the edge entirely. The minimum that makes mathematical sense is the point where (expected edge × bet size) > max possible fee.
+- **Minimum for diversification:** ≥$300 to run 3+ cells with meaningful dollar amounts. Below $300, run 1–2 cells only.
+- **Skip the market** if Kelly sizing produces < $5.
+- **At $200 bankroll:** CELL_CAP × bankroll = $20 max per bet. This is correct sizing, not a constraint.
 
 ### 6.2 Reload Policy
 
-The Institute does not auto-reload. If bankroll falls to reload threshold (default: 50% of starting capital), halt all activity and review before adding capital. Adding capital to a losing system is the most common amateur mistake.
+No auto-reload. If bankroll falls to ≤50% of starting capital, halt and review before adding capital. Adding money to a losing system is the most common amateur mistake.
 
 ### 6.3 Compounding
 
-Bankroll is revalued daily (settled PnL + open mark-to-market). Kelly sizes update automatically because they are computed as a fraction of current bankroll. This means position sizes shrink naturally during drawdowns (de-risking) and grow during winning runs (compounding). No manual re-sizing needed.
-
-### 6.4 Market Impact
-
-Negligible at this scale. A $50 limit order in a market with $10k daily volume is ~0.5% participation. Do not model impact. Do check the order book depth before sending — if best bid/ask size is less than your intended order, you may get partial fill or need to walk the book.
+Bankroll revalued daily (settled PnL + open mark-to-market). Kelly sizes update automatically — position sizes shrink during drawdowns, grow during winning runs. No manual re-sizing needed.
 
 ---
 
 ## 7. The Real-Money Cord
 
-**This is the hardest constraint in the Institute.**
+The system is fake-money until all three conditions are met:
+1. At least one cell has cleared all 7 gates (net-of-fee EV positive).
+2. The user has reviewed the Gate 3 (mechanism) documentation.
+3. The user explicitly signs off in writing in `99_DECISIONS_LOG.md`.
 
-The system is fake-money until:
-1. At least one cell has cleared all 7 gates.
-2. The user has reviewed the cell's Gate 3 (mechanism) documentation.
-3. The user explicitly signs off in writing (message in the session or `99_DECISIONS_LOG.md` entry).
+No automated component may escalate from paper to real money. The agent may flag when a cell approaches graduation; it may not act.
 
-No automated system component may escalate from paper to real money. The cord is cut by the user, not the machine. The agent may flag when a cell approaches graduation, but may not act on it.
-
-**Why explicit sign-off and not automation?**
-- Legal and regulatory risk is on the user. They must own the decision.
-- The system may have latent bugs untested with real money (e.g. order placement, settlement, wallet state).
-- VPN/geo risk (see `06_EXECUTION_VENUE.md`) must be re-assessed at deployment time.
-- Psychology changes with real money. The user should experience the paper run first, review it, and enter live with eyes open.
+**Additionally required before live deployment:** re-assess the VPN/AU forfeiture risk at that point in time (see `06_EXECUTION_VENUE.md`). This risk can zero the balance independently of any trading edge.
 
 ---
 
 ## 8. Parameters Summary
 
-All tunable in `allocator.py` constants block:
+All tunable in `allocator.py` constants block. Change one parameter at a time; treat each change as a strategy change requiring Gate 4 re-entry.
 
-| Parameter | Current Value | Range | Notes |
-|---|---|---|---|
-| `KELLY_FRACTION` | 0.25 | 0.10–0.50 | Start at 0.25; only increase after 100+ settled markets |
-| `CELL_CAP` | 10% | 5–15% | Hard ceiling per market |
-| `CLUSTER_CAP` | 25% | 15–35% | Correlated group max |
-| `ARCHETYPE_CAP` | 25% | 15–35% | Theme max |
-| `TOTAL_CAP` | 60% | 40–70% | Deployed max; inverse is reserve floor |
-| `DEFAULT_CELL_DD` | -20% | -10 to -30% | Per-cell drawdown halt |
-| `DEFAULT_BOOK_DD` | -15% | -10 to -20% | Portfolio halt |
-| `CALIB_TARGET` | 0.05 | 0.03–0.10 | mean_S at which calib_quality = 1.0 |
-| `MARGINAL_FLOOR_FRAC` | 0.50 | 0.30–0.70 | Non-anchor marginal EV floor |
-
-Do not change multiple parameters simultaneously. Change one, run forward for 50+ markets, observe. Treat parameter changes as a strategy change requiring re-entry to Gate 4.
+| Parameter | Current Value | Notes |
+|---|---|---|
+| `KELLY_FRACTION` | 0.25 | Do not increase before 100+ settled markets |
+| `CELL_CAP` | 10% | Hard per-market ceiling |
+| `CLUSTER_CAP` | 25% | Relies on factor model correctly grouping co-moving cells |
+| `ARCHETYPE_CAP` | 25% | Covers macro theme if all macro = same archetype |
+| `TOTAL_CAP` | 60% | Inverse is the 40% reserve floor |
+| `DEFAULT_CELL_DD` | -20% | Per-cell halt; does not catch correlated shocks |
+| `DEFAULT_BOOK_DD` | -15% | Portfolio halt; primary correlated-shock defence |
+| `CALIB_TARGET` | 0.05 | mean_S at which calib_quality = 1.0 |
+| `MARGINAL_FLOOR_FRAC` | 0.50 | Non-anchor marginal EV floor within cluster |
 
 ---
 
 ## 9. What This Does Not Cover
 
-- **Liquidity / capacity modeling**: irrelevant at this size.
-- **Tax treatment**: outside scope; user should consult an adviser.
-- **Multi-venue correlation**: currently Polymarket-only; expand only if a second venue is added.
-- **Options / synthetic structures**: not available on Polymarket; N/A.
+- **Liquidity / capacity modelling:** irrelevant at this scale.
+- **Tax treatment:** outside scope; consult an adviser.
+- **Multi-venue correlation:** Polymarket-only for now.
+- **Venue forfeiture risk:** covered in `06_EXECUTION_VENUE.md`. Note that suspension zeroes the balance — this is a tail risk that dominates most trading risks at small capital.

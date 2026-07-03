@@ -1,13 +1,46 @@
 # The Institute — Vertical Template (03)
 
+## CHANGELOG
+- **Data contracts hardened**: every module interface now specifies exact types, nullability,
+  and failure behaviour. Prior version had ambiguous interfaces that required builder
+  guesswork (e.g., `primary_series` return schema unspecified; `ResolvedMarket.stake`
+  had no stated default contract).
+- **Look-ahead made structurally impossible**: `snapshot()` now explicitly passes `now`
+  through to all model calls and data fetches; `distribution_fn` receives `now` as a
+  REQUIRED parameter — models that ignore it are detectable in tests.
+- **Re-forecasting structurally impossible**: `snapshot()` idempotency is now a typed
+  contract (market_id already in store → no-op; error if attempted overwrite).
+- **Pairwise independence audit** added as a mandatory build gate in Module 4, not an
+  optional audit item. Vertical cannot register in gate pipeline until audit passes.
+- **Multiple-testing correction** added to the readiness checklist: when a new vertical
+  is evaluated, the kill threshold is adjusted for the number of verticals live.
+- **Sigma honesty**: sigma floor raised from 0.05 to `max(0.05, vertical_trailing_stdev / 3)`;
+  prevents trivially tight distributions on volatile series.
+- **Non-Normal distribution guidance**: explicit Shapiro-Wilk test required before
+  staying with Normal assumption; do not default to Normal without checking OOS residuals.
+- **Engine 3 budget gate**: added explicit EV-vs-token-cost check before enabling Engine 3
+  for any vertical.
+- **Engine 4 cron warning**: template now blocks Engine 4 as a primary signal on cron-only
+  deployments; relegates it to confirmation-only until WebSocket is live.
+- **Multiple-testing correction**: added Bonferroni-style threshold adjustment to the
+  calibration schedule — the more verticals live, the higher the per-vertical bar.
+- **SPEC.md required content**: expanded to include engine justification, kill criteria,
+  and data contract specification — so each vertical's design is auditable.
+- **Anti-pattern AP8 added**: Normal distribution assumed without residual check.
+- **Customization slots table** updated with explicit data types for each slot input/output.
+- Bloat cut: removed duplicated explanation of two-phase sensor (it is fully defined here
+  once, not twice).
+
+---
+
 **Status:** PLANNING ONLY. Blueprint for stamping out new verticals.
 **Date:** 2026-06-30
 **Generalizes:** weather bot (M1–M5) + CPI vertical (B1) into a reusable anatomy.
 
-A "vertical" is a deep specialist module that covers ONE market archetype end-to-end:
+A "vertical" is a deep specialist module covering ONE market archetype end-to-end:
 data ingestion → model(s) → ensemble → calibrate → parse market questions → snapshot →
 settle → feed Gate pipeline. Every vertical is self-contained, independently testable,
-and plugs into the existing gates + allocator without touching their internals.
+and plugs into gates + allocator without touching their internals.
 
 ---
 
@@ -16,222 +49,294 @@ and plugs into the existing gates + allocator without touching their internals.
 ```
 institute/verticals/<slug>/
     __init__.py
-    data.py         # free no-key fetchers for this vertical's data sources
-    models.py       # 3+ independent forecasters -> (mu, sigma) or (p_i) per question
+    data.py         # all network calls live here; all other modules are pure
+    models.py       # 3+ independent forecasters -> (mu, sigma) or (p_i)
     ensemble.py     # combine models -> predictive distribution or p_model
-    calibrate.py    # per-model RMSE/error weights + bias correction; walk-forward fit
-    parse.py        # market question text + slug -> structured claim (lo, hi, archetype)
+    calibrate.py    # per-model RMSE weights + bias correction; walk-forward only
+    parse.py        # market question text -> structured claim or None
     sensor.py       # two-phase snapshot/settle; the point-in-time honesty contract
-    [adapter.py]    # [optional] settled-row -> ResolvedMarket for the gate pipeline
 
-institute/resolve/<slug>_adapter.py     # ResolvedMarket loader (if not inline)
+institute/resolve/<slug>_adapter.py     # ResolvedMarket loader
 institute/data/<slug>_markets.jsonl     # live store (gitignored with carve-out)
-institute/tests/test_<slug>_*.py        # offline tests, inject all fetchers/fixtures
+institute/tests/test_<slug>_*.py        # offline only; 0 real network calls
 ```
 
-Each component is described in detail in the sections below. The CUSTOMIZATION SLOTS
-mark where each vertical injects its own data, models, and edge engines.
+Each module is described with exact interfaces below. CUSTOMIZATION SLOTS mark where
+each vertical injects its own logic. Everything else is Institute standard — do not
+re-implement or override.
 
 ---
 
 ## Module 1 — `data.py` (fetchers)
 
-**Purpose:** everything that touches the network lives here. All other modules are pure.
+**Contract:** every function that touches the network lives here. All other modules
+are pure. No exceptions.
 
 **Standard interface:**
 ```python
-def _get_json(url, timeout=25, _get=None): ...   # injectable; default = urllib
-def _get_text(url, timeout=25, _get=None): ...   # injectable; default = urllib
+# Injectable _get for testing — do NOT call urllib directly in other modules.
+def _get_json(url: str, timeout: int = 25,
+              _get=None) -> dict | list:
+    """Default: urllib GET, parse JSON. Returns {} on ANY failure. Never raises."""
 
-def primary_series(_get=_get_json) -> list[dict]:   # main data source; OLD->NEW
-def secondary_series(_get=_get_text) -> list[dict]: # backup source; same schema
-def optional_nowcast(_get=_get_text) -> dict|None:  # BEST EFFORT; None on any failure
+def _get_text(url: str, timeout: int = 25,
+              _get=None) -> str:
+    """Default: urllib GET, decode UTF-8. Returns '' on ANY failure. Never raises."""
+
+# --- SLOT D1: Primary data source ---
+def primary_series(_get=_get_json) -> list[dict]:
+    """Fetch main historical series. Returns [] on failure.
+    Each dict MUST contain at least: {"period": str, "value": float}
+    Ordered OLD → NEW. Caller may assume this ordering.
+    """
+
+# --- SLOT D2: Backup / cross-check source ---
+def secondary_series(_get=_get_text) -> list[dict]:
+    """Same schema as primary_series. Used if primary fails or for cross-validation.
+    Returns [] on failure. Never raises.
+    """
+
+# --- SLOT D3: Optional external nowcast (best-effort) ---
+def optional_nowcast(_get=_get_text) -> dict | None:
+    """Returns {"value": float, "source": str} or None on any failure.
+    Callers MUST handle None — ensemble degrades gracefully without it.
+    Never raises.
+    """
 ```
 
-**Rules:**
-- Every function catches ALL exceptions and returns `[]` or `None` on failure.
-  The ensemble MUST degrade gracefully to remaining models.
+**Rules (all mandatory):**
+- Every public function catches ALL exceptions; returns `[]` or `None` on failure.
 - User-Agent header: `institute/1.0`
-- No API key at the free tier. Design the Premium slot as an injectable `_get` override.
-- Pure transform functions (e.g., `mom_pct(levels)`, `parse_csv(text)`) live here too
-  but do not touch the network — they are tested inline.
+- Free tier first: no API key required at the free tier. Premium is an injectable
+  `_get` override.
+- Pure transform functions (`mom_pct()`, `parse_csv()`) live here too but do NOT
+  touch the network. They are testable inline without injection.
 
-**[SLOT D1] Primary data source:**
-- Weather: `Open-Meteo ensemble API` (temperature members, free, no key)
-- CPI: `BLS public API v1` (CPI-U series, free, no key, 25 calls/day)
-- Employment: `BLS establishment survey` (FRED `PAYEMS`, free CSV)
-- Politics: `538 poll aggregator`, Wikipedia infobox, RCP poll averages (all free)
-- Sports: `ESPN unofficial API`, `sportsreference.com` scrape (free), `SportsDB API`
-- Crypto: `CoinGecko API` (free tier, 10-50 calls/min), CMC (free tier)
+**[SLOT D1] Primary data sources by vertical:**
+- Weather: Open-Meteo ensemble API (temperature members, free, no key)
+- CPI: BLS public API v1 (CPI-U series, free, no key, 25 calls/day)
+- Employment: BLS establishment survey / FRED `PAYEMS` (free CSV)
+- Politics: 538 poll aggregator, Wikipedia infobox, RCP poll averages (free)
+- Sports: ESPN unofficial API, sportsreference.com scrape, SportsDB API (free)
+- Crypto: CoinGecko free tier (10–50 calls/min), CMC free tier
 
-**[SLOT D2] Secondary / backup source:**
-- Same data from a different provider. Only used if primary fails OR as a cross-check.
-- CPI: `FRED CSV` (CPIAUCSL, same series, different endpoint). If both agree → high confidence.
-- Weather: `NWS gridpoints API` as a reality-check on Open-Meteo.
+**[SLOT D2] Backup source:** same data, different endpoint.
+- CPI: FRED `CPIAUCSL` CSV (same series, different provider)
+- Weather: NWS gridpoints API (reality-check on Open-Meteo)
 
-**[SLOT D3] Optional third-party nowcast (best-effort):**
-- A pre-built forecast from a credible external source. If absent → ensemble degrades.
-- CPI: Cleveland Fed nowcast (free, no key). Employment: Atlanta Fed Wage Tracker (free).
-- Weather: (not needed — Open-Meteo already IS the ensemble of NWP models).
-- Sports: injury feeds (no universal free source; ESPN injury report page is scrapable).
+**[SLOT D3] Optional nowcast:**
+- CPI: Cleveland Fed nowcast (free, no key)
+- Employment: Atlanta Fed Wage Tracker
+- Weather: not needed — Open-Meteo already IS the NWP ensemble
 
 ---
 
 ## Module 2 — `models.py` (forecasters)
 
-**Purpose:** 3+ independent models, each forecasting the same measurable quantity, each
-returning its own estimate of uncertainty.
+**Contract:** pure functions only. Zero network calls. Each model returns its own
+uncertainty estimate. Each model must be independently testable.
 
-**Standard interface (quant verticals — Engine 1):**
+**Standard interface — quant verticals (Engine 1):**
 ```python
-def model_name(history, **context) -> dict:
-    """Pure function. No network. Returns {"name": str, "mu": float, "sigma": float}.
-    mu    = point forecast of the TARGET quantity (next value, probability, etc.)
-    sigma = model's own error estimate; floored at 0.05.
+def model_name(history: list[dict], now: str, **context) -> dict:
+    """Pure function. No network calls. `now` is the snapshot timestamp (ISO8601Z).
+    Model MUST NOT use any data from history where period > now.
+    Returns {"name": str, "mu": float, "sigma": float}.
+    sigma >= max(0.05, trailing_stdev / 3)  # see sigma floor rule below
+    On insufficient history: return {"name": ..., "mu": 0.0, "sigma": 0.5}
+    Never raises.
     """
 ```
 
-**Standard interface (qualitative verticals — Engine 3):**
+**Standard interface — qualitative verticals (Engine 3):**
 ```python
-def swarm_agent(question, evidence, persona) -> dict:
-    """LLM call (injectable mock for tests).
+def swarm_agent(question: str, evidence: str, persona: str,
+                llm_call=None) -> dict:
+    """LLM call; llm_call is injectable for tests (replaces with mock).
     Returns {"p": float, "rationale": str}.
-    p in (0,1); rationale <= 100 tokens.
+    p in (0, 1). rationale <= 100 tokens.
+    q_yes MUST NOT appear in evidence or persona strings.
+    Never raises; on LLM failure returns {"p": 0.5, "rationale": "fallback"}.
     """
 ```
 
-**[SLOT M1] Model family selection:**
-The critical decision in any vertical. Independence principle: models must use
-STRUCTURALLY DIFFERENT approaches, not just different parameters on the same approach.
+**Sigma floor rule (honesty gate):**
+```python
+def sigma_floor(trailing_values: list[float]) -> float:
+    """Minimum sigma for this vertical, based on observed volatility.
+    floor = max(0.05, stdev(trailing_values[-24:]) / 3)
+    This prevents an overconfident narrow sigma when models happen to agree.
+    """
+```
+A sigma of 0.001 on a CPI vertical claiming certainty to 0.001pp is dishonest.
+Every model's sigma must reflect the historical volatility of the series.
+
+**[SLOT M1] Model family selection — the independence requirement:**
+Models must use STRUCTURALLY DIFFERENT approaches. Different parameters on the same
+model architecture is NOT independence (it will fail the pairwise audit).
 
 ```
-Quant vertical — target diversity matrix:
-  Model A: Mechanistic/structural    (seasonal pattern, domain physics)
-  Model B: Statistical/trailing      (AR, trailing mean — the honest naive anchor)
-  Model C: External/independent      (third-party nowcast, leading indicator, proxy data)
+Target diversity matrix (quant):
+  Model A: Mechanistic/structural  (seasonal pattern, domain physics, ARIMA)
+  Model B: Statistical/trailing    (random walk, trailing mean — honest naive anchor)
+  Model C: External/independent    (third-party nowcast or leading-indicator regression
+                                    using a DIFFERENT INPUT VARIABLE)
 
-Examples by vertical:
-  CPI:         seasonal_ar  |  random_walk      |  Cleveland Fed / PPI-regression
-  Temperature: GFS ensemble |  ECMWF ensemble   |  ICON / UKMO / GEM / AIFS (Open-Meteo)
-  Employment:  seasonal_ar  |  trailing_mean    |  ADP nowcast (free tier)
-  Polling:     RCP avg      |  State-level shift |  Ensemble of poll aggregators
-  Crypto:      ARIMA(p,q)   |  GARCH vol model  |  On-chain metrics regression
+Examples:
+  CPI:         seasonal_ar     |  random_walk       |  Cleveland Fed / PPI-OLS
+  Temperature: GFS ensemble    |  ECMWF ensemble    |  ICON / UKMO / GEM
+  Employment:  seasonal_ar     |  trailing_mean     |  ADP nowcast
+  Polling:     RCP average     |  State-level shift |  Ensemble aggregator
+  Crypto:      ARIMA(p,q)      |  GARCH vol         |  On-chain metrics regression
 
-Qualitative vertical — persona diversity matrix (PolySwarm):
-  10 personas sampled from: base-rate statistician, macroeconomist, contrarian,
+Target diversity matrix (qualitative, Engine 3):
+  10 personas from: base-rate statistician, macroeconomist, contrarian,
   domain expert (archetype-specific), political scientist, geopolitical analyst,
-  tech industry analyst, public health expert, legal analyst, market historian.
-  Each persona WITHHOLDS the current market price q_yes during forecast.
+  tech analyst, public health expert, legal analyst, market historian.
+  Each persona WITHHOLDS q_yes during forecast (blind to market price).
 ```
 
-**[SLOT M2] Error/uncertainty estimation:**
-Each model must produce its OWN sigma (not a shared global sigma). Sources:
-- Historical residuals (walk-forward OOS: compute errors model made on past data).
-- For external nowcasts with no published RMSE: use the vertical's trailing error
-  stdev as a floor.
-- For LLM agents: sigma proxy = inter-agent std of the 10 swarm forecasts.
-Sigma floor: 0.05 (prevents division-by-zero in inverse-RMSE weighting).
+**[SLOT M2] Uncertainty estimation:**
+Each model produces its OWN sigma. Sources:
+- Historical residuals via walk-forward OOS.
+- External nowcast with no published RMSE: use vertical's trailing error stdev as floor.
+- LLM agents: sigma proxy = inter-agent std of 10 swarm forecasts.
+- Sigma floor: `max(0.05, trailing_stdev / 3)` — never return sigma below this.
 
-**Minimum effective model count:**
-- 3 is the minimum for a functional ensemble. Below 3, collapsed diversity is too likely.
+**Model count:**
+- 3 is the minimum. Below 3, diversity collapse is too likely.
 - Target: 3–5 well-diversified models. Beyond 5 quant models, returns diminish.
-- For LLM swarms: 10 agents is the sweet spot (AIA Forecaster finding). 25 sampled from
-  50 persona pool (PolySwarm). Diminishing returns past 10; cost scales linearly.
+- For LLM swarms: 10 agents (budget starting point). AIA finding: diminishing returns
+  past 10; PolySwarm uses 50 for higher coverage at higher cost.
 
 ---
 
 ## Module 3 — `ensemble.py` (combination)
 
-**Purpose:** combine model outputs into a single calibrated predictive distribution or
-probability. Reuses institute-standard code where possible.
+**Contract:** pure functions only. Deterministic given same inputs. No network calls.
 
-**Standard quant interface (reuse from CPI):**
+**Standard quant interface:**
 ```python
-def combine(models, weights, bias=0.0) -> dict:
+def combine(models: list[dict], weights: dict[str, float],
+            bias: float = 0.0) -> dict:
     """Weighted Gaussian mixture.
-    mu*    = sum(w_i * mu_i) - bias
-    sigma* = sqrt( sum(w_i * (sigma_i^2 + (mu_i - mu_raw)^2)) )
-    Returns {"mu": mu*, "sigma": max(sigma*, 0.05)}
+    models: [{"name": str, "mu": float, "sigma": float}, ...]
+    weights: {model_name: float} — need not sum to 1; normalised internally.
+    Returns {"mu": float, "sigma": float}.
+    sigma = max(sqrt(mixture_variance), sigma_floor)
+    If models is empty: return {"mu": 0.0, "sigma": 0.5}
+    Never raises.
+
+    FORMULA:
+      mu_raw  = sum(w_i * mu_i)          [weighted mean before bias]
+      mu*     = mu_raw - bias
+      sigma*  = sqrt( sum(w_i * (sigma_i^2 + (mu_i - mu_raw)^2)) )
+                ^within-model variance   ^across-model disagreement
     """
 
-def bucket_prob(mu, sigma, lo, hi) -> float:
-    """P(lo <= X < hi) for X ~ Normal(mu, sigma). Uses norm_cdf via math.erf."""
+def bucket_prob(mu: float, sigma: float,
+                lo: float | None, hi: float | None) -> float:
+    """P(lo <= X < hi) for X ~ Normal(mu, sigma).
+    lo=None means -inf; hi=None means +inf.
+    Result clipped via scoring.clip to (EPS, 1-EPS).
+    """
 
-def forecast_distribution(history, **context) -> dict:
-    """Glue: call models, calibrate, combine. Returns {"mu","sigma","weights","n_train"}."""
+def forecast_distribution(history: list[dict], now: str,
+                           build_models=None, **context) -> dict:
+    """Glue: call models with `now`, calibrate, combine.
+    `now` is passed through to every model call — models cannot use data after now.
+    Returns {"mu": float, "sigma": float, "weights": dict, "n_train": int}
+    """
 ```
 
-**For non-Normal distributions:**
-Some verticals need non-Gaussian predictive distributions:
-- **Bounded quantity (win probability 0–1)**: use Beta distribution.
-  `combine_beta(alpha_models, beta_models, weights)` → Beta(alpha*, beta*)
-  `bucket_prob_beta(alpha, beta, lo, hi)` → regularized incomplete beta
-- **Count/discrete**: Poisson or NegBin (e.g., goals scored).
-  `combine_poisson(lambda_models, weights)` → weighted lambda*
-- **Categorical**: Dirichlet (e.g., which of 5 candidates wins).
-  Bucket probabilities = Dirichlet marginals per candidate.
+**Distribution honesty check (mandatory before deploying any new vertical):**
+```python
+# In calibrate.py, after fitting OOS residuals:
+from scipy.stats import shapiro  # or pure stdlib alternative
 
-For the Institute's current scope, Normal is correct for most measurable-quantity
-markets (CPI MoM%, temperature °F, economic growth %). Use Normal first; specialize
-only when residuals are clearly non-Normal (test with Shapiro-Wilk on OOS residuals).
+def check_normality(residuals: list[float]) -> bool:
+    """Returns True if Normal assumption is reasonable (p-value > 0.05).
+    If False: flag the vertical for non-Normal ensemble (Beta, Poisson, etc.).
+    Run this on walk-forward OOS residuals before assuming Normal is correct.
+    """
+    if len(residuals) < 8: return True  # too few to test; assume OK
+    stat, p = shapiro(residuals[:50])   # Shapiro-Wilk; cap at 50 for power
+    return p > 0.05
+```
+
+**For non-Normal distributions (use only if normality check fails):**
+- Bounded 0–1 (win probability): Beta distribution. `combine_beta(alpha_i, beta_i, w)`
+- Count/discrete (goals scored): Poisson or NegBin. `combine_poisson(lambda_i, w)`
+- Categorical (which of N candidates): Dirichlet. Marginals per candidate.
+Normal is correct for most economic-quantity markets (CPI MoM%, temperature). Specialize
+ONLY when OOS residuals fail the normality check.
 
 **LLM swarm aggregation:**
 ```python
-def aggregate_swarm(p_list) -> dict:
-    """Simple mean of forecaster probabilities. Returns {"p_swarm", "p_std"}."""
+def aggregate_swarm(p_list: list[float]) -> dict:
+    """Simple mean (budget). Returns {"p_swarm": float, "p_std": float}.
+    DO NOT use debate/LLM-judge aggregation — sycophancy cascade.
+    DO NOT use geometric mean of log-odds unless calibrated from OOS data.
+    Upgrade path: confidence-weighted Bayesian combination (PolySwarm pattern).
+    """
     n = len(p_list)
+    if n == 0: return {"p_swarm": 0.5, "p_std": 0.5}
     p_swarm = sum(p_list) / n
     p_std = (sum((p - p_swarm)**2 for p in p_list) / n) ** 0.5
     return {"p_swarm": p_swarm, "p_std": p_std}
-    # Note: DO NOT use debate/LLM-judge — it overweights outliers and cascades sycophancy
-    # Note: DO NOT use geometric mean of log-odds unless calibrated from data
 ```
 
-**[SLOT E1] Blending rule (model vs market):**
-The AIA/PolySwarm blend: `p_final = w * p_model + (1-w) * q_market`.
-Default w=0.70 (swarm dominates over market). Recalibrate per archetype from OOS data:
-- Liquid, well-traded markets: w→0.30 (market knows more than the model)
-- Illiquid long-tail: w→0.70–0.90 (model adds real independent information)
-- Early paper period: use PolySwarm's 0.70 as a fixed prior; learn from OOS data.
+**[SLOT E1] Model-vs-market blend weight `w`:**
+```python
+# p_final = w * p_model + (1-w) * q_market
+# Default: w = 0.70 (illiquid long-tail markets — model adds real signal)
+# Recalibrate per archetype from OOS data:
+#   Liquid, well-traded: w → 0.30 (market knows more)
+#   Illiquid long-tail:  w → 0.70–0.90
+#   Early paper period:  use 0.70 as fixed prior; update quarterly
+```
 
 ---
 
 ## Module 4 — `calibrate.py` (weight fitting + bias)
 
-**Purpose:** learn from errors. The weather bot's shrinkage calibration pattern, generalized.
+**Contract:** pure, deterministic, walk-forward OOS only. NO in-sample fitting.
+No network calls. Must be testable with injected history.
 
 **Standard interface:**
 ```python
-def fit_weights(history, build_models, min_train=24) -> dict:
-    """Walk-forward OOS. For each period t after min_train:
-       fit each model on data < t, record error vs actual at t.
+def fit_weights(history: list[dict], build_models,
+                min_train: int = 24, now: str = None) -> dict:
+    """Walk-forward OOS ONLY.
+    For each period t after min_train:
+      fit each model on data strictly before t (data[t].period < now), record error.
     Returns {model_name: rmse, "bias": mean_signed_error_of_ensemble}.
-    If history too short: return uniform {name: 1.0} and bias=0.0.
-    Pure, deterministic, no network.
+    If len(history) < min_train: return {name: 1.0 for each model, "bias": 0.0}.
+    Never raises. Never uses future data (now is the guard).
     """
 
-def inverse_rmse_weights(rmse_map) -> dict:
+def inverse_rmse_weights(rmse_map: dict) -> dict:
     """w_i = (1/RMSE_i) / sum(1/RMSE_j).
-    Guards RMSE<=0 with small floor. Sums to 1.
+    RMSE floor: max(RMSE_i, 1e-6) — prevents division by zero.
+    Returns {model_name: float} summing to 1.0.
+    Excludes "bias" key from weight computation.
     """
-```
 
-**Bias correction (weather-bot shrinkage pattern):**
-```python
-def shrinkage_correction(raw_bias, n, K=10):
-    """Bayesian shrinkage: correction = (n/(n+K)) * raw_bias.
-    K=10 means 4 observations → 29% correction. 50 obs → 83%.
+def shrinkage_correction(raw_bias: float, n: int, K: int = 10) -> float:
+    """Bayesian shrinkage: correction = (n / (n + K)) * raw_bias.
+    K=10: at n=4 → 29% applied; at n=50 → 83%.
     Prevents overreaction to small samples.
     """
     return (n / (n + K)) * raw_bias
-```
 
-**Platt extremization (gated until n≥200 per vertical):**
-```python
-def platt_extremize(p, alpha=1.732):
-    """Push probability toward extremes: undoes RLHF hedge-toward-0.5.
-    Only safe when raw p is on the correct side of 0.5.
+def platt_extremize(p: float, alpha: float = 1.732) -> float:
+    """Push probability toward extremes; undoes RLHF hedge-toward-0.5.
     alpha = sqrt(3) ≈ 1.732 (Neyman & Roughgarden 2022).
+    THREE GATES REQUIRED before calling:
+      1. n >= 200 resolved markets for this archetype
+      2. p is on the CORRECT side of 0.5 (caller must verify)
+      3. swarm p_std < 0.20 (high consensus)
+    If any gate fails, return p unchanged.
     """
     import math
     lo = math.log(p / (1 - p))
@@ -239,400 +344,479 @@ def platt_extremize(p, alpha=1.732):
 ```
 
 **[SLOT C1] Calibration schedule:**
-- RMSE weights: refit monthly (or after every 10 new resolved markets).
+- RMSE weights: refit monthly or after every 10 new resolved markets.
 - Bias correction: refit weekly (captures regime drift faster).
-- Platt alpha: fit from data once n≥200, then update quarterly.
-- Model pairwise correlation audit: run after every calibration cycle.
-  If any pair > 0.7, flag the vertical for model diversity review.
+- Platt alpha: fit from data at n≥200; update quarterly thereafter.
+- **Pairwise independence audit**: run after EVERY calibration cycle.
+  If any model pair > 0.70 Pearson correlation on OOS errors → flag for diversity
+  review. Vertical is NOT deployment-ready until this passes.
 
-**[SLOT C2] Recalibration trigger:**
-- Welch-z decay (already built): if a model's OOS Brier degrades significantly vs
-  the baseline, downweight it automatically. The calibration module feeds the gate pipeline.
+**[SLOT C2] Multiple-testing correction:**
+When evaluating whether a vertical is generating real edge:
+```
+Bonferroni-adjusted significance level = 0.05 / (number of live verticals)
+At 5 live verticals:  require p < 0.01 per vertical kill-or-keep decision
+At 10 live verticals: require p < 0.005
+
+Practical rule: the MORE verticals in production, the MORE resolved markets
+required before trusting a kill-or-keep decision. Document the live vertical
+count at the time any kill criterion was evaluated.
+```
+
+**[SLOT C3] Recalibration trigger:**
+If a model's rolling 30-day Brier score degrades by >20% vs its trailing
+12-month baseline, downweight it automatically in the next cycle. Do not
+retire a model on a single bad month — require 3 consecutive degraded months.
 
 ---
 
 ## Module 5 — `parse.py` (question → claim)
 
-**Purpose:** map raw market question text into a structured, typed claim the vertical
-can evaluate. The hardest module to get right; the most important for avoiding mismatches.
+**Contract:** pure function. No network. Conservative: abstain rather than misparse.
+A wrong parse → silent wrong bet. A None return → missed opportunity. The cost
+of a wrong bet vastly exceeds the cost of a missed opportunity.
 
 **Standard interface:**
 ```python
-def parse_market(question: str, slug: str) -> dict|None:
-    """Returns structured claim or None if not parseable by THIS vertical.
-    Conservative: if ambiguous, return None. Better to abstain than misparse.
+def parse_market(question: str, slug: str) -> dict | None:
+    """Map raw market question text to a structured typed claim.
+    Returns None if: question is out of scope for this vertical,
+                     OR ambiguous scope / resolution criterion,
+                     OR indicator cannot be cleanly extracted.
+    Conservative bias: when in doubt, return None.
+    Never raises.
     """
 ```
 
-**[SLOT P1] Claim schema by vertical type:**
+**[SLOT P1] Claim schemas:**
 
 Numeric-range markets (CPI, temperature, jobs, GDP):
 ```python
-{"indicator": str,      # "us_cpi_mom", "dallas_high_f", "nfp_thousands"
- "period": str,         # "2026-07" or "2026-07-04"
- "lo": float,           # lower bound (can be -inf)
- "hi": float,           # upper bound (can be +inf)
- "unit": str}           # "pct", "fahrenheit", "thousands"
+{
+    "indicator":  str,    # "us_cpi_mom" | "dallas_high_f" | "nfp_thousands"
+    "period":     str,    # "2026-07" or "2026-07-04" (ISO date string)
+    "lo":         float,  # lower bound; use float("-inf") for open lower end
+    "hi":         float,  # upper bound; use float("inf") for open upper end
+    "unit":       str,    # "pct" | "fahrenheit" | "thousands"
+    "ambiguity":  str,    # "low" | "medium" | "high" — high → return None
+}
 ```
 
-Binary event markets (politics, sports outcomes):
+Binary event markets (politics, sports, geopolitics):
 ```python
-{"event_type": str,     # "election_winner", "match_outcome", "geopolitical_event"
- "entity": str,         # "Donald Trump", "Manchester City", "NATO_Article5_invoked"
- "outcome": str,        # "YES" / "NO" + description
- "resolution_date": str,# ISO8601
- "ambiguity_level": str}# "low" / "medium" / "high" → if high, return None
+{
+    "event_type":       str,  # "election_winner" | "match_outcome" | "geo_event"
+    "entity":           str,  # "Donald Trump" | "Manchester City" | "NATO_Art5"
+    "outcome":          str,  # "YES" or "NO" + brief description
+    "resolution_date":  str,  # ISO8601
+    "ambiguity_level":  str,  # "low" | "medium" | "high" → high returns None
+}
 ```
 
 **[SLOT P2] Parsing rules:**
-- Numeric precision: "will CPI increase by 0.3%" → bucket [0.25, 0.35) — round to
-  1 decimal means the bucket is ±0.05 around the stated value.
-- "more than X" → lo=X, hi=+inf. "less than X" → lo=-inf, hi=X. "between A and B" → lo=A, hi=B.
-- Month/date extraction: maintain a MONTHS dict + current-year context.
-- Abstain conservatively: "UK CPI", "China CPI", "PCE deflator" → None for the US CPI
-  vertical. Scope is load-bearing — wrong parse means wrong bet.
-- Ambiguous resolution criteria (e.g., "significant" conflict, "major" announcement):
-  return None. Ambiguity transfers to the question, not the forecast.
+- "≥0.3%" → bucket [0.25, 0.35) — 1 decimal place means ±0.05 around stated value.
+- "more than X" → lo=X, hi=float("inf"). "less than X" → lo=float("-inf"), hi=X.
+- "between A and B" → lo=A, hi=B.
+- Return None for: UK CPI, China CPI, PCE deflator (not the same vertical as US CPI).
+- Return None for: "significant conflict", "major announcement" (ambiguous resolution).
+- Return None for: any question where the resolution criterion is not objectively
+  verifiable from a named public source.
 
 ---
 
 ## Module 6 — `sensor.py` (the two-phase honest contract)
 
-**Purpose:** the structural moat. SNAPSHOT freezes the forecast at decision time from
-data available THEN. SETTLE fills the outcome after resolution. The two phases NEVER
-share data in either direction.
+**This is the Institute's structural moat. Break this contract and every backtest
+becomes a phantom. Read it fully before building anything.**
 
+```
+TIME AXIS:
+────────────────────────────────────────────────────────────────
+t0            t_now (cron)   t_resolution    t_settle (cron)
+│                 │                │                │
+│ Market listed   │ SNAPSHOT       │ Event resolves │ SETTLE
+│ on Polymarket   │ (write-once)   │ officially     │ (fill y only)
+└─────────────────┴───────────────────────────────┴─────────────
+
+SNAPSHOT (write-once):
+  - Data: only data with period < now is used. Models receive `now` explicitly.
+  - Runs models + ensemble → p_model
+  - Freezes p_model + all inputs into row at t_now
+  - Writes to jsonl store; row is IMMUTABLE after write
+  - Idempotency: market_id already in store → skip. Never re-forecast. EVER.
+  - Does NOT know the outcome. q_yes is the only market signal used.
+
+SETTLE (fill y only):
+  - Reads the official published outcome after resolution
+  - Fills y=0 or y=1 in the row
+  - NEVER alters p_model, q_yes, or any meta frozen at snapshot
+  - NEVER re-runs models
+  - NEVER passes outcome data back to any model or calibration function
+
+THE LAW: p_model is computed ONCE, from data before t_resolution, and FROZEN.
+Settle fills y. There is zero information flow from outcome to forecast.
+```
+
+**SNAPSHOT schema:**
 ```python
 OPEN_ROW_SCHEMA = {
-    "market_id": str,
-    "archetype": str,               # "econ-cpi", "weather-dallas", "politics-us"
-    "t0": "ISO8601Z",               # snapshot timestamp — FROZEN
-    "q_yes": float,                 # market price at t0 — FROZEN
-    "question": str,
-    "end_date": "ISO8601Z",
-    "status": "open",               # → "settled" after resolve
-    "y": None,                      # → 0 or 1 after settle
-    "settled_ts": None,             # → ISO8601Z after settle
+    "market_id":   str,           # unique per market
+    "archetype":   str,           # "econ-cpi" | "weather-dallas" | "politics-us"
+    "t0":          str,           # ISO8601Z — snapshot timestamp, FROZEN
+    "q_yes":       float,         # market price at t0, FROZEN
+    "question":    str,
+    "end_date":    str,           # ISO8601Z
+    "status":      "open",        # → "settled" after resolve
+    "y":           None,          # → 0 or 1 (int) after settle; never float
+    "settled_ts":  None,          # → ISO8601Z after settle
     "meta": {
-        # Vertical-specific frozen forecast:
-        "p_model": float,           # final calibrated model probability
-        "forecast_ts": "ISO8601Z",  # when p_model was computed
-        # Engine 1 fields (quant verticals):
-        "mu": float, "sigma": float, "weights": dict, "n_train": int,
-        # Engine 3 fields (LLM verticals):
-        "p_swarm": float, "p_std": float, "p_supervisor": float,
-        # Vertical-specific parsed claim:
-        "indicator": str, "period": str, "lo": float, "hi": float,
-        # Everything else the vertical needs for settle:
-        "slug": str
+        "p_model":        float,  # final calibrated probability, FROZEN
+        "forecast_ts":    str,    # ISO8601Z when p_model was computed
+        # Engine 1 fields:
+        "mu":       float,
+        "sigma":    float,
+        "weights":  dict,         # {model_name: float}
+        "n_train":  int,
+        # Engine 3 fields:
+        "p_swarm":      float,
+        "p_std":        float,
+        "p_supervisor": float,
+        # Parsed claim (vertical-specific):
+        "indicator": str,
+        "period":    str,
+        "lo":        float,
+        "hi":        float,
+        "slug":      str,
     }
 }
 ```
 
-**SNAPSHOT function:**
+**SNAPSHOT function contract:**
 ```python
-def snapshot(store_path, fetch_fn, distribution_fn, now=None):
+def snapshot(store_path: str,
+             fetch_fn: Callable[[], list[dict]],
+             distribution_fn: Callable[[dict, str], dict],
+             now: str = None) -> list[dict]:
     """For each new active market not already in store:
-      1. parse_market() → structured claim; skip if None
-      2. distribution_fn(claim, now) → {mu, sigma, p_model, ...}  [POINT IN TIME]
+      1. parse_market(q["question"], slug) → claim; skip if None
+      2. distribution_fn(claim, now) → {mu, sigma, p_model, ...}
+         `now` is passed explicitly; distribution_fn MUST NOT use data after now.
       3. Freeze p_model + claim into meta; set t0=now, status="open", y=None
-      4. Append to store (jsonl); return new rows
+      4. Append to store (jsonl); return new rows written this run
 
-    IDEMPOTENT: market already in store → skip. Never re-forecast.
-    distribution_fn uses only data available at `now`. Never looks forward.
+    IDEMPOTENCY CONTRACT:
+      - If market_id already in store: skip unconditionally. No update. No re-forecast.
+      - Raise ValueError if caller attempts to force-overwrite an existing market_id.
     """
-```
 
-**SETTLE function:**
-```python
-def settle(store_path, resolve_fn, now=None):
+def settle(store_path: str,
+           resolve_fn: Callable[[dict], int | None],
+           now: str = None) -> list[dict]:
     """For each open row past end_date:
       1. resolve_fn(row) → y in {0, 1} or None (not yet published)
-      2. If y is not None: set status="settled", y=y, settled_ts=now; overwrite
-      3. Return settled rows
+      2. If y is int: set status="settled", y=y, settled_ts=now; overwrite row
+      3. Return rows settled in this run
 
-    POINT-IN-TIME: resolve_fn reads the ACTUAL OUTCOME from an official source.
-    y is NEVER read during snapshot. The two phases are structurally isolated.
+    CONTRACT:
+      - resolve_fn MUST NOT alter p_model, q_yes, or any meta field.
+      - resolve_fn returns None on error; settle retries on next cron run.
+      - NEVER re-runs models; NEVER passes outcome to calibration.
     """
 ```
 
 **[SLOT S1] fetch_active markets:**
-- Gamma API: `GET gamma-api.polymarket.com/markets?active=true&closed=false&order=volume`
-- Parse clobTokenIds (double-parse quirk — see polymarket.py); parse outcomePrices.
-- Filter by `parse_market()` returning non-None AND valid prices.
-- Default page size 100, paginate up to max_pages=15.
-
-**[SLOT S2] resolve function (vertical-specific):**
-Each vertical implements its own truth source:
 ```python
-def resolve_<slug>(row, source_fn=None) -> int|None:
-    """Read the official published outcome for row["meta"]["period"].
-    Returns 1 if claim resolved YES, 0 if NO, None if not yet published.
-    On error: return None (retry next run). NEVER raise.
-    """
+# Gamma API: GET gamma-api.polymarket.com/markets?active=true&closed=false&order=volume
+# Parse clobTokenIds (double-parse quirk — see polymarket.py::parse_clob_token_ids)
+# Parse outcomePrices (JSON string in JSON)
+# Filter: parse_market() returning non-None AND 0 < q_yes < 1
+# Pagination: default page_size=100, max_pages=15
+# Return: [{"market_id": str, "q_yes": float, "question": str, "end_date": str}, ...]
 ```
-Examples:
-- CPI: BLS series → compute realized MoM%; compare to [lo, hi).
-- Weather: Wunderground historical high for the city+date.
-- NFP: BLS employment situation release.
-- Election: AP/Reuters projected winner.
+
+**[SLOT S2] resolve function — one per vertical:**
+```python
+def resolve_<slug>(row: dict, source_fn=None) -> int | None:
+    """Read the official published outcome for row["meta"]["period"].
+    Returns: 1 if claim resolved YES, 0 if NO, None if not yet published.
+    On error: return None (retry on next run). NEVER raise.
+    source_fn is injectable for tests (replaces real HTTP call).
+    MUST use data published AFTER row["end_date"] — never proxy a pre-event source.
+    """
+
+# Examples by vertical:
+# CPI:     BLS series → compute realized MoM%; compare to [lo, hi)
+# Weather: Wunderground historical high for city+date
+# NFP:     BLS employment situation release
+# Election: AP/Reuters projected winner
+```
 
 **[SLOT S3] Cron schedule:**
-- Monthly release verticals (CPI, NFP): daily cron; snapshot picks up new markets;
-  settle checks for new prints daily after release date.
-- Daily event verticals (weather): daily cron; settle fills the previous day's outcome.
-- Binary event markets (politics, sports): daily cron; settle after resolution date.
+- Monthly releases (CPI, NFP): daily cron; snapshot picks up new markets; settle
+  checks for new prints daily after release date.
+- Daily events (weather): daily cron; settle fills previous day's outcome.
+- Binary events (politics, sports): daily cron; settle after resolution date.
+
+**Engine 3 foreknowledge defense (additional gate for agentic search):**
+```python
+# For each search result r from agentic worker:
+if r["published_at"] > now:      # t0 is our snapshot `now`
+    discard(r)                   # post-event data; cannot use
+# AIA contamination rate: ~1.65% of results are post-event.
+# LLM-as-judge check: "Was this publicly available before [now]? YES/NO."
+# Discard if judge answers NO or is uncertain.
+# Cost of skipping: phantom backtest +20–30% vs live performance.
+```
 
 ---
 
 ## Module 7 — `adapter.py` / `resolve/<slug>_adapter.py`
 
-**Purpose:** translate the vertical's settled rows into the standard `ResolvedMarket`
-format consumed by the gate pipeline and baselines.
+**Contract:** pure function. No network. Translates settled rows to `ResolvedMarket`
+format for the gate pipeline. Skips open rows silently.
 
 ```python
-def load_rows(store_path=DEFAULT_STORE) -> list[dict]:
-    """Settled rows with int y → ResolvedMarket dicts.
-    Empty/missing store → [].  No network.
+# ResolvedMarket schema (gate pipeline contract — do NOT modify):
+RESOLVED_MARKET = {
+    "market_id":     str,
+    "archetype":     str,
+    "t0":            str,      # ISO8601Z
+    "q_yes":         float,
+    "y":             int,      # 0 or 1; never None here
+    "realized_pnl":  None,     # float — filled by ledger post-execution
+    "realized_side": None,     # "YES" | "NO" — filled by ledger
+    "stake":         1.0,      # float — default 1.0 until ledger fills it
+    "meta":          dict,     # all frozen forecast fields from sensor row
+}
+
+def load_rows(store_path: str = DEFAULT_STORE) -> list[dict]:
+    """Return settled rows as ResolvedMarket dicts.
+    Open rows (y is None): silently excluded.
+    Missing/empty store: return [].
+    Never raises.
     """
-    # ResolvedMarket schema:
-    return [{
-        "market_id": row["market_id"],
-        "archetype": row["archetype"],
-        "t0": row["t0"],
-        "q_yes": row["q_yes"],
-        "y": row["y"],          # 0 or 1 (int)
-        "realized_pnl": None,   # filled by ledger after real execution
-        "realized_side": None,
-        "stake": 1.0,
-        "meta": row["meta"]     # all frozen forecast fields ride in meta
-    } for row in _load_settled(store_path)]
 ```
 
-**[SLOT A1] Gate pipeline registration:**
+**[SLOT A1] Gate pipeline registration (four steps, all required):**
 ```python
-# map/baselines.py — add the vertical's baseline:
-def <slug>_baseline(rm, edge=0.05):
+# 1. map/baselines.py — add the vertical's baseline function:
+def <slug>_baseline(rm: dict, edge: float = 0.05) -> tuple[float, str | None]:
     p = rm.get("meta", {}).get("p_model")
-    if p is None: return rm["q_yes"], None
+    if p is None: return rm["q_yes"], None   # no forecast → abstain
     q = rm["q_yes"]
     if p - q > edge: return p, "YES"
     if q - p > edge: return p, "NO"
     return p, None
 
 BASELINES["<slug>"] = (<slug>_baseline, {}, True)
-BASELINE_MECHANISM["<slug>"] = ("model_vs_crowd", "<description>")
+BASELINE_MECHANISM["<slug>"] = ("model_vs_crowd", "<one-line description>")
 
-# resolve/__init__.py — add to load_all_rows():
+# 2. resolve/__init__.py — add to load_all_rows():
 from institute.resolve.<slug>_adapter import load_rows as load_<slug>
 rows += load_<slug>()
 
-# factor.CELL_FACTORS — add archetype correlation:
+# 3. factor.CELL_FACTORS — add archetype correlation group:
 "<archetype>": {"<correlation_group>": 1.0}
-# e.g., "econ-cpi": {"macro": 1.0}; "weather-dallas": {"weather": 1.0}
+# Examples: "econ-cpi": {"macro": 1.0}; "weather-dallas": {"weather": 1.0}
+# Correlation group is used for portfolio stress-test (correlated drawdown check).
+
+# 4. Register kill criterion in kill_registry (see § below).
 ```
 
 ---
 
-## The point-in-time two-phase honesty pattern (in detail)
+## Kill criterion registry (mandatory per vertical)
 
-This is the Institute's structural moat. Understand it fully before building anything.
+Each vertical registers a pre-set kill criterion BEFORE it receives live capital.
+Kill criteria are evaluated against OOS data only. They CANNOT be modified once set.
 
+```python
+KILL_REGISTRY = {
+    "<slug>": {
+        "metric":          "brier_ratio",        # "brier_ratio" | "win_rate" | "mean_S"
+        "threshold":       1.0,                  # kill if metric >= threshold (brier_ratio)
+        "sample_size":     50,                   # resolved markets required before kill eval
+        "comparison_base": "longshot_fade",      # baseline to compare against
+        "set_at":          "2026-06-30",         # date criterion was registered
+        "live_verticals_at_set": 2,              # for Bonferroni correction audit
+    }
+}
+# Kill criterion evaluation:
+# brier_ratio = vertical_brier / longshot_fade_brier on SAME resolved market set.
+# If brier_ratio >= 1.0 AND n >= sample_size: halt deployment of this vertical.
+# Do NOT expand sample_size to rescue a failing vertical. The criterion is frozen.
 ```
-TIME AXIS:
-─────────────────────────────────────────────────────────────────────────
-t0           t_now (cron)    t_resolution      t_settle (cron)
-│                │                 │                  │
-│  Market listed │  SNAPSHOT       │  Event resolves  │  SETTLE
-│  on Polymarket │  runs here      │  officially      │  runs here
-└────────────────┴────────────────────────────────────┴──────────────────
-
-SNAPSHOT:
-  - Fetches ALL data available at t_now (BLS, FRED, Open-Meteo, news, etc.)
-  - Runs models + ensemble → p_model
-  - FREEZES p_model + all inputs into the row as-of t_now
-  - Writes to jsonl store; row is IMMUTABLE after this point
-  - Does NOT know the outcome; q_yes is the only market signal used
-
-SETTLE:
-  - Reads the official published outcome (BLS, Wunderground, AP, etc.)
-  - Fills y=0 or y=1 in the row
-  - NEVER alters p_model, q_yes, or any meta frozen at snapshot
-  - NEVER re-runs the models; just resolves what was already frozen
-
-THE LAW: p_model for a market is computed ONCE, from data before t_resolution,
-and FROZEN. The settle phase ONLY fills y. There is no information flow from
-outcome to forecast in any direction.
-
-WHY THIS MATTERS:
-  1. Backtests are honest: replay any run using historical data at t0. No lookahead.
-  2. Competitor moat: a competitor cannot reconstruct our frozen priors retroactively
-     because they don't know what data was available at t0 (we logged it).
-  3. Live/paper parity: the live system and the paper backtest run identical code.
-```
-
-**Foreknowledge defense (Engine 3 specific):**
-When the agentic search fetches news, each result must be checked:
-```
-For each search result r:
-  published_at = r["published_at"]  # from RSS/API
-  if published_at > t0:
-      discard(r)  # post-event data — cannot use
-  if published_at > t_resolution:
-      log_anomaly(r)  # search engine may be serving live results
-```
-AIA Forecaster found ~1.65% contamination in live runs. The LLM-as-judge check:
-`"Was this information publicly available before [t0]? Answer YES or NO."` — discard
-any result where the judge says NO or is uncertain.
 
 ---
 
-## Customization slots summary (blueprint for new vertical builders)
+## Edge engine fit by market type
 
-| Slot | What to customize | Where |
-|------|------------------|-------|
-| D1 | Primary data source URL + parser | `data.py` |
-| D2 | Backup data source | `data.py` |
-| D3 | Optional external nowcast | `data.py` |
-| M1 | 3+ independent model families | `models.py` |
-| M2 | Per-model sigma estimation method | `models.py` |
-| E1 | Model-vs-market blend weight w | `ensemble.py` |
-| P1 | Claim schema (numeric vs binary) | `parse.py` |
-| P2 | Parsing rules + ambiguity policy | `parse.py` |
-| S1 | Market discovery filter | `sensor.py` |
-| S2 | Official resolve source + logic | `sensor.py` |
-| S3 | Cron cadence (daily / monthly / on-demand) | `sensor.py` |
-| A1 | Baseline name + Gate registration | `adapter.py` + `baselines.py` |
-| C1 | Calibration schedule | `calibrate.py` |
-| C2 | Recalibration trigger criteria | `calibrate.py` |
+Every vertical MUST explicitly declare which engines are active and why in SPEC.md.
 
-**Invariants that MUST NOT be customized (they are the Institute standard):**
+| Market type | Engine 1 (Quant) | Engine 2 (Bias) | Engine 3 (News) | Engine 4 (Copy) |
+|------------|-----------------|-----------------|-----------------|-----------------|
+| Economic releases (CPI, NFP) | PRIMARY | anchor check | optional if liquid | confirmation only |
+| Weather / physical quantity | PRIMARY | bias check | not used | not used |
+| Political elections | not primary | horizon compression, FLB | PRIMARY | confirmation only |
+| Sports outcomes | partial (stats) | FLB on longshots | PRIMARY | confirmation only |
+| Geopolitics | rare | FLB | PRIMARY (GDELT, wire) | not typical |
+| Crypto / price | partial (GARCH) | FLB, overreaction | supplemental | HIGH (on-chain flow) |
+| Science / replication | not typical | FLB on longshots | PRIMARY (arXiv) | not typical |
+| Culture / entertainment | not typical | FLB | PRIMARY | not typical |
+
+**Engine 3 budget gate:** before enabling Engine 3 for any vertical, estimate:
+`expected_EV_per_bet × projected_bets_per_run > token_cost_per_run`
+If not clearly positive at paper-trade EV estimates: use Engine 2 only until Engine
+3 proves its edge on the first 50 resolved markets.
+
+**Engine 4 cron restriction:** Engine 4 is a CONFIRMATION signal only on cron-cycle
+deployments. It CANNOT be the primary signal source without WebSocket implementation.
+See 02_EDGE_ENGINES.md §Engine 4 for the entry-slippage argument.
+
+---
+
+## Standard test harness (offline, deterministic — zero real network calls)
+
+Every vertical MUST pass `pytest institute/tests -q` fully offline. All fetchers and
+LLM calls are injectable. A test that calls a real API is not a test.
+
+```python
+# Standard fixture pattern:
+FAKE_SERIES = [{"period": f"2024-{i:02d}", "value": 0.2 + i * 0.01}
+               for i in range(1, 25)]
+
+def fake_fetch_json(url, timeout=25): ...    # returns FAKE_SERIES wrapped in BLS schema
+def fake_distribution(claim, now=None):      # replaces forecast_distribution
+    return {"mu": 0.3, "sigma": 0.05, "p_model": 0.42,
+            "forecast_ts": now, "weights": {}, "n_train": 20}
+
+def test_snapshot_idempotent(tmp_path):
+    store = str(tmp_path / "test.jsonl")
+    fake_markets = [{"market_id": "m1", "q_yes": 0.35,
+                     "question": "Will CPI be 0.3%?",
+                     "end_date": "2026-08-01T00:00:00Z"}]
+    n1 = sensor.snapshot(store, fetch=lambda: fake_markets,
+                         distribution=fake_distribution, now="2026-07-01T00:00:00Z")
+    assert len(n1) == 1
+    n2 = sensor.snapshot(store, fetch=lambda: fake_markets,
+                         distribution=fake_distribution, now="2026-07-02T00:00:00Z")
+    assert len(n2) == 0  # idempotent
+
+def test_settle_does_not_alter_p_model(tmp_path):
+    # snapshot → settle → assert meta["p_model"] unchanged
+    ...
+
+def test_now_is_respected_by_models(tmp_path):
+    # pass now="2024-06-01", inject history that includes 2024-07 data;
+    # assert model output equals result with history[:cutoff] only.
+    # This is the look-ahead impossibility test.
+    ...
+```
+
+**Required test coverage per vertical:**
+1. `parse.py`: all phrasings → correct claim; ambiguous/out-of-scope → None
+2. `models.py`: each model returns finite mu + sigma ≥ sigma_floor; fallback is safe;
+   model with `now` set to early date does not use future data
+3. `ensemble.py`: weights sum to 1; bucket_prob over (-inf, inf) ≈ 1; disagreement widens sigma
+4. `calibrate.py`: walk-forward; shrinkage formula; pairwise audit returns False on correlated pair
+5. `sensor.py`: snapshot idempotency; settle isolation (p_model unchanged); past-end-date settle;
+   ValueError on forced overwrite attempt
+6. `adapter.py`: settled rows → ResolvedMarket; open rows excluded; empty store → []
+
+---
+
+## Customization slots reference
+
+| Slot | What to customize | Module | Input type | Output type |
+|------|------------------|--------|------------|-------------|
+| D1 | Primary data source URL + parser | `data.py` | url: str | list[dict] with "period", "value" |
+| D2 | Backup data source | `data.py` | url: str | same schema as D1 |
+| D3 | Optional external nowcast | `data.py` | url: str | {"value": float, "source": str} or None |
+| M1 | 3+ independent model families | `models.py` | history: list[dict], now: str | {"name", "mu", "sigma"} |
+| M2 | Per-model sigma estimation | `models.py` | OOS residuals: list[float] | sigma: float >= sigma_floor |
+| E1 | Model-vs-market blend weight w | `ensemble.py` | archetype: str | w: float in [0.3, 0.9] |
+| P1 | Claim schema (numeric vs binary) | `parse.py` | question: str | dict or None |
+| P2 | Parsing rules + ambiguity policy | `parse.py` | question: str | None if ambiguous |
+| S1 | Market discovery filter | `sensor.py` | market batch: list[dict] | filtered list[dict] |
+| S2 | Official resolve source + logic | `sensor.py` | row: dict | 0, 1, or None |
+| S3 | Cron cadence | deployment config | — | cron expression |
+| A1 | Baseline + Gate registration | `adapter.py` + `baselines.py` | — | registered in 4 places |
+| C1 | Calibration schedule | `calibrate.py` | — | RMSE, bias, audit cadence |
+| C2 | Multiple-testing correction | `calibrate.py` | n_live_verticals: int | adjusted threshold |
+| C3 | Recalibration trigger | `calibrate.py` | rolling Brier delta | downweight trigger |
+
+**Invariants — MUST NOT be customized:**
 - `fit_weights` walk-forward loop (RMSE, not in-sample)
 - `inverse_rmse_weights` formula
 - `combine` mixture-variance formula (within + between model spread)
 - `norm_cdf` via `math.erf` (pure stdlib)
 - `bucket_prob` clipping via `scoring.clip`
 - Two-phase sensor structure (snapshot idempotency, settle isolation)
-- `ResolvedMarket` schema (downstream gate pipeline expects it)
-- Gate pipeline (never modify gate/allocator internals from a vertical)
-- Quarter-Kelly sizing (allocator handles this; vertical just produces p_model)
+- `ResolvedMarket` schema
+- Gate pipeline internals (vertical produces p_model; allocator handles sizing)
+- Quarter-Kelly sizing (allocator only)
 
 ---
 
-## Edge engine fit by market type
-
-Every vertical should explicitly choose which engines to run:
-
-| Market type | Engine 1 (Quant) | Engine 2 (Bias) | Engine 3 (News) | Engine 4 (Copy) |
-|------------|-----------------|-----------------|-----------------|-----------------|
-| Economic releases (CPI, NFP) | PRIMARY | bias check, anchor check | optional | supplemental |
-| Weather / physical quantity | PRIMARY | bias check | not used | not used |
-| Political elections | not primary | horizon compression, FLB | PRIMARY | supplemental |
-| Sports outcomes | partial (statistical models) | FLB (longshots overpriced) | PRIMARY | supplemental |
-| Geopolitics | rare | FLB | PRIMARY (GDELT, wire) | not typical |
-| Crypto / price | partial (GARCH, on-chain) | FLB, overreaction | supplemental | HIGH (on-chain flow) |
-| Science / replication | not typical | FLB on longshots | PRIMARY (arXiv) | not typical |
-| Culture / entertainment | not typical | FLB | PRIMARY | not typical |
-
-The table is a guide, not a rule. A vertical may use only Engine 1 (weather), only
-Engine 3 (geopolitics), or all four (politics close to election). The point is to
-be DELIBERATE: state which engines are active and why, in the vertical's SPEC.
-
----
-
-## Standard test harness (offline, deterministic — 0 real network calls)
-
-Every vertical MUST pass `pytest institute/tests -q` fully offline. The pattern:
-
-```python
-# Fixture pattern (inject everywhere):
-FAKE_SERIES = [{"year": 2024, "month": i, "mom": 0.2 + i*0.01} for i in range(1,25)]
-
-def fake_fetch_json(url, timeout=25):  # replaces _get_json in data.py
-    return {"Results": {"series": [{"data": FAKE_SERIES}]}}
-
-def fake_distribution(claim, now=None):  # replaces forecast_distribution in sensor.py
-    return {"mu": 0.3, "sigma": 0.05, "p_model": 0.42, "forecast_ts": now}
-
-def test_snapshot_idempotent(tmp_path):
-    store = str(tmp_path / "test.jsonl")
-    fake_markets = [{"market_id": "m1", "q_yes": 0.35, "question": "Will CPI be 0.3%?",
-                     "end_date": "2026-08-01T00:00:00Z"}]
-    n1 = sensor.snapshot(store, fetch=lambda: fake_markets,
-                          distribution=fake_distribution, now="2026-07-01T00:00:00Z")
-    assert len(n1) == 1
-    n2 = sensor.snapshot(store, fetch=lambda: fake_markets,
-                          distribution=fake_distribution, now="2026-07-02T00:00:00Z")
-    assert len(n2) == 0  # idempotent — same market not re-snapshotted
-
-def test_settle_does_not_alter_p_model(tmp_path):
-    # ...snapshot, then settle, then assert meta["p_model"] unchanged...
-```
-
-**Required test coverage per vertical:**
-1. `parse.py`: all question phrasings → correct claim; ambiguous/out-of-scope → None
-2. `models.py`: each model returns finite mu + sigma ≥ 0.05; fallback is safe
-3. `ensemble.py`: weights sum to 1; bucket_prob over (-inf,inf) ≈ 1; disagreement widens sigma
-4. `calibrate.py`: inverse_rmse_weights behavior; shrinkage formula
-5. `sensor.py`: snapshot idempotency; settle isolation (p_model unchanged); past-end-date settle
-6. `adapter.py`: settled rows → ResolvedMarket; open rows excluded; empty store → []
-
----
-
-## Checklist: vertical ready for gate pipeline
+## Readiness checklist: vertical may enter gate pipeline
 
 ```
-[ ] data.py: all fetchers injectable; degrade gracefully on failure
-[ ] models.py: ≥3 models with STRUCTURALLY DIFFERENT approaches (check pairwise error corr)
-[ ] ensemble.py: mixture variance formula; blend weight w set per vertical
-[ ] calibrate.py: walk-forward OOS; shrinkage; bias stored per-model
-[ ] parse.py: conservative; ambiguous → None; scope clearly bounded
-[ ] sensor.py: snapshot idempotent; settle isolated; two-phase law enforced
+[ ] data.py: all fetchers injectable; degrade gracefully on failure; _get injectable
+[ ] models.py: ≥3 structurally different families; each accepts `now`; sigma >= sigma_floor
+[ ] ensemble.py: mixture variance formula; blend weight w documented; normality check run
+[ ] calibrate.py: walk-forward OOS only; shrinkage; pairwise independence audit PASSES
+[ ] parse.py: conservative; ambiguous → None; scope clearly bounded in tests
+[ ] sensor.py: snapshot idempotent; settle isolated; `now` passed to distribution_fn
+[ ] sensor.py: ValueError on overwrite attempt confirmed by test
 [ ] adapter.py: load_rows registered in resolve/__init__.py
-[ ] baselines.py: baseline function registered with mechanism description
+[ ] baselines.py: baseline function + mechanism description registered
 [ ] factor.py: archetype added to CELL_FACTORS correlation map
-[ ] tests: all green, fully offline, ≥6 test modules
-[ ] gitignore: data/<slug>_markets.jsonl in carve-out (persists like other stores)
-[ ] SPEC.md: engines chosen + justified; free/premium data mapped; failure modes named
+[ ] kill_registry: kill criterion registered with sample size + comparison baseline
+[ ] SPEC.md: engines chosen + justified; net edge stated; kill criterion documented;
+             free/premium data mapped; data contracts specified
+[ ] tests: all green, fully offline, ≥6 test modules, look-ahead test included
+[ ] gitignore: data/<slug>_markets.jsonl in carve-out
+[ ] paper run: ≥30 snapshots before any capital allocation; OOS Brier tracked
 [ ] cron: line added to GCP VM cron for snapshot+settle
-[ ] paper run: ≥30 snapshots before live capital; OOS Brier tracked
+[ ] Engine 3 (if used): EV > token cost check documented in SPEC.md
+[ ] Engine 4 (if used): WebSocket deployed OR confirmed as confirmation-only
+[ ] multiple-testing: Bonferroni-adjusted significance level computed and documented
 ```
 
 ---
 
-## Anti-patterns to avoid (learned from weather bot + CPI vertical)
+## Anti-patterns (do not repeat)
 
 **AP1: Collapsed model diversity**
-CPI's `nowcast` falls back to `random_walk` when Cleveland Fed is absent → 2 effective
-models, not 3. Fix: always have a fallback that is genuinely independent (PPI regression).
-Test: compute pairwise error correlation matrix. If any pair > 0.7 — the vertical has 1 fewer
-effective model than it thinks.
+CPI `nowcast` falls back to `random_walk` → 2 effective models. Fix: always have a
+fallback that is genuinely independent (PPI regression). Enforce via pairwise audit.
 
 **AP2: Re-forecasting after snapshot**
-The snapshot is a write-once contract. Re-running the model with new data and overwriting
-p_model in an existing row is a silent honesty violation. The sensor's deduplication logic
-(`market_id already in store → skip`) is the defense. Test for it explicitly.
+The snapshot is write-once. Overwriting p_model in an existing row violates the law.
+The `ValueError on overwrite` test makes this structurally impossible.
 
-**AP3: parse.py being too permissive**
-Accepting "GDP growth above 2.5%" as a CPI market because it mentions a percentage is a
-mismatch. The downstream settle will compute MoM% from BLS and compare to a GDP bucket.
-The result is either a crash or a silent wrong bet. Always return None if the indicator
-is ambiguous.
+**AP3: parse.py too permissive**
+Accepting "GDP growth above 2.5%" as a CPI market. Downstream settle will compare a
+GDP bucket against BLS MoM data → wrong bet or crash. Return None if indicator ambiguous.
 
 **AP4: Network in tests**
-A test that calls a real API is not a test — it's a dependency on external uptime.
-Inject all fetchers. The `_get` parameter pattern in every data.py function is the standard.
+A test calling a real API is a dependency on external uptime. Inject all fetchers.
+The `_get` parameter pattern is the standard. No exceptions.
 
 **AP5: Sigma collapse from tied models**
-If all models agree exactly (e.g., all three use the same trailing window), sigma* → the
-within-model variance only. The ensemble looks very confident when it should be uncertain.
-The mixture variance formula catches BETWEEN-model spread only if models genuinely disagree.
+All models use the same trailing window → sigma* collapses to within-model variance.
+The pairwise audit detects this; the `disagreement widens sigma` test verifies it.
 
-**AP6: Platt calibration applied before n≥200**
-At n=20, the Platt alpha fit from 20 data points is meaningless noise. Apply it too early
-and it randomly amplifies errors. The n≥200 gate is a hard rule, not a guideline.
+**AP6: Platt calibration before n≥200**
+At n=20, Platt alpha from 20 points is noise. Apply it too early → random error
+amplification. Three-gate check is mandatory.
 
-**AP7: Skipping the Gate pipeline**
-A vertical that bets directly, bypassing Gates 1–7 and the allocator, violates the
-Institute architecture. Every bet must flow through the standard pipeline. The vertical
-only produces p_model; it has no opinion on stake size or portfolio construction.
+**AP7: Skipping the gate pipeline**
+A vertical betting directly, bypassing Gates 1–7 and the allocator, violates the
+architecture. Vertical produces p_model only. Sizing is the allocator's job.
+
+**AP8: Normal distribution assumed without residual check**
+Assuming Gaussian residuals without running Shapiro-Wilk on OOS errors. For bounded
+quantities (win rates, poll percentages), the Normal assumption often fails. Run the
+check before finalizing ensemble.py.
+```

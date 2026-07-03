@@ -53,6 +53,33 @@ need user input before the relevant build phase.
 - VPN execution is a Polymarket ToS violation with real forfeiture risk (06) — paper-only
   until the user explicitly, knowingly goes live.
 
+## Post-hardening decisions (2026-06-30 red-team pass)
+- **J10 FLB on Polymarket is CONTESTED — validate before relying.** SSRN 2025 finds no
+  general market-level favorite-longshot bias on Polymarket (robust FLB is Kalshi). Our
+  presumed universal edge is now a hypothesis to test on-venue first (roadmap B4 reframed).
+- **J11 Engines 3 & 4 are provisional, gated on beating cost.** News swarm marginal net of
+  token cost (except long-tail illiquid); copy-flow likely negative-EV on cron (entry
+  slippage) -> confirmation-only until WebSocket. Do not assume either pays.
+- **J12 Geopolitics (0% fee) + FDA approvals promoted to Tier 1 / early build** — best
+  net-edge-per-build-hour; FDA has a domain-expertise barrier (moat).
+- **J13 Venue forfeiture is an EXISTENTIAL single-point risk.** AU-via-VPN detection = perma
+  suspension + full balance forfeiture, no appeal. Dominates trading edge at small capital.
+  The real-money decision (O4) must confront it head-on.
+- **J14 Risk params hardened:** MACRO_CAP=0.15; Gate 4 requires net-of-fee EV; Welch-z window
+  n>=50; swarm workers=Haiku; cadence cost ~$0.63/pass base with a hard circuit breaker.
+- **J15 Meta-learning must validate OOS before use; no dead-strategy resurrection without
+  Tier C; autonomy Tier B needs an audit trail (no silent approval).**
+- **J16 Context/memory tiering adopted (doc 11):** plan is build-time only; numeric state
+  feeds models directly; per-task vector retrieval; GraphRAG (graphify) only for periodic
+  meta-learning, never per-trade.
+
+## NEW open item (needs user)
+- **O6 Venue re-think (raised by J13).** Given FLB contested on Polymarket + Engines 3/4
+  marginal + the existential VPN-forfeiture risk, is Polymarket-via-VPN still the right venue
+  for REAL money — or do we stay paper-only on Polymarket (edge research) and route real
+  capital elsewhere (or not at all)? This is now the biggest strategic question. Paper build
+  proceeds regardless; only the real-money cord depends on it.
+
 ## How to resume the build
 Read 00_CHARTER -> 09_ROADMAP -> this log. Start at Phase 0 / B2. Each Bn follows the proven
 Opus-spec -> Sonnet-build -> Opus-verify loop. The research (01-08) is the reference depth.

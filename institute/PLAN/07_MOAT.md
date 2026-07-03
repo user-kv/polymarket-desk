@@ -1,69 +1,93 @@
+## CHANGELOG
+- **2026-06-30 red-team + hardening pass** (rubric Tier 4):
+  - Applied the rubric's "moat falsifiability" test to each dimension: stated explicitly what a copyist does, what stops them, and — critically — where the "moat" is actually weak or temporary.
+  - Dimension 1 (Data): acknowledged that frozen prior data is only private if the Institute never publishes results. If calibration parameters converge publicly, the moat narrows.
+  - Dimension 2 (Model sophistication): downgraded from "moat" to "lead time." Fitted weights are an 8-12 week head start, not a permanent barrier. LLM capabilities are rapidly commoditising. Honest about this.
+  - Dimension 3 (Breadth × Speed): explicitly flagged that breadth is NOT a moat if the edge in each vertical is thin. Volume without edge compounds losses, not gains.
+  - Dimension 4 (Integration): the most durable dimension — confirmed. But "path-dependent" integration is only a moat if the system keeps running and the edge remains positive.
+  - Added "Moat failure modes" section: honest list of ways the moat collapses.
+  - Cut the optimistic framing on VPN/AU as a "natural filter" — it is a risk, not an advantage.
+  - All speculative claims tagged [ASSUMPTION].
+
+---
+
 # 07 — The Moat
 
 **Status:** PLANNING ONLY. No build authorized.
-**Scope:** How the Institute builds a genuinely hard-to-replicate edge across all four moat dimensions, and an honest assessment of what a copyist would do and why they'd fail.
+**Scope:** An honest assessment of how hard (or easy) this system is to copy, and what actually defends the edge.
 
 ---
 
 ## Framing
 
-"Moat" is the wrong word for most trading strategies — genuine alpha is leaked by success (other people see what you're doing), eroded by competition (they pile in), or decay-clocked (the market corrects the inefficiency). The Institute's four moat dimensions are chosen precisely because they resist these three failure modes. A competitor who copies the method cannot copy the execution, and a competitor who copies the execution cannot back-fill what the execution has already built.
+Most trading strategies have no moat. Alpha is leaked by success, eroded by competition, or decay-clocked as the market corrects the inefficiency. The four dimensions below are chosen because they resist at least two of these failure modes. Where a dimension only resists one (or none), this document says so.
 
-The moat is not an argument for complacency. It is a forcing function for a specific style of construction: one that compounds privately, improves autonomously, and widens as it ages.
-
----
-
-## Dimension 1: Compounding Data & Track Record
-
-### What it is
-
-Every forecast the Institute makes is **frozen at decision time** — prior probabilities, model inputs, and the resulting probability estimate are all locked the moment the bet is proposed, before the outcome is known. This is the **point-in-time honesty law** (Charter §Non-negotiable principles).
-
-The result: a growing ledger of (frozen_prior, model_inputs_at_t, actual_outcome) tuples. Over months, this becomes a calibration dataset no competitor can reconstruct. They cannot back-fill it because:
-1. Market prices at time t are observable in retrospect, but **the Institute's internal model estimate** at time t is not. It is private.
-2. The ensemble weights, bias corrections, and calibration state at each decision point are timestamped and stored only by the Institute.
-3. Even if a competitor starts the same process today, they are permanently n-bets behind in sample size, and their early bets will have been placed without the calibration data the Institute has already accumulated.
-
-### How it is built
-
-- Every scan writes a frozen JSON blob to `data/scans/YYYYMMDD_HHMMSS.json` with all inputs.
-- The ledger (`bets.csv`) stores each bet's prior, model weights, and calibration state at time of entry.
-- Settlement writes the actual outcome back to the same row.
-- The calibration module (`calibration.py`, `prob_calibration.py`) is re-fit only on the historical frozen data — never on data that includes any forward look.
-
-### How it compounds
-
-- **Calibration improves**: With 200+ settled markets, Platt scaling and per-model RMSE weights converge to genuinely more accurate priors. Earlier data is more valuable than later data (it trained the later bets).
-- **Anomaly detection sharpens**: With enough frozen priors, the Institute can detect drift — a model that was 5% over-confident on high-temperature days in summer — and correct it prospectively. A new entrant cannot spot this pattern because they lack the history.
-- **The track record itself is evidence**: A 12-month auditable series of frozen priors and outcomes is a credential. It justifies deploying more capital, trying new verticals (Gate 4 evidence accumulates), and making stronger claims about edge. A competitor starting from zero cannot present this.
-
-### Compounding rate
-
-The moat widens faster than a competitor can catch up. If the Institute runs 10 settled markets/week across 3 verticals, it generates ~150 data points/quarter. A competitor starting today is 150 behind after Q1, 300 behind after Q2, and falling further because the Institute's calibration improves with each additional point.
+**Moat honesty law:** a weak moat disclosed and managed is better than a strong moat assumed and not defended. Every "what stops them" below includes an honest answer to "what does NOT stop them."
 
 ---
 
-## Dimension 2: Agent & Model Sophistication
+## Dimension 1: Compounding Data and Track Record
 
 ### What it is
 
-The Institute is not running a single model. It is running an ensemble of specialist agents — weather NWP models, macro indicator extractors, event-reasoning LLMs, smart-money copy-flow sensors — each tuned to a vertical, combined via learned weights, and continuously evaluated for decay.
+Every forecast the Institute makes is **frozen at decision time** — prior probabilities, model inputs, and the resulting probability estimate are locked before the outcome is known. The result is a growing ledger of `(frozen_prior, model_inputs_at_t, actual_outcome)` tuples.
 
-### How it is built
+### What a copyist does
 
-The existing stack already demonstrates this: the weather vertical combines 6 NWP models (GFS, ECMWF, ICON, GEM, UKMO, AIFS) with inverse-RMSE weights fitted per-city from 7-day archives. The CPI vertical runs a 3-model ensemble. Gate 7's Welch-z decay detector fires the moment a component's edge degrades, before it costs significant capital.
+1. Starts the same process today.
+2. Uses the same free data feeds (Open-Meteo, Gamma API).
+3. Runs the same Kelly + 7-gate structure.
+4. Gets the same unfitted, uncalibrated engine — the Institute had on Day 1.
 
-The sophistication compounds in three ways:
+### What stops them
 
-1. **Vertical depth**: Each vertical is a specialist system with bespoke data pipelines, models, and calibration. A generalist with a single model cannot match a specialist with an ensemble. The weather system took weeks to build; a copyist must invest the same time from scratch.
+**Time is irreversible.** Gate 4 requires n ≥ 50 settled markets and a 4-week minimum span. This cannot be purchased or simulated. The SPRT's sequential nature requires the sample to arrive in chronological order.
 
-2. **Agent-org routing**: The A6 Alpha Engine (LLM forecast swarm, built but gated off) routes market questions to the best available model for that question type. An election question goes to a political-context LLM; a macroeconomic question goes to a fundamentals model; a sports question goes to an ELO/statistics model. Getting the routing right requires iteration that only comes from running the system.
+**Private calibration state.** The per-city, per-model RMSE weights, and Platt calibration parameters are fitted on the Institute's own forecasts vs. outcomes. A copyist using the same models will produce different forecasts — their calibration will diverge from the Institute's from the first bet.
 
-3. **Self-improvement loop**: When a vertical's SPRT rejects a strategy (accept_H0), the system proposes amendments — different calibration, different features, different model weights — and enters Gate 4 again. A human competitor who loses with a strategy typically abandons it; the Institute's adversarial gates distinguish "strategy wrong" from "implementation wrong" and try to salvage the former.
+**Track record as credential.** A 6–12 month auditable forward record justifies larger position sizes and aggressive vertical expansion. A copyist starting today cannot present this record for 6–12 months.
 
-### Why a copyist can't catch up
+### Where this is actually weak
 
-Model sophistication is not a recipe — it is a fitted system. You can read the method (it's published), but the fitted weights, the decay detector's calibration on actual EV streams, the per-city model weights — these are internal states of a running system. Copying the code gives you the unfitted engine; years of operation gives you the calibrated one.
+- The frozen prior data is only private as long as the Institute does not publish its forecasts. If the Institute ever publishes its probability estimates (e.g., in a leaderboard or research output), the moat in this dimension narrows significantly.
+- If calibration parameters converge to the same values a competitor would derive (because both are fitting on the same underlying model outputs), the "private calibration" moat is illusory. [ASSUMPTION: divergence is expected given different forecast histories, but this has not been empirically verified.]
+- The track record moat matters mainly if the Institute scales capital. For purely personal-scale trading ($200–$1,000), the credential has limited practical leverage.
+
+**Verdict:** Strong moat for the calibration/track-record dimension IF the Institute keeps running and does not publish its internal estimates. Weak at personal capital scale where credential does not unlock more capital.
+
+---
+
+## Dimension 2: Agent and Model Sophistication
+
+### What it is
+
+The Institute runs an ensemble of specialist agents — NWP weather models, macro extractors, LLM-event reasoners, copy-flow sensors — combined via learned weights, continuously evaluated for decay.
+
+### What a copyist does
+
+1. Reads the method (published or reverse-engineered from the open-source stack).
+2. Uses the same LLM APIs (GPT-4o, Gemini Flash — both commercially available).
+3. Uses the same NWP data (Open-Meteo is free).
+4. Implements the same ensemble weighting (inverse-RMSE is a published method).
+
+### What stops them
+
+**Fitted weights take time.** The per-city, per-model RMSE weights require 7+ days of actual model output vs. observed data to converge. A new entrant starts with uniform weights and produces noisier forecasts for their first several weeks.
+
+**Decay detector has no baseline.** `decay.py`'s Welch-z test requires an `early_ev` distribution fitted on actual bet history. A fresh system has no baseline. It cannot distinguish edge erosion from startup variance for the first min_window × 2 = 16 bets per cell.
+
+**Routing takes iteration.** The A6 Alpha Engine's question-routing (which LLM for which market type) requires empirical feedback to tune. Initial routing guesses will be wrong in ways that only become visible after running forward.
+
+### Where this is actually weak [HONEST ASSESSMENT]
+
+**Model sophistication is an 8-12 week lead, not a permanent barrier.**
+
+- LLM capabilities are commoditising rapidly. A copyist who starts today has access to the same or better base models.
+- RMSE weight fitting converges in 1-2 weeks of operation. After that, the weights are similar for anyone running the same NWP models.
+- The ensemble weighting method (inverse-RMSE) is published in the weather forecasting literature. The Institute has no IP lock on it.
+- If the Institute's edge comes primarily from the ensemble method rather than from unique data or private calibration, this moat dissolves over 2–4 weeks for a competent copyist.
+
+**Verdict:** Weak moat for model sophistication alone. It is a meaningful head start (8–12 weeks) but not a durable barrier. Do not plan around it persisting beyond 6 months in any single vertical.
 
 ---
 
@@ -71,28 +95,32 @@ Model sophistication is not a recipe — it is a fitted system. You can read the
 
 ### What it is
 
-The Institute scans the entire Polymarket universe every 30 minutes. Across 4 market families (Macro, Sports, Politics, Crypto/Culture/Tech), hundreds of markets are in scope at any given time. A human analyst can monitor ~10 markets simultaneously and needs hours to form a view. The Institute can cover 500 markets and form views in minutes.
+The Institute scans the full Polymarket universe every 30 minutes, across 4+ market families, forming views on hundreds of markets where a human can monitor ~10.
 
-### How it is built
+### What a copyist does
 
-The autonomous cron pipeline on the GCP VM:
-1. Fetches all active Polymarket markets via Gamma API.
-2. Classifies each against the known verticals (sports event → sports vertical; temperature market → weather vertical; CPI release → macro vertical).
-3. Routes to the appropriate specialist engine.
-4. Generates a probability, compares to market price, and scores edge.
-5. Proposes bets for any market clearing all seven gates.
+1. Deploys the same autonomous cron pipeline (the architecture is not secret).
+2. Subscribes to the same Gamma API.
+3. Covers the same markets.
 
-This entire loop runs unattended. The human's time is spent reviewing proposals, signing off on tier escalations, and reading digest summaries — not manual forecasting.
+### What stops them
 
-### Speed advantage in practice
+**Consistency of coverage.** A human gets tired, skips scans, misses markets. The automated system doesn't. This is a meaningful operational advantage over manual competitors.
 
-For news-driven markets (political events, crypto), speed matters because prices correct quickly when information arrives. The Institute's advantage here is not raw latency (it's not a HFT shop) but **consistency of coverage**: a human gets tired, skips a scan, misses a market. The autonomous system doesn't.
+**Gate 4 in parallel.** Running many markets simultaneously means more cells accumulate Gate 4 evidence concurrently. A copyist must build all their verticals from scratch and wait the same Gate 4 minimum span for each.
 
-For slow-moving markets (weekly temperature highs, monthly CPI), speed matters less — but breadth does. A human monitoring 3 cities for weather can generate maybe 30 weather bets/year. The system monitoring 50 cities can generate 500. Statistical significance builds 17× faster.
+### Where this is actually weak [CRITICAL CAVEAT]
 
-### The compounding dynamic
+**Breadth without edge is worse than no breadth.**
 
-More bets → faster Gate 4 graduation → earlier real-money deployment → more capital at work → more bets. The flywheel is slow at first (Gate 4 needs 4 weeks minimum) but accelerates as more verticals graduate.
+If a vertical has no genuine edge, scanning it continuously and placing bets does not compound — it compounds losses. The 7-gate structure is supposed to prevent this, but:
+- A vertical that passes Gate 4 at n=50 with marginal significance (p just under 0.05) has a ~5% false positive rate by design.
+- With 23 verticals, multiple-comparisons math implies roughly 1 false-positive graduate on average. That cell then places real-money bets with no actual edge.
+- Speed × breadth means a false-positive cell damages the book faster than a slow human trader would.
+
+**Mitigation:** Run Bonferroni or Benjamini-Hochberg correction across verticals. The rubric requires multiple-comparisons correction (Tier 1.3). Ensure Gate 4 significance threshold is adjusted for the number of vertical candidates being tested simultaneously.
+
+**Verdict:** Breadth is a real operational advantage over human competitors. It is not a moat against another automated system. The real question is whether edge-detection gates are tight enough to prevent breadth from amplifying false-positive cells.
 
 ---
 
@@ -100,84 +128,61 @@ More bets → faster Gate 4 graduation → earlier real-money deployment → mor
 
 ### What it is
 
-The four dimensions are not independent — they feed each other. The integrated loop is:
+The four dimensions feed each other in a closed loop:
 
 ```
 Gate → Allocate → Execute → Settle → Decay → Recalibrate → Self-improve → Gate
 ```
 
-Each component is designed to work with the others: the allocator reads calibration quality from the gate outputs; decay detection reads settled outcomes from the same ledger the allocator writes to; self-improvement reads the decay detector's output to propose vertical amendments.
+Each component is designed to work with the others: allocator reads calibration quality from gate outputs; decay detection reads settled outcomes from the same ledger; self-improvement reads decay outputs to propose amendments.
 
-### Why integration is the hardest moat to copy
+### What stops a copyist
 
-A competitor can copy the Kelly formula. They can copy the Welch-z decay detector. They can even copy the 7-gate structure. What they cannot copy is **a system that has been running this full loop for 12 months** with real data flowing through every seam.
+**A copyist can copy the code. They cannot copy the running state.**
 
 Specific non-copyable elements:
-- **Calibration state at every layer**: The per-model RMSE weights in `calibration.json` are fitted on 7+ days of actual model outputs vs. observed highs. A new entrant starts with uniform weights and must run the system for weeks before they converge to anything useful.
-- **Gate 4 evidence**: The forward lockbox ledger entries — n, ev, span_weeks, SPRT decisions — are accumulated over real time. You cannot simulate them; the SPRT's sequential nature means the sample must arrive in chronological order.
-- **Decay baselines**: The early_ev distribution in the decay detector is fitted on the Institute's actual bet history. A fresh system has no baseline to compare against.
-- **The self-improvement log**: Every strategy amendment, every vertical birth and death, every parameter change — these are in `99_DECISIONS_LOG.md`. The decisions look obvious in hindsight but were each contingent on prior system behavior that no one else observed.
+- **Calibration state at every layer:** Per-model RMSE weights, per-vertical Platt parameters — private states fitted on private data.
+- **Gate 4 evidence:** Forward lockbox entries accumulated over real time in chronological order. Cannot be simulated.
+- **Decay baselines:** `early_ev` distribution requires actual bet history to exist. A fresh system has no baseline for min_window × 2 bets per cell.
+- **Decisions log:** Every strategy amendment, vertical birth/death, parameter change — `99_DECISIONS_LOG.md` represents path-dependent knowledge that a copyist must re-derive through their own experiments. The negative results (Gate 4 rejects) are as valuable as the live strategies.
 
-### The self-improvement loop as a moat amplifier
+### Where this is actually weak
 
-The Institute proposes new verticals autonomously. When it identifies a market family with consistent crowd mispricing (longshot bias, anchoring to first-posted odds), it generates a pilot specification, enters it into Gate 1, and begins accumulating forward evidence. A human competitor doing manual analysis might spot the same pattern — but they must notice it, research it, design an approach, and test it. The Institute does this in parallel across every category it monitors.
+**Integration moat only holds while the system keeps running and the edge stays positive.**
 
-Over 24 months, this produces a portfolio of strategies — some graduated and deployed, some accumulating, some dead — that collectively represent the Institute's map of the prediction-market universe's exploitable edges. The map has no substitute for lived experience.
+If the Institute stops running scans for 30+ days, the calibration data goes stale, the track record stops compounding, and decay detection loses its baseline recency. The moat is maintenance-dependent. Maintenance cost is near-zero (cron keeps running) but not zero.
 
----
+**If the edge in a key vertical disappears** (market corrects the inefficiency), the integration moat in that vertical evaporates regardless of how long the system has been running. Gate 7 detects this, but only after meaningful capital has been risked in the decay phase.
 
-## "How Someone Would Try to Copy This, and What Stops Them"
-
-### The most plausible copy attempt
-
-A well-resourced competitor could:
-1. Read the architecture (if published or leaked).
-2. Implement the same Kelly + cap cascade.
-3. Subscribe to the same free data feeds.
-4. Use the same LLM APIs.
-5. Run the same 7-gate structure.
-
-**What they get**: an unfitted, uncalibrated, unvalidated engine with zero track record. At this point they are exactly where the Institute was on Day 1.
-
-### What stops them from catching up
-
-**Time is irreversible.** Gate 4 requires 4 weeks minimum and n ≥ 50 settled markets. You cannot buy this time. The Institute's frozen prior ledger is compounding daily; the competitor's clock starts when they start.
-
-**Calibration is private.** The Institute's per-city, per-model RMSE weights, per-vertical Platt calibration parameters — these are internal states fitted on private data (the Institute's own forecasts vs outcomes). The competitor's calibration will diverge because their prior forecasts will differ, even given the same models.
-
-**The track record is the credential.** When the Institute goes live, it will have a 6–12 month auditable forward record. The competitor starting today cannot present this record until 6–12 months from now. If the Institute's record is strong, it justifies larger position sizes and more aggressive vertical expansion — compounding the lead.
-
-**Self-improvement is path-dependent.** The Institute's dead strategies (Gate 4 rejected) are as valuable as the live ones — they carve out the territory where edges don't exist. A competitor learns the same lessons only by running their own experiments. They cannot import the Institute's negative results.
-
-**The AU/VPN operational reality is a natural filter.** Few competitors will run a personal prediction-market fund from a geo-blocked jurisdiction with the specific operational discipline required. The barrier is not technical; it is the combination of regulatory awareness, operational care, and sustained commitment. Most competitors give up on paper.
-
-### What does NOT stop them
-
-- **The open-source tooling**: py-clob-client, Open-Meteo, and the LLM APIs are all accessible to anyone. The Institute has no lock on inputs.
-- **Market discovery**: The same Gamma API is public. A competitor sees the same markets.
-- **The conceptual framework**: Fractional Kelly, 7-gate validation, ensemble forecasting — all published. None of this is proprietary.
-
-The moat is not secrecy. It is **accumulated time × disciplined execution × private calibration data**. A competitor who knows exactly what we're doing still cannot catch up because they don't have the fitted system we've been running.
+**Verdict:** The most durable moat dimension. Path-dependent integration is genuinely hard to replicate without running the system for an equivalent period. The vulnerability is systemic edge decay — which is why Gate 7 and the self-improvement loop matter more than any single technical component.
 
 ---
 
-## Moat Maintenance
+## Moat Failure Modes (The Honest List)
 
-The moat degrades if:
-- Calibration stops updating (Institute stops running scans) — maintenance cost: near-zero (cron keeps running).
-- A vertical's edge is discovered by the crowd (prices adjust, EV collapses to 0) — detection: Gate 7 / decay detector fires before this costs significant capital.
-- A better free data source appears and a competitor adopts it — risk: low if the Institute's premium-data upgrade slots are activated before the competition. The free-to-premium path is designed into every vertical.
-- The market universe itself changes (Polymarket adds new market types, existing types dry up) — risk: managed by the market universe scan and the self-improvement loop's vertical birth/death mechanism.
+The moat fails if any of the following occur:
 
-**The key maintenance discipline**: keep the automated cron running, keep the ledger accurate, and keep Gate 4 accumulating. The moat builds itself as long as the engine is running.
+1. **No genuine edge exists in the graduated verticals.** The 7-gate structure is designed to catch this, but multiple-comparisons failures are possible. A false-positive cell that scales ruins the track record and may deplete the bankroll before decay detection fires.
+
+2. **Calibration stops updating.** Cron stops running, or the ledger becomes stale. Decay baselines lose relevance. Calibration weights drift. This is the cheapest failure mode and the easiest to prevent.
+
+3. **Crowd adaptation in a key vertical.** If the Institute's weather forecast edge (favorite-longshot bias in high-temperature markets) becomes well-known and targeted by other bettors, prices correct and EV collapses. Gate 7 will detect this but only after some capital is lost.
+
+4. **A better data source appears and a competitor adopts it first.** Open-Meteo is a free baseline. If ECMWF releases a higher-resolution free product, the NWP ensemble advantage in the weather vertical narrows. Risk: low if the Institute's premium-data upgrade slots (built into the vertical design) are activated before the competition. [ASSUMPTION]
+
+5. **Venue forfeiture.** VPN detection by Polymarket suspends the account and zeroes the balance. This terminates the operation regardless of edge quality. Not a moat failure — but it ends the system before the moat compounds. The most operationally critical risk at the user's scale. See `06_EXECUTION_VENUE.md`.
+
+6. **Building breadth at the expense of depth.** Self-improvement proposes new verticals faster than existing ones can be properly validated. Over-extension leads to false-positive graduates and capital distributed across under-validated cells.
 
 ---
 
-## Summary: The Moat Matrix
+## Summary: The Moat Matrix (Honest Version)
 
-| Dimension | Core asset | How it accrues | Copyist failure mode |
-|---|---|---|---|
-| Data & Track Record | Frozen prior + outcome ledger | Every settled bet adds a row | Cannot back-fill; no frozen priors before their start date |
-| Agent Sophistication | Fitted ensemble weights + decay baselines | More settled markets → better calibration | Starts with unfitted weights; months behind |
-| Breadth × Speed | Full-universe scan + multi-vertical coverage | More verticals graduated → more bets → faster Gate 4 | Must rebuild each vertical from scratch |
-| Integrated Machine | Gate→allocate→settle→decay→self-improve loop | System state compounds with runtime | Can copy the code; cannot copy the running state |
+| Dimension | Core asset | How it accrues | Copyist failure mode | How strong / how durable |
+|---|---|---|---|---|
+| Data & Track Record | Frozen prior + outcome ledger | Every settled bet adds a row | Cannot back-fill frozen priors | Strong IF not published; limited leverage at personal capital scale |
+| Agent Sophistication | Fitted ensemble weights + decay baselines | More settled markets → better calibration | Starts with uniform weights; 8–12 week lag | Weak as permanent moat; meaningful head start only |
+| Breadth × Speed | Full-universe scan + multi-vertical coverage | More verticals graduated → more bets → faster Gate 4 | Must rebuild each vertical from scratch | Real vs human competitors; not vs another automated system; requires tight gate discipline |
+| Integrated Machine | Gate→allocate→settle→decay→self-improve loop | System state compounds with runtime | Cannot copy running state | Most durable; only holds while system keeps running and edge persists |
+
+**Bottom line:** The Institute's moat is real but not impregnable. Its durability depends on (a) genuine edge in graduated verticals (Gate 4 discipline), (b) the system continuing to run (maintenance), and (c) not being terminated by venue forfeiture before the track record compounds. None of these are guaranteed. The moat earns the right to operate at increasing scale only if the evidence supports it.
