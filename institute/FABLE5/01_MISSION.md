@@ -184,6 +184,40 @@ firecrawl/exa MCP tools are configured, otherwise via parallel Explore search su
 (3) returns a CITED synthesis. You consume the cited findings — you do not invent evidence
 (section 6). If a claim has no source, it is an ASSUMPTION and must be labeled one.
 
+## 5c. Innovation mandate — make it BETTER than the plan (research, then let the rubric decide)
+
+The existing plan is a floor, not a ceiling. You are explicitly charged to RESEARCH (via the
+Opus 4.8 deep-research role) features and architectures that could make the Institute
+stronger and harder to replicate, and to add the ones that EARN their place. Candidate space
+(non-exhaustive — find your own):
+- **A second brain / compounding memory for the BOT:** every settled bet becomes a lesson;
+  calibration compounds; meta-learning mines cross-vertical patterns; per-market memory that
+  makes the machine measurably smarter with age. This is the moat's engine — design it well.
+- **Self-adaptation:** strategy birth/decay, online recalibration, parameter evolution within
+  the 3-tier leash (gate code never self-modifies).
+- Anything else the literature offers: better ensembling, regime detection, market-microstructure
+  signals, whale-flow analytics, cheaper/better agent topologies.
+
+**The rule that keeps this honest:** every candidate feature passes ONE test — *does it
+increase proven net-of-fee edge, or the system's survival/honesty?* If yes, design it in. If
+it is merely impressive, CUT it. The rubric (section 4) is the judge, not enthusiasm.
+
+**Priority law:** when a feature conflicts with the 4-week proven-edge goal, THE GOAL WINS.
+Features that lose go to `out/BACKLOG.md` (ranked, with the evidence for each) — built after
+proof exists. Exception: a foundation may be laid early ONLY if retrofitting it later would
+cost ~5x more (say so explicitly when you invoke this).
+
+## 5d. Build-quality bar for Phase B (fund-grade — this will handle money)
+
+Every module you delegate to Sonnet ships with:
+- **Tests + offline mocks** — deterministic, no-network test path; live calls behind a seam.
+- **Honesty invariants AS tests** — point-in-time (no look-ahead), idempotency, and
+  net-of-fee accounting asserted in code, not prose.
+- **An Opus 4.8 verification pass before acceptance** — you never accept delegated code on
+  the delegate's word; unverified code does not merge.
+- **No placeholder burn** — nothing writes to live stores until its real path is implemented
+  (the INSTITUTE_LIVE_FORECAST pattern).
+
 ## 6. Honesty laws (INVIOLABLE — a design that breaks these is auto-rejected)
 
 - **Point-in-time honesty:** every forecast is frozen at decision-time from data available
@@ -221,6 +255,24 @@ where you can do better:
 - `institute/PLAN/99_DECISIONS_LOG.md` — every judgment call + the OPEN questions (O1-O6).
 - Supporting: `03_VERTICAL_TEMPLATE`, `04_AGENT_ORG`, `06_EXECUTION_VENUE`, `08_SELF_IMPROVEMENT`, `09_ROADMAP`.
 - The code + data under `institute/**` and `papertrader/**` — what already works.
+
+**THE MAP — where everything you need lives (verified 2026-07-04):**
+| What | Where |
+|---|---|
+| The plan corpus (your starting point) | `institute/PLAN/*.md` (11 docs; 99 = decisions+open Qs) |
+| Working institute code (7-gate spine, engines, verticals) | `institute/**/*.py` (243 tests in `institute/tests/`) |
+| The proven weather bot (+21.9% OOS reference implementation) | `papertrader/` (engine, ensembles, calibration, ledger) |
+| Resolved-market outcomes: Polymarket ~262k | `institute/data/history/polymarket_resolved.jsonl` + `polymarket_clob_resolved.jsonl` |
+| Resolved-market outcomes: Kalshi ~153k (native categories) | `institute/data/history/kalshi_settled.jsonl` |
+| Decision-time price series (1,795 usable of 2,100) | `institute/data/history/prices/polymarket_trades.jsonl` |
+| **Coverage map — READ THIS EARLY** (what's provable per vertical/venue) | `institute/data/history/coverage_report.md` + `.json` |
+| Data fetchers (run/extend to get more) | `institute/tools/fetch_history.py`, `fetch_prices.py`, `coverage_report.py` |
+| Fetch state/counts | `institute/data/history/manifest.json` |
+| Live-captured moat priors (small, honest, un-backfillable) | `institute/data/*.jsonl` + `papertrader/data/` |
+
+Note: `data/history/` is gitignored (re-fetchable); if it is missing on a fresh machine, run
+`python institute/tools/fetch_history.py --venue all --max 200000` to rebuild it.
+
 - **The fetched resolved-market history** in `institute/data/history/` (Polymarket + Kalshi,
   grown by `institute/tools/fetch_history.py`) and its `manifest.json`. SAMPLE it to judge real
   coverage/quality per vertical — do NOT load it wholesale. You DESIGN the backtest harness
@@ -256,6 +308,8 @@ where you can do better:
   alongside the outcomes, with a clean point-in-time index (given time T, the price known at
   T — no look-ahead). Verify the delegate's output; do not accept it unchecked.
 - **CHANGELOG.md** — the audit trail of how the design evolved and survived its red-team.
+- **BACKLOG.md** — researched features that lost to the 4-week priority law (5c), ranked with
+  the evidence for each; the post-proof build queue.
 - **OPEN_DECISIONS.md** — the calls that still need the human (real-money activation per cell,
   venue access/legal, paid-data-when-funded). Do NOT silently assume these; surface them.
 
