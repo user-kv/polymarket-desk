@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Institute — Data &amp; Cell Dashboard</title>
+<style>
+  :root {
+    --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e;
+    --muted: #898781; --grid: #e1e0d9; --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6;
+    --status-good: #0ca30c; --status-warning: #fab219; --status-critical: #d03b3b;
+  }
+  @media (prefers-color-scheme: dark) { :root {
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7;
+    --grid: #2c2c2a; --border: rgba(255,255,255,0.10); --series-1: #3987e5;
+  } }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--page); color: var(--ink);
+    font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; padding: 24px; }
+  h1 { font-size: 18px; margin-bottom: 2px; }
+  .sub { color: var(--muted); margin-bottom: 20px; font-size: 12px; }
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 20px; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .tile .k { color: var(--ink-2); font-size: 12px; }
+  .tile .v { font-size: 26px; font-weight: 650; margin: 2px 0; }
+  .tile .d { color: var(--muted); font-size: 12px; }
+  .spark { display: block; margin-top: 6px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .panel h2 { font-size: 13px; color: var(--ink-2); font-weight: 600; margin-bottom: 12px; }
+  .barrow { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+  .barlabel { width: 110px; color: var(--ink-2); font-size: 12px; text-align: right;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bartrack { flex: 1; background: transparent; }
+  .bar { display: block; height: 14px; background: var(--series-1); border-radius: 0 4px 4px 0; min-width: 2px; }
+  .barval { width: 64px; font-variant-numeric: tabular-nums; font-size: 12px; color: var(--ink-2); }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; color: var(--muted); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .04em; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+  td { padding: 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .mono { font-family: ui-monospace, Consolas, monospace; }
+  .muted { color: var(--muted); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; }
+  .foot { color: var(--muted); font-size: 11px; margin-top: 18px; }
+  @media (max-width: 640px) { body { padding: 12px; } .barlabel { width: 84px; } }
+</style></head><body>
+<h1>The Institute — data &amp; cell dashboard</h1>
+<p class="sub">Generated 2026-07-05 00:16 UTC · paper only · ARCHITECTURE v4 (converged)</p>
+
+<div class="grid">
+  <div class="tile"><div class="k">Kalshi candle histories</div>
+    <div class="v">308</div>
+    <div class="d">36,401 hourly candles · 0% with bid/ask</div>
+    <svg class="spark" width="120" height="28" viewBox="0 0 120 28" role="img" aria-label="trend"><polyline points="0.0,2.0 120.0,2.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+  <div class="tile"><div class="k">PM decision-time series</div>
+    <div class="v">2,100</div>
+    <div class="d">1,795 usable (&ge;10 trades, 85%) · 668,729 trade points</div>
+    <svg class="spark" width="120" height="28" viewBox="0 0 120 28" role="img" aria-label="trend"><polyline points="0.0,2.0 120.0,2.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+  <div class="tile"><div class="k">Kalshi settled outcomes</div>
+    <div class="v">153,228</div>
+    <div class="d">backtest ground truth (labels)</div></div>
+  <div class="tile"><div class="k">Candle coverage of settled</div>
+    <div class="v">0.2%</div>
+    <div class="d">grows with each scheduled fetch</div></div>
+</div>
+
+<div class="panel"><h2>Kalshi candle histories by category (markets)</h2><div class="barrow"><span class="barlabel">unknown</span><span class="bartrack"><span class="bar" style="width:100.0%"></span></span><span class="barval">228</span></div>
+<div class="barrow"><span class="barlabel">politics</span><span class="bartrack"><span class="bar" style="width:17.1%"></span></span><span class="barval">39</span></div>
+<div class="barrow"><span class="barlabel">entertainment</span><span class="bartrack"><span class="bar" style="width:9.2%"></span></span><span class="barval">21</span></div>
+<div class="barrow"><span class="barlabel">economics</span><span class="bartrack"><span class="bar" style="width:6.6%"></span></span><span class="barval">15</span></div>
+<div class="barrow"><span class="barlabel">sports</span><span class="bartrack"><span class="bar" style="width:1.8%"></span></span><span class="barval">4</span></div>
+<div class="barrow"><span class="barlabel">companies</span><span class="bartrack"><span class="bar" style="width:0.4%"></span></span><span class="barval">1</span></div></div>
+
+<div class="panel"><h2>Cell / study status (ARCHITECTURE &sect;2, &sect;5)</h2>
+<table><thead><tr><th>ID</th><th>Cell</th><th>Stage</th><th>Note</th></tr></thead>
+<tbody><tr><td class="mono">C1</td><td>Weather ensemble</td><td><span class="dot" style="background:var(--status-warning)"></span>Graduation candidate</td><td class="muted">W1 net re-derivation pending; pre-registered branch decides</td></tr>
+<tr><td class="mono">C2</td><td>Kalshi longshot fade</td><td><span class="dot" style="background:var(--status-warning)"></span>Backtest study + forward seed</td><td class="muted">Awaiting candle corpus; +2% net-after-costs bar, SPRT ~wk 10</td></tr>
+<tr><td class="mono">C3</td><td>PM behavioral validation</td><td><span class="dot" style="background:var(--status-warning)"></span>Pre-registered study</td><td class="muted">Probe: only 3.5% of PM long tail has >=10 trades — bars re-anchor</td></tr>
+<tr><td class="mono">S1</td><td>Geopolitics news (0% fee)</td><td><span class="dot" style="background:var(--muted)"></span>Forward-only seed</td><td class="muted">Needs O-F5 LLM spend sign-off (day 3)</td></tr>
+<tr><td class="mono">S2</td><td>CPI / macro</td><td><span class="dot" style="background:var(--muted)"></span>Forward-only seed</td><td class="muted">Monthly cadence; cannot graduate in-window</td></tr></tbody></table></div>
+
+<p class="foot">Data stores are local &amp; gitignored (re-fetchable). This page regenerates after every
+scheduled fetch via gen_dashboard.py. Kill criteria and pre-registration live in
+institute/FABLE5/out/ARCHITECTURE.md; go-live bar in GO_LIVE_TRIGGER.md.</p>
+</body></html>
