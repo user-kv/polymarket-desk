@@ -35,11 +35,13 @@ basis you are willing to sign. Needed only at go-live (after O-F1).
 GO_LIVE_TRIGGER §3 sets "projected 90-day net profit ≥ $50" as the worth-doing floor
 [ASSUMPTION]. Confirm or re-set. Needed at first go-live worksheet.
 
-## O-F5 — LLM spend for S1 (extends O2)
-S1 geopolitics is the only in-window LLM consumer: ~$0.30–0.40/day (arithmetic in
-ARCHITECTURE §6) + ~2 Opus calls/week for gates. Approve this standing spend for the
-4-week window, or S1 runs mock-gated (no forecasts, no seed accrual — the window then
-produces C1 + studies only). Needed by day 3.
+## O-F5 — LLM spend for S1 — RESOLVED 2026-07-06 (user + research)
+User directed free providers. Opus research pass (cited in CHANGELOG) selected **Groq
+free tier** (llama-3.3-70b-versatile, 1,000 req/day, no production-use prohibition)
+as primary, OpenRouter fallback; **NVIDIA NIM rejected — its Trial ToS bars production
+use**. S1 standing cost: **$0**. Remaining human step: create a free account at
+console.groq.com, generate an API key, set it as the GROQ_API_KEY environment variable
+on this PC. S1 starts capturing forecasts on the next 16:30 run after the key exists.
 
 ## Carried open from PLAN/99 (unchanged, still yours)
 - O1 sports model sequencing; O3 premium-data budget at launch; O4 real-money activation

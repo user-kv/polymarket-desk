@@ -121,19 +121,68 @@ def _c2_cell():
     return "warning", note
 
 
-# Cell status (C1 from the live paper ledger verdict of 2026-07-05; C2 data-driven).
+def _c1_cell():
+    """Live net-of-fee record from the papertrader ledger (fees already in pnl)."""
+    import csv
+    bets = os.path.join(os.path.dirname(ROOT), "papertrader", "data", "bets.csv")
+    try:
+        rows = [r for r in csv.DictReader(open(bets, encoding="utf-8"))
+                if r["status"] == "settled" and r.get("is_test", "N") != "Y"]
+        w = sum(1 for r in rows if r["result"] == "WON")
+        staked = sum(float(r["stake"]) for r in rows)
+        pnl = sum(float(r["pnl"]) for r in rows)
+        return ("good" if pnl > 0 else "warning",
+                f"LIVE paper since 2026-06-20: {len(rows)}/50 settled, {w} wins "
+                f"({w/len(rows)*100:.0f}%), {pnl/staked*100:+.1f}% ROI NET of fees "
+                f"(${pnl:+.0f}) — >=+10% branch; SPRT + family correction at n>=50")
+    except Exception:
+        return "warning", "ledger unreadable"
+
+
+def _c3_cell():
+    p = os.path.join(DATA, "c3_verdict.json")
+    if not os.path.exists(p):
+        return "warning", "Not yet run"
+    try:
+        b = json.load(open(p, encoding="utf-8"))["buckets"]
+        b1, b2 = b["B1_longshot_fade"], b["B2_favorite_buy"]
+        return "warning", (
+            f'longshot n={b1["n"]} ({b1.get("mean_net_roi_forward", 0)*100:+.1f}%), '
+            f'favorite n={b2["n"]} ({b2.get("mean_net_roi_forward", 0)*100:+.1f}%) — '
+            f'both UNDERPOWERED (need 500/bucket); PM long tail too thin, grows ~7/day')
+    except Exception:
+        return "warning", "verdict file unreadable"
+
+
+def _s1_cell():
+    p = os.path.join(DATA, "s1_forecasts.jsonl")
+    if not os.path.exists(p):
+        return "neutral", ("Wired to Groq free tier ($0) — waiting for GROQ_API_KEY "
+                           "to start capturing forecasts")
+    n = fro = setl = 0
+    for r in _iter_jsonl(p):
+        n += 1
+        if "settle_for" in r:
+            setl += 1
+        else:
+            fro += 1
+    return "good", f"{fro} frozen forecasts, {setl} settled — forward record accruing"
+
+
+# Cell status — all data-driven from ledgers/verdict files.
+_c1s, _c1n = _c1_cell()
 _c2s, _c2n = _c2_cell()
+_c3s, _c3n = _c3_cell()
+_s1s, _s1n = _s1_cell()
 CELLS = [
     {"id": "C1", "name": "Weather ensemble", "stage": "Graduation candidate",
-     "status": "good", "note": "LIVE paper (since 2026-06-20): 25 settled, 92% wins, "
-     "+15.3% ROI NET of fees ($375 on $2,450) — lands in the pre-registered >=+10% "
-     "branch; n>=50 + SPRT + family correction still required before graduation"},
+     "status": _c1s, "note": _c1n},
     {"id": "C2", "name": "Kalshi longshot fade", "stage": "Backtest study + forward seed",
      "status": _c2s, "note": _c2n},
     {"id": "C3", "name": "PM behavioral validation", "stage": "Pre-registered study",
-     "status": "warning", "note": "Probe: only 3.5% of PM long tail has >=10 trades — bars re-anchor"},
+     "status": _c3s, "note": _c3n},
     {"id": "S1", "name": "Geopolitics news (0% fee)", "stage": "Forward-only seed",
-     "status": "neutral", "note": "Needs O-F5 LLM spend sign-off (day 3)"},
+     "status": _s1s, "note": _s1n},
     {"id": "S2", "name": "CPI / macro", "stage": "Forward-only seed",
      "status": "neutral", "note": "Monthly cadence; cannot graduate in-window"},
 ]

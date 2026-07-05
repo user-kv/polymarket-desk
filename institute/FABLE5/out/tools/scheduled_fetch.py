@@ -96,6 +96,8 @@ def main():
          "--interval", "60"])
     run(["fetch_prices_v2.py", "--venue", "polymarket", "--max", str(a.poly_max)])
     run(["c2_backtest.py"])          # pre-registered; re-runs as the corpus grows
+    run(["c3_study.py"])             # pre-registered; underpowered until PM data grows
+    run(["s1_geopolitics.py"])       # forward forecast capture; exits 0 if no GROQ_API_KEY
     run(["gen_dashboard.py"])
     notify_phone()
     log("=== scheduled fetch done ===")
