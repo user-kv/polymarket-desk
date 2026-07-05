@@ -47,6 +47,9 @@ def _live_complete(prompt, model, max_tokens, temperature):
         req = urllib.request.Request(url, data=body, headers={
             "Authorization": f"Bearer {key}",
             "Content-Type": "application/json",
+            # Groq sits behind Cloudflare, which 403s (error 1010) urllib's
+            # default Python-urllib/3.x signature. A plain browser UA passes.
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
         })
         for attempt in range(4):
             try:
