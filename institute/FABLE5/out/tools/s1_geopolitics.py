@@ -1,17 +1,40 @@
 """S1 — Geopolitics forecast-capture cell. FORWARD-ONLY, PAPER-ONLY.
 
 This tool NEVER places an order on any venue. It discovers open geopolitics
-markets on Polymarket, runs a 10-persona LLM swarm forecast, blends it with
-the market's own price, and freezes the result to an append-only JSONL
+markets on Polymarket, runs TWO independent price-blind forecasting variants
+per market (an A/B test of analyst protocol, not of data), blends each with
+the market's own price, and freezes both results to an append-only JSONL
 ledger for later scoring. That scoring (hit-rate, calibration, edge realized)
-is a separate concern — this file only captures forecasts and settlements.
+is a separate concern -- this file only captures forecasts and settlements.
+
+VARIANTS ("variant" field on every forecast row):
+  - "swarm10" (original, unchanged behavior): 10 fixed personas, one call
+    each, mean-aggregated. Rows written before this A/B existed carry no
+    "variant" field at all -- absence of the field means "swarm10" (documented
+    here for anyone auditing old rows).
+  - "sfp3" (superforecaster protocol, new): 3 calls, each a different analyst
+    "lens" over an identical 5-step scratchpad prompt (outside view first,
+    then inside view, then a red-team pass), aggregated via extremized-median
+    + base-rate shrinkage (see forecast_sfp3() docstring for the exact math
+    and its citations).
+  Both variants are captured for every candidate market every run. The
+  idempotency key is now market_id+date+variant, so each market gets up to
+  one swarm10 row AND up to one sfp3 row per day (never more).
+
+PRE-REGISTERED A/B KILL RULE (decided before data; never moved): after 50
+resolved markets covered by BOTH variants, the variant with the worse Brier
+score on its own price-blind "p_model" field (p_swarm for swarm10, p_model
+for sfp3 -- i.e. the pre-market-blend quantity) retires. This is a scoring
+concern for a separate tool; this file only ensures both variants' price-
+blind quantities are on the row so that later scoring is possible.
 
 ANCHORING / HONESTY RULE (frozen): the market price (q_market) is NEVER
-included in any prompt sent to a persona. Personas forecast blind; the market
-price is blended in only AFTER all 10 replies are collected. This is the same
-category of invariant as fetch_prices_v2.py's look-ahead rule for candle
-timestamps -- it exists so a later audit can grep every prompt string in this
-file and confirm no price token appears in one.
+included in any prompt sent to a persona/lens, in EITHER variant. Personas
+and lenses forecast blind; the market price is blended in only AFTER all
+replies for that variant are collected. This is the same category of
+invariant as fetch_prices_v2.py's look-ahead rule for candle timestamps --
+it exists so a later audit can grep every prompt string in this file and
+confirm no price token appears in one.
 
 Pipeline (one run):
   1. DISCOVER  Gamma API `/markets?closed=false` (paginated), classify question
@@ -19,22 +42,36 @@ Pipeline (one run):
      institute/tools/coverage_report.py's "geopolitics" rule -- see comment at
      GEO_PATTERN below), require binary Yes/No + parseable endDate > now+24h +
      outcomePrices present. Cap at --max, preferring higher liquidity/volume.
-  2. FORECAST  (skipped entirely, exit 0, if GROQ_API_KEY is unset) 10 fixed
-     personas each get a price-blind prompt and must reply with strict JSON
-     {"prob":0.xx,"rationale":"..."}. Non-conforming replies are dropped;
-     need >=6/10 valid or the market is skipped ("swarm_failed"). p_swarm =
-     mean of valid probs, p_std = population stdev. p_std > 0.30 is recorded
-     but flagged "no_trade_high_disagreement" (not dropped).
-     p_final = 0.70 * p_swarm + 0.30 * q_market (blended only after step 2).
-  3. FREEZE  Append one row per market per day to
-     institute/data/history/s1_forecasts.jsonl. Idempotent: a market_id+date
-     pair already present is skipped, never rewritten.
+  2. FORECAST  (skipped entirely, exit 0, if GROQ_API_KEY is unset) for each
+     candidate, capture BOTH variants:
+       (2a) swarm10 -- 10 fixed personas each get a price-blind prompt and
+       must reply with strict JSON {"prob":0.xx,"rationale":"..."}.
+       Non-conforming replies are dropped; need >=6/10 valid or the market is
+       skipped ("swarm_failed"). p_swarm = mean of valid probs, p_std =
+       population stdev. p_std > 0.30 is recorded but flagged
+       "no_trade_high_disagreement" (not dropped).
+       p_final = 0.70 * p_swarm + 0.30 * q_market.
+       (2b) sfp3 -- 3 calls (one per lens: structural/historical,
+       recent-news/momentum, base-rate-anchored), each a 5-step scratchpad
+       reply {"base_rate":0.xx,"prob":0.xx,"rationale":"..."}. Need >=2/3
+       valid or the market is flagged "sfp3_failed" (swarm10 row is still
+       kept). Aggregation: p_median (median of valid probs) -> p_ext
+       (extremized via d=sqrt(3)) -> p_model = 0.70*p_ext + 0.30*base_rate_med
+       -> p_final = 0.70*p_model + 0.30*q_market (identical market blend to
+       swarm10, so the A/B isolates the analyst protocol, not the blend).
+  3. FREEZE  Append one row per market per day per variant to
+     institute/data/history/s1_forecasts.jsonl. Idempotent: a
+     market_id+date+variant triple already present is skipped, never
+     rewritten.
   4. SETTLE  Before forecasting, scan prior forecast rows lacking an
      "outcome" and check Gamma for resolution. Resolved markets get a NEW
      settlement row appended (never a rewrite of the forecast row):
      {"settle_for": "<market_id>|<date>", "outcome": 0|1, "settled_at": iso}.
+     Settlement keys on market_id only, so one settlement row applies to
+     both variants' forecast rows for that market+date.
   5. REPORT  Print a summary; hard-cap 200 LLM calls/run (Groq free-tier RPD
      protection) and sleep 0.5s between calls (Groq free-tier 30 RPM limit).
+     Budget per market is now 13 calls (10 swarm10 + 3 sfp3).
 
 Spec-silent decisions (documented here per task instructions):
   - "highest liquidity/volume" ranking uses Gamma's `volume` field (falls back
@@ -53,6 +90,12 @@ Spec-silent decisions (documented here per task instructions):
     terms (regime, border, hostage, invade) the task spec asked for that
     coverage_report.py's rule doesn't carry. Keeping this file import-free of
     institute/tools avoids a fragile cross-package import for one regex.
+  - sfp3 clips p_median and base_rate_med to [0.001, 0.999] before any
+    logit/sigmoid math, per spec, to avoid -inf/+inf at the extremes.
+  - sfp3's per-call temperature (0.7) intentionally differs from swarm10's
+    default (0.0, via llm's own default) -- the scratchpad protocol wants
+    each lens to reason somewhat independently rather than collapse to the
+    same greedy completion three times.
 
 stdlib only. ASCII output. Windows-safe paths throughout.
 
@@ -63,6 +106,7 @@ Usage:
 """
 import argparse
 import json
+import math
 import os
 import re
 import statistics
@@ -110,6 +154,16 @@ PERSONAS = [
     "You are a game theorist. Model this as a strategic interaction between rational "
     "actors with competing incentives.",
 ]
+
+# --------------------------------------------------------------------------------------
+# sfp3 (superforecaster protocol, 3 calls) -- lenses + aggregation constants
+# --------------------------------------------------------------------------------------
+LENS_A = "weight structural and historical constraints most heavily"
+LENS_B = "weight recent news and current momentum most heavily"
+LENS_C = "assume the base rate is correct unless the evidence is overwhelming"
+SFP3_LENSES = [LENS_A, LENS_B, LENS_C]
+
+SFP3_D = 3 ** 0.5  # sqrt(3), per AIA arXiv 2511.07678 / Halawi 2402.18563
 
 # --------------------------------------------------------------------------------------
 # geopolitics classifier -- COPIED (not imported) from institute/tools/coverage_report.py
@@ -283,6 +337,148 @@ def _parse_persona_reply(text):
     return {"prob": p, "rationale": str(obj.get("rationale", ""))[:300]}
 
 
+def build_sfp3_prompt(lens_line, question, end_date, today):
+    """Build a price-blind 5-step scratchpad prompt for one sfp3 lens.
+
+    MUST NEVER include q_market/outcomePrices -- same honesty invariant as
+    build_prompt() above.
+    """
+    return (
+        f"You are a superforecaster. For this question, {lens_line}.\n\n"
+        f"Question: {question}\n"
+        f"Resolution date: {end_date}\n"
+        f"Today's date: {today}\n\n"
+        "Follow these 5 steps:\n"
+        "Step 1 -- RESTATE the question, its resolution criterion, and today's date.\n"
+        "Step 2 -- OUTSIDE VIEW FIRST: name 1-3 reference classes of similar past "
+        "events, and state the base rate as a frequency (e.g. \"out of 100 "
+        "comparable situations, YES resolves in ~M\").\n"
+        "Step 3 -- INSIDE VIEW through your lens: list factors pushing above the "
+        "base rate AND factors pushing below it (at least one of each).\n"
+        "Step 4 -- RED-TEAM THE DRAMATIC OUTCOME: ask yourself \"am I reasoning "
+        "from vividness rather than frequency?\" and adjust down if so.\n"
+        "Step 5 -- reply ONLY with JSON of the form "
+        '{"base_rate": 0.xx, "prob": 0.xx, "rationale": "<one sentence>"} '
+        "and nothing else."
+    )
+
+
+def _parse_sfp3_reply(text):
+    """Defensively parse the first {...} JSON object in a sloppy sfp3 reply."""
+    if not text:
+        return None
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        return None
+    try:
+        obj = json.loads(text[start:end + 1])
+    except ValueError:
+        return None
+    if not isinstance(obj, dict) or "prob" not in obj or "base_rate" not in obj:
+        return None
+    try:
+        p = float(obj["prob"])
+        br = float(obj["base_rate"])
+    except (TypeError, ValueError):
+        return None
+    if not (0.0 <= p <= 1.0) or not (0.0 <= br <= 1.0):
+        return None
+    return {"prob": p, "base_rate": br, "rationale": str(obj.get("rationale", ""))[:300]}
+
+
+def _clip01(x, lo=0.001, hi=0.999):
+    return min(hi, max(lo, x))
+
+
+def _logit(p):
+    p = _clip01(p)
+    return math.log(p / (1.0 - p))
+
+
+def _sigmoid(x):
+    return 1.0 / (1.0 + math.exp(-x))
+
+
+def sfp3_aggregate(probs, base_rates, q_market):
+    """Pre-registered sfp3 aggregation (AIA arXiv 2511.07678 + Halawi 2402.18563).
+
+    p_median = median of valid probs (clipped to [0.001, 0.999]).
+    p_ext = sigmoid(sqrt(3) * logit(p_median))            -- extremize.
+    base_rate_med = median of valid base_rate values (clipped).
+    p_model = 0.70 * p_ext + 0.30 * base_rate_med          -- shrink toward outside view.
+    p_final = 0.70 * p_model + 0.30 * q_market             -- same market blend as swarm10.
+    Returns dict with p_median, p_ext, base_rate_med, p_model, p_final.
+    """
+    p_median = _clip01(statistics.median(probs))
+    p_ext = _sigmoid(SFP3_D * _logit(p_median))
+    base_rate_med = _clip01(statistics.median(base_rates))
+    p_model = 0.70 * p_ext + 0.30 * base_rate_med
+    p_final = 0.70 * p_model + 0.30 * q_market
+    return {
+        "p_median": p_median,
+        "p_ext": p_ext,
+        "base_rate_med": base_rate_med,
+        "p_model": p_model,
+        "p_final": p_final,
+    }
+
+
+def forecast_sfp3(candidate, budget, complete_fn=llm_complete, sleep_fn=time.sleep,
+                   call_sleep=0.5):
+    """Run the 3-lens sfp3 protocol for one candidate. Returns (row_dict_or_None, reason)."""
+    today = _today()
+    replies = []
+    for lens_line in SFP3_LENSES:
+        if budget.exhausted():
+            return None, "budget_exhausted"
+        prompt = build_sfp3_prompt(lens_line, candidate["question"], candidate["end_date"], today)
+        # HONESTY INVARIANT: candidate["q_market"] / outcomePrices must NEVER appear
+        # in `prompt`. Do not add it above without re-reading the module docstring.
+        budget.spend()
+        try:
+            reply = complete_fn(prompt, role="forecast", mock=False, max_tokens=400,
+                                 temperature=0.7)
+        except Exception:
+            reply = None
+        sleep_fn(call_sleep)
+        parsed = _parse_sfp3_reply(reply)
+        if parsed is not None:
+            replies.append(parsed)
+    if len(replies) < 2:
+        return None, "sfp3_failed"
+    probs = [r["prob"] for r in replies]
+    base_rates = [r["base_rate"] for r in replies]
+    q_market = candidate["q_market"]
+    agg = sfp3_aggregate(probs, base_rates, q_market)
+    edge = agg["p_final"] - q_market
+    p_std = statistics.pstdev(probs) if len(probs) > 1 else 0.0
+    row = {
+        "date": today,
+        "variant": "sfp3",
+        "market_id": candidate["market_id"],
+        "condition_id": candidate.get("condition_id"),
+        "question": candidate["question"],
+        "end_date": candidate["end_date"],
+        "q_market": q_market,
+        "probs": [round(p, 4) for p in probs],
+        "p_median": round(agg["p_median"], 4),
+        "p_ext": round(agg["p_ext"], 4),
+        "base_rate_med": round(agg["base_rate_med"], 4),
+        "p_model": round(agg["p_model"], 4),
+        "p_final": round(agg["p_final"], 4),
+        "n_valid": len(replies),
+        "lenses_used": 3,
+        "edge": round(edge, 4),
+        "would_bet": bool(abs(edge) > 0.05 and p_std <= 0.30),
+        "side": "YES" if edge > 0 else "NO",
+        "frozen_at": _now_iso(),
+    }
+    if p_std > 0.30:
+        row["flag"] = "no_trade_high_disagreement"
+    return row, "ok"
+
+
 class LLMBudget:
     """Tracks call count across a run; hard-caps at max_calls."""
 
@@ -326,12 +522,14 @@ def forecast_market(candidate, budget, complete_fn=llm_complete, sleep_fn=time.s
     edge = p_final - q_market
     row = {
         "date": today,
+        "variant": "swarm10",
         "market_id": candidate["market_id"],
         "condition_id": candidate.get("condition_id"),
         "question": candidate["question"],
         "end_date": candidate["end_date"],
         "q_market": q_market,
         "p_swarm": round(p_swarm, 4),
+        "p_model": round(p_swarm, 4),
         "p_std": round(p_std, 4),
         "p_final": round(p_final, 4),
         "n_valid": len(probs),
@@ -350,10 +548,14 @@ def forecast_market(candidate, budget, complete_fn=llm_complete, sleep_fn=time.s
 # 3. FREEZE (append-only, idempotent by market_id+date)
 # --------------------------------------------------------------------------------------
 def load_existing_keys(path=FORECASTS_PATH):
+    """market_id+date+variant idempotency key. Rows with no "variant" field
+    (written before this A/B existed) are treated as "swarm10" per the module
+    docstring."""
     keys = set()
     for row in _iter_jsonl(path):
         if "market_id" in row and "date" in row:
-            keys.add((row["market_id"], row["date"]))
+            variant = row.get("variant", "swarm10")
+            keys.add((row["market_id"], row["date"], variant))
     return keys
 
 
@@ -444,14 +646,23 @@ def run(max_markets=MAX_MARKETS_DEFAULT, fetch_fn=fetch_json, complete_fn=llm_co
     for c in candidates:
         if budget.exhausted():
             break
-        key = (c["market_id"], _today())
-        if key in existing:
-            continue
-        row, reason = forecast_market(c, budget, complete_fn, sleep_fn)
-        if row is not None:
-            append_row(row, path)
-            existing.add(key)
-            frozen += 1
+        today = _today()
+        key_swarm = (c["market_id"], today, "swarm10")
+        if key_swarm not in existing:
+            row, reason = forecast_market(c, budget, complete_fn, sleep_fn)
+            if row is not None:
+                append_row(row, path)
+                existing.add(key_swarm)
+                frozen += 1
+        if budget.exhausted():
+            break
+        key_sfp3 = (c["market_id"], today, "sfp3")
+        if key_sfp3 not in existing:
+            row, reason = forecast_sfp3(c, budget, complete_fn, sleep_fn)
+            if row is not None:
+                append_row(row, path)
+                existing.add(key_sfp3)
+                frozen += 1
 
     report = {
         "markets_scanned_geopolitics_candidates": len(candidates),
@@ -535,8 +746,8 @@ def _selftest():
     # GROQ_API_KEY unset in this test env -> run() should skip forecasting entirely
     # and add no rows; verify separately with key present via direct dedupe check.
     existing_keys = load_existing_keys(path)
-    assert (row["market_id"], row["date"]) in existing_keys
-    key = (candidates[0]["market_id"], _today())
+    assert (row["market_id"], row["date"], "swarm10") in existing_keys
+    key = (candidates[0]["market_id"], _today(), "swarm10")
     if key not in existing_keys:
         pass
     # explicit dedupe check bypassing the GROQ gate
@@ -572,6 +783,57 @@ def _selftest():
     settle_row = rows_after_settle[-1]
     assert settle_row.get("outcome") == 1 and "settle_for" in settle_row
     print("[selftest] (d) PASS: settlement appends a new row; forecast row untouched")
+
+    # (e) sfp3 aggregation math is exact on a hand-computed case
+    probs_e = [0.10, 0.20, 0.40]
+    base_rates_e = [0.05, 0.10, 0.30]
+    agg_e = sfp3_aggregate(probs_e, base_rates_e, q_market=0.0)
+    assert abs(agg_e["p_median"] - 0.20) < 1e-9
+    assert abs(_logit(0.20) - (-1.3862944)) < 1e-4
+    assert abs(agg_e["p_ext"] - 0.0830895) < 1e-4, f"p_ext={agg_e['p_ext']}"
+    assert abs(agg_e["base_rate_med"] - 0.10) < 1e-9
+    assert abs(agg_e["p_model"] - 0.0881626) < 1e-4, f"p_model={agg_e['p_model']}"
+    print("[selftest] (e) PASS: sfp3 aggregation math matches hand-computed case")
+
+    # (f) market price absent from all sfp3 prompts
+    sfp3_prompts_seen = []
+
+    def fake_complete_sfp3(prompt, role="forecast", mock=False, max_tokens=400,
+                            temperature=0.7, **kw):
+        sfp3_prompts_seen.append(prompt)
+        return json.dumps({
+            "base_rate": 0.15 + 0.01 * len(sfp3_prompts_seen),
+            "prob": 0.25 + 0.01 * len(sfp3_prompts_seen),
+            "rationale": "ok",
+        })
+
+    budget_sfp3 = LLMBudget(max_calls=200)
+    row_sfp3, reason_sfp3 = forecast_sfp3(candidates[0], budget_sfp3,
+                                           complete_fn=fake_complete_sfp3,
+                                           sleep_fn=lambda s: None, call_sleep=0)
+    assert reason_sfp3 == "ok", f"forecast_sfp3 failed: {reason_sfp3}"
+    assert row_sfp3["variant"] == "sfp3"
+    assert len(sfp3_prompts_seen) == 3, f"expected 3 sfp3 calls, got {len(sfp3_prompts_seen)}"
+    for p in sfp3_prompts_seen:
+        assert "0.37" not in p and "0.63" not in p, "market price leaked into an sfp3 prompt!"
+    print("[selftest] (f) PASS: q_market never appears in any sfp3 prompt")
+
+    # (g) idempotency across variants: one row per variant, no more
+    append_row(row_sfp3, path)
+    rows_all = list(_iter_jsonl(path))
+    variant_keys = [
+        (r["market_id"], r["date"], r.get("variant", "swarm10"))
+        for r in rows_all if "market_id" in r
+    ]
+    assert len(variant_keys) == len(set(variant_keys)), \
+        "duplicate market_id+date+variant rows present!"
+    assert variant_keys.count((candidates[0]["market_id"], _today(), "swarm10")) == 1
+    assert variant_keys.count((candidates[0]["market_id"], _today(), "sfp3")) == 1
+    existing_keys3 = load_existing_keys(path)
+    key_swarm3 = (candidates[0]["market_id"], _today(), "swarm10")
+    key_sfp3_3 = (candidates[0]["market_id"], _today(), "sfp3")
+    assert key_swarm3 in existing_keys3 and key_sfp3_3 in existing_keys3
+    print("[selftest] (g) PASS: idempotent across variants (one row each, no duplicates)")
 
     print("[selftest] ALL CHECKS PASSED")
 
