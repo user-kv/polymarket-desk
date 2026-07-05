@@ -40,6 +40,52 @@ def run(args_list):
     return p.returncode
 
 
+NTFY_TOPIC = "kavee-institute-x7q2m9"   # private-ish: unguessable topic name; paper
+                                        # stats only, nothing sensitive travels here.
+
+
+def notify_phone():
+    """Push a one-line daily summary to the user's phone via ntfy.sh.
+
+    The user subscribes to the topic in the ntfy app (iOS/Android). Free, no
+    account, no credentials on disk. Failure is logged, never fatal.
+    """
+    import csv
+    import json
+    import urllib.request
+    data = os.path.abspath(os.path.join(HERE, "..", "..", "..", "data", "history"))
+    parts = []
+    try:
+        v = json.load(open(os.path.join(data, "c2_verdict.json"), encoding="utf-8"))
+        tag = "VERDICT!" if (v.get("bar_pass") or v.get("deploy_killed")) else "prelim"
+        parts.append(f'Kalshi test [{tag}]: {v.get("qualifying_fades", 0)}/2000 bets, '
+                     f'net {v.get("mean_net_roi", 0)*100:+.2f}%')
+    except Exception:
+        parts.append("Kalshi test: no data")
+    try:
+        bets = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..",
+                                            "papertrader", "data", "bets.csv"))
+        rows = [r for r in csv.DictReader(open(bets, encoding="utf-8"))
+                if r["status"] == "settled" and r.get("is_test", "N") != "Y"]
+        if rows:
+            w = sum(1 for r in rows if r["result"] == "WON")
+            pnl = sum(float(r["pnl"]) for r in rows)
+            staked = sum(float(r["stake"]) for r in rows)
+            parts.append(f"Weather bot: {len(rows)}/50 bets, {w} wins, "
+                         f"{pnl/staked*100:+.1f}% net (${pnl:+.0f})")
+    except Exception:
+        parts.append("Weather bot: ledger unreadable")
+    msg = " | ".join(parts)
+    try:
+        req = urllib.request.Request(
+            f"https://ntfy.sh/{NTFY_TOPIC}", data=msg.encode("utf-8"),
+            headers={"Title": "Institute daily (paper)", "Tags": "chart_with_upwards_trend"})
+        urllib.request.urlopen(req, timeout=20).read()
+        log(f"phone notify sent: {msg}")
+    except Exception as e:
+        log(f"phone notify FAILED (non-fatal): {e}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--kalshi-max", type=int, default=2000)
@@ -51,6 +97,7 @@ def main():
     run(["fetch_prices_v2.py", "--venue", "polymarket", "--max", str(a.poly_max)])
     run(["c2_backtest.py"])          # pre-registered; re-runs as the corpus grows
     run(["gen_dashboard.py"])
+    notify_phone()
     log("=== scheduled fetch done ===")
 
 
