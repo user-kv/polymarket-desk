@@ -49,6 +49,7 @@ def main():
     run(["fetch_prices_v2.py", "--venue", "kalshi", "--max", str(a.kalshi_max),
          "--interval", "60"])
     run(["fetch_prices_v2.py", "--venue", "polymarket", "--max", str(a.poly_max)])
+    run(["c2_backtest.py"])          # pre-registered; re-runs as the corpus grows
     run(["gen_dashboard.py"])
     log("=== scheduled fetch done ===")
 

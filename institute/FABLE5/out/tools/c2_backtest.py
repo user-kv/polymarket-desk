@@ -156,11 +156,11 @@ def evaluate():
 
 
 def main():
+    global YES_MAX
     ap = argparse.ArgumentParser()
-    ap.add_argument("--threshold", type=float, default=YES_MAX,
+    ap.add_argument("--threshold", type=float, default=0.10,
                     help="override voids the pre-registration; report will say so")
     a = ap.parse_args()
-    global YES_MAX
     if a.threshold != YES_MAX:
         YES_MAX = a.threshold
     report, _ = evaluate()

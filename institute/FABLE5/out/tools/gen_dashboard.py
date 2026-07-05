@@ -104,12 +104,32 @@ def collect():
     return stats
 
 
-# Cell status is design-static (from ARCHITECTURE v4 §2/§5); build phase flips these.
+def _c2_cell():
+    p = os.path.join(DATA, "c2_verdict.json")
+    if not os.path.exists(p):
+        return "warning", "Awaiting candle corpus; +2% net-after-costs bar"
+    try:
+        v = json.load(open(p, encoding="utf-8"))
+    except ValueError:
+        return "warning", "verdict file unreadable"
+    note = (f'{v.get("qualifying_fades", 0)} fades, win {v.get("win_rate", 0)*100:.1f}%, '
+            f'net ROI {v.get("mean_net_roi", 0)*100:+.2f}% — {v.get("verdict", "?")}')
+    if v.get("bar_pass"):
+        return "good", note
+    if v.get("deploy_killed"):
+        return "critical", note
+    return "warning", note
+
+
+# Cell status (C1 from the live paper ledger verdict of 2026-07-05; C2 data-driven).
+_c2s, _c2n = _c2_cell()
 CELLS = [
     {"id": "C1", "name": "Weather ensemble", "stage": "Graduation candidate",
-     "status": "warning", "note": "W1 net re-derivation pending; pre-registered branch decides"},
+     "status": "good", "note": "LIVE paper (since 2026-06-20): 25 settled, 92% wins, "
+     "+15.3% ROI NET of fees ($375 on $2,450) — lands in the pre-registered >=+10% "
+     "branch; n>=50 + SPRT + family correction still required before graduation"},
     {"id": "C2", "name": "Kalshi longshot fade", "stage": "Backtest study + forward seed",
-     "status": "warning", "note": "Awaiting candle corpus; +2% net-after-costs bar, SPRT ~wk 10"},
+     "status": _c2s, "note": _c2n},
     {"id": "C3", "name": "PM behavioral validation", "stage": "Pre-registered study",
      "status": "warning", "note": "Probe: only 3.5% of PM long tail has >=10 trades — bars re-anchor"},
     {"id": "S1", "name": "Geopolitics news (0% fee)", "stage": "Forward-only seed",
