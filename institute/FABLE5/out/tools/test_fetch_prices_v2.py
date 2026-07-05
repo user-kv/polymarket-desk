@@ -358,6 +358,63 @@ class TestManifestNonClobbering(unittest.TestCase):
         self.assertEqual(result["kalshi_candles"]["added_this_run"], 1)
 
 
+class TestCandleShapeNormalization(unittest.TestCase):
+    """Live API (2026-07-05) serves *_dollars string fields; older/numeric shape is
+    integer CENTS under the bare key. Both must normalize to float dollars, and the
+    unit is decided by TYPE, never magnitude (a 1-cent int must not become $1)."""
+
+    def test_dollars_string_shape(self):
+        row = fp2._flatten_candle({
+            "end_period_ts": 1783112400,
+            "price": {"close_dollars": "0.0100", "open_dollars": "0.9400",
+                      "high_dollars": "0.9400", "low_dollars": "0.0100"},
+            "yes_bid": {"close_dollars": "0.0000"},
+            "yes_ask": {"close_dollars": "0.0100"},
+            "volume_fp": "5580.50",
+        })
+        self.assertEqual(row[4], 0.01)   # close
+        self.assertEqual(row[1], 0.94)   # open
+        self.assertEqual(row[5], 0.0)    # yes_bid close
+        self.assertEqual(row[6], 0.01)   # yes_ask close
+        self.assertEqual(row[7], 5580.5)
+
+    def test_integer_cents_shape(self):
+        row = fp2._flatten_candle({
+            "end_period_ts": 100,
+            "price": {"close": 1, "open": 94},   # ints = cents
+            "yes_bid": {"close": 34},
+            "volume": 7,
+        })
+        self.assertEqual(row[4], 0.01)   # 1 cent, NOT $1 — the tail-corruption trap
+        self.assertEqual(row[1], 0.94)
+        self.assertEqual(row[5], 0.34)
+
+    def test_float_dollars_shape(self):
+        row = fp2._flatten_candle({"end_period_ts": 100, "price": {"close": 0.3}})
+        self.assertEqual(row[4], 0.3)
+
+
+class TestDoubleNotFoundIsNoData(unittest.TestCase):
+    """404 on BOTH endpoints = permanent no-data, recorded (not a retryable error)."""
+
+    def test_both_404_returns_empty_none(self):
+        def fetch_404(url):
+            raise _http_error(url, 404)
+        m = {"id": "KXAGICO-COMP-27Q3", "close_time": "2026-01-01T00:00:00Z"}
+        candles, src = fp2.fetch_kalshi_candles_for_market(
+            m, 60, fetch_fn=fetch_404, sleep_fn=lambda s: None)
+        self.assertEqual(candles, [])
+        self.assertEqual(src, "none")
+
+    def test_historical_500_still_raises(self):
+        def fetch_mixed(url):
+            raise _http_error(url, 404 if "/series/" in url else 500)
+        m = {"id": "KXX-1-M1", "close_time": "2026-01-01T00:00:00Z"}
+        with self.assertRaises(urllib.error.HTTPError):
+            fp2.fetch_kalshi_candles_for_market(
+                m, 60, fetch_fn=fetch_mixed, sleep_fn=lambda s: None)
+
+
 class TestHardeningGuards(unittest.TestCase):
     """The two verifier-flagged latent traps must now fail loudly, not guess."""
 

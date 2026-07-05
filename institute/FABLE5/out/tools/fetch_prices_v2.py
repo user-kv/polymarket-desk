@@ -175,18 +175,53 @@ def _flatten_candle(c):
     price = c.get("price") or {}
     yb = c.get("yes_bid") or {}
     ya = c.get("yes_ask") or {}
-    close = price.get("close")
+
+    def val(d, key):
+        # Kalshi serves two shapes: integer CENTS under the bare key ("close": 34)
+        # and dollar strings under "*_dollars" ("close_dollars": "0.3400").
+        # Normalize to float DOLLARS. Type decides the unit (an int is cents,
+        # a float/str is dollars) — a magnitude heuristic would corrupt exactly
+        # the 1-2c longshot tail this data exists to measure.
+        v = d.get(key)
+        if v is not None:
+            if isinstance(v, bool):
+                return None
+            if isinstance(v, int):
+                return v / 100.0
+            try:
+                return float(v)
+            except (TypeError, ValueError):
+                return None
+        v = d.get(f"{key}_dollars")
+        if v is None:
+            return None
+        try:
+            return float(v)
+        except (TypeError, ValueError):
+            return None
+
+    close = val(price, "close")
     if close is None and "close" in c:
-        close = c.get("close")
+        try:
+            close = float(c.get("close"))
+        except (TypeError, ValueError):
+            close = None
+    vol = c.get("volume")
+    if vol is None:
+        vol = c.get("volume_fp")
+    try:
+        vol = float(vol) if vol is not None else None
+    except (TypeError, ValueError):
+        vol = None
     return [
         ts,
-        price.get("open"),
-        price.get("high"),
-        price.get("low"),
+        val(price, "open"),
+        val(price, "high"),
+        val(price, "low"),
         close,
-        yb.get("close"),
-        ya.get("close"),
-        c.get("volume"),
+        val(yb, "close"),
+        val(ya, "close"),
+        vol,
     ]
 
 
@@ -216,7 +251,16 @@ def fetch_kalshi_candles_for_market(m, interval, fetch_fn=fetch_json, sleep_fn=t
 
     if not candles:
         url_hist = build_candle_url(ticker, series, start_ts, end_ts, interval, historical=True)
-        resp = fetch_with_retry(url_hist, fetch_fn, sleep_fn)
+        try:
+            resp = fetch_with_retry(url_hist, fetch_fn, sleep_fn)
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                # 404 on BOTH endpoints = the venue serves no candles for this market
+                # (observed: long-dated early-settled series). Permanent condition —
+                # record an empty no_data row so it is marked done and never re-burned,
+                # rather than counting as a retryable error forever.
+                return [], "none"
+            raise
         candles = (resp or {}).get("candlesticks") or []
         return [_flatten_candle(c) for c in candles], "historical"
 
