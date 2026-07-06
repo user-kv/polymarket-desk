@@ -89,6 +89,48 @@ def collect():
             pm_usable += 1
     stats["poly"] = {"markets": pm_markets, "usable": pm_usable, "points": pm_points}
 
+    # Weather bankroll equity curve (papertrader ledger)
+    bk = os.path.join(os.path.dirname(ROOT), "papertrader", "data", "bankroll.json")
+    try:
+        h = json.load(open(bk, encoding="utf-8"))
+        stats["equity"] = [round(e["balance"], 2) for e in h.get("history", [])][-80:]
+        stats["balance"] = h.get("balance")
+    except Exception:
+        stats["equity"], stats["balance"] = [], None
+
+    # LLM-cell A/B scoreboard: per (cell, variant) — frozen, settled, Brier vs market
+    stats["ab"] = []
+    for cell, path in (("geopolitics", os.path.join(DATA, "s1_forecasts.jsonl")),
+                       ("fda", os.path.join(DATA, "fda_forecasts.jsonl"))):
+        fc, st = {}, {}
+        for r in _iter_jsonl(path):
+            if "settle_for" in r:
+                st[r["settle_for"]] = r.get("outcome")
+            else:
+                key = f'{r.get("market_id")}|{r.get("date")}'
+                fc.setdefault(key, []).append(r)
+        agg = {}
+        for key, rows in fc.items():
+            outcome = st.get(key)
+            for r in rows:
+                v = r.get("variant", "swarm10")
+                a = agg.setdefault(v, {"frozen": 0, "settled": 0, "bs_m": 0.0, "bs_q": 0.0})
+                a["frozen"] += 1
+                if outcome is None:
+                    continue
+                pm_ = r.get("p_model", r.get("p_swarm"))
+                if pm_ is None:
+                    continue
+                a["settled"] += 1
+                a["bs_m"] += (float(pm_) - outcome) ** 2
+                a["bs_q"] += (float(r.get("q_market", 0.5)) - outcome) ** 2
+        for v, a in sorted(agg.items()):
+            stats["ab"].append({
+                "cell": cell, "variant": v, "frozen": a["frozen"], "settled": a["settled"],
+                "brier": round(a["bs_m"] / a["settled"], 4) if a["settled"] else None,
+                "brier_market": round(a["bs_q"] / a["settled"], 4) if a["settled"] else None,
+            })
+
     # Run history (append this snapshot, then load all for the sparkline)
     snap = {
         "ts": int(time.time()),
@@ -227,6 +269,42 @@ def render(stats):
     pct_usable = (pm["usable"] / pm["markets"] * 100) if pm["markets"] else 0
     pct_bidask = (kc["with_bidask"] / kc["markets"] * 100) if kc["markets"] else 0
 
+    def spark_vals(vals):
+        vals = list(vals) or [0]
+        vmax, vmin = max(vals), min(vals)
+        rng = (vmax - vmin) or 1
+        w, h = 220, 34
+        if len(vals) == 1:
+            vals = vals * 2
+        step = w / (len(vals) - 1)
+        pts = " ".join(f"{i*step:.1f},{h - ((v-vmin)/rng)*(h-6) - 3:.1f}"
+                       for i, v in enumerate(vals))
+        return (f'<svg class="spark" width="{w}" height="{h}" viewBox="0 0 {w} {h}" '
+                f'role="img" aria-label="equity curve"><polyline points="{pts}" fill="none" '
+                f'stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" '
+                f'stroke-linecap="round"/></svg>')
+
+    equity_tile = ""
+    if stats.get("equity"):
+        equity_tile = (f'<div class="tile"><div class="k">Weather paper bankroll</div>'
+                       f'<div class="v">${stats["balance"]:,.0f}</div>'
+                       f'<div class="d">of $2,000 start (open bets excluded from balance)</div>'
+                       f'{spark_vals(stats["equity"])}</div>')
+
+    ab_rows = "\n".join(
+        f'<tr><td>{r["cell"]}</td><td class="mono">{r["variant"]}</td>'
+        f'<td class="mono">{r["frozen"]}</td><td class="mono">{r["settled"]}</td>'
+        f'<td class="mono">{r["brier"] if r["brier"] is not None else "—"}</td>'
+        f'<td class="mono">{r["brier_market"] if r["brier_market"] is not None else "—"}</td></tr>'
+        for r in stats.get("ab", [])
+    ) or '<tr><td colspan="6" class="muted">No LLM-cell forecasts yet</td></tr>'
+    ab_panel = (
+        '<div class="panel"><h2>LLM analyst A/B scoreboard '
+        '(lower Brier = better; kill rule at 50 settled)</h2>'
+        '<table><thead><tr><th>Cell</th><th>Variant</th><th>Frozen</th>'
+        '<th>Settled</th><th>Brier (analyst)</th><th>Brier (market)</th></tr></thead>'
+        f'<tbody>{ab_rows}</tbody></table></div>')
+
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -290,7 +368,10 @@ def render(stats):
   <div class="tile"><div class="k">Candle coverage of settled</div>
     <div class="v">{(kc["markets"]/stats["kalshi_settled_total"]*100 if stats["kalshi_settled_total"] else 0):.1f}%</div>
     <div class="d">grows with each scheduled fetch</div></div>
+  {equity_tile}
 </div>
+
+{ab_panel}
 
 <div class="panel"><h2>Kalshi candle histories by category (markets)</h2>{cat_bars}</div>
 

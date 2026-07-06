@@ -82,10 +82,10 @@ def fetch_weather_markets(cfg, cutoff_hours=48):
             question = m.get("question", "")
             slug = m.get("slug", "")
 
-            # Only daily-high markets are supported. Daily-low markets need a
-            # separate low-temperature forecast path and must not be scored as highs.
+            # Daily-high and daily-low markets are both supported (metric is
+            # detected in _parse_bucket / stored on the result dict below).
             q_lower = question.lower()
-            if "highest temperature" not in q_lower:
+            if "highest temperature" not in q_lower and "lowest temperature" not in q_lower:
                 continue
             matched_city = None
             for city_name, city_cfg in cfg_cities.items():
@@ -147,6 +147,8 @@ def fetch_weather_markets(cfg, cutoff_hours=48):
                 "bucket_high_f": bucket["high_f"],
                 "is_open_ended_low": bucket["is_open_ended_low"],
                 "is_open_ended_high": bucket["is_open_ended_high"],
+                "metric": bucket.get("metric", "high"),
+                "display_unit": bucket.get("display_unit", "f"),
                 "resolution_source": m.get(
                     "resolutionSource",
                     f"https://www.wunderground.com/history/daily/us/{matched_city['station'].lower()}"
@@ -165,9 +167,10 @@ def fetch_weather_markets(cfg, cutoff_hours=48):
     return results
 
 
-def _parse_bucket(question):
+def _parse_bucket_fahrenheit(q):
     """
-    Parse temperature bucket bounds (in °F) from a question string.
+    Original °F bucket parser (unchanged behavior — do not touch: existing 9
+    US cities depend on this being bit-identical).
     Handles patterns like:
       "...between 96-97°F..."
       "...96°F or higher..."
@@ -177,8 +180,6 @@ def _parse_bucket(question):
     Returns dict with keys: low_f, high_f, is_open_ended_low, is_open_ended_high
     Returns None if parse fails.
     """
-    q = question.lower()
-
     # Pattern: "between X-Y°F" or "between X and Y°F"
     m = re.search(r"between\s+([\d.]+)[-\s]+(?:and\s+)?([\d.]+)\s*[°f]", q)
     if m:
@@ -190,7 +191,9 @@ def _parse_bucket(question):
         }
 
     # Pattern: "X°F or higher" / "X°F or above"
-    m = re.search(r"([\d.]+)\s*[°f]\s*or\s+(?:higher|above)", q)
+    # [°f]+ not [°f]: the degree sign AND the f are two chars — a single-char
+    # class made "96°F or higher" unparseable (silently dropped; fixed 2026-07-06)
+    m = re.search(r"([\d.]+)\s*[°f]+\s*or\s+(?:higher|above)", q)
     if m:
         low = float(m.group(1))
         return {
@@ -198,8 +201,8 @@ def _parse_bucket(question):
             "is_open_ended_low": False, "is_open_ended_high": True
         }
 
-    # Pattern: "X°F or below" / "X°F or lower"
-    m = re.search(r"([\d.]+)\s*[°f]\s*or\s+(?:below|lower)", q)
+    # Pattern: "X°F or below" / "X°F or lower"  ([°f]+ — same fix as above)
+    m = re.search(r"([\d.]+)\s*[°f]+\s*or\s+(?:below|lower)", q)
     if m:
         high = float(m.group(1))
         return {
@@ -208,7 +211,7 @@ def _parse_bucket(question):
         }
 
     # Pattern: "X°F or below" written differently (e.g. 83forbelow in slug)
-    m = re.search(r"([\d.]+)\s*[°°f]+\s*or\s*below", question.lower())
+    m = re.search(r"([\d.]+)\s*[°°f]+\s*or\s*below", q)
     if m:
         high = float(m.group(1))
         return {
@@ -217,6 +220,99 @@ def _parse_bucket(question):
         }
 
     return None
+
+
+def _parse_bucket_celsius(q):
+    """
+    °C bucket parser for the ~34 additional Polymarket weather cities
+    (2026-07 expansion). Converts every bound to °F at parse time so the
+    internal canonical unit stays Fahrenheit everywhere downstream — only
+    `display_unit` records that the market was originally quoted in °C.
+
+    Handles patterns like:
+      "...between 27-28°C..." / "...between 27 and 28°C..."
+      "...28°C or higher/above..."
+      "...15°C or below/lower..."
+      "...be 28°C..." (single discrete value; Polymarket buckets these as
+        the half-open interval [X, X+1) in °C, matching the site's own
+        1-degree-wide bucket convention)
+
+    Returns dict with keys: low_f, high_f, is_open_ended_low,
+    is_open_ended_high, display_unit. Returns None if parse fails.
+    """
+    # Pattern: "between X-Y°C" or "between X and Y°C"
+    m = re.search(r"between\s+([\d.]+)[-\s]+(?:and\s+)?([\d.]+)\s*°?\s*c\b", q)
+    if m:
+        low_c = float(m.group(1))
+        high_c = float(m.group(2))
+        return {
+            "low_f": _celsius_to_f(low_c), "high_f": _celsius_to_f(high_c),
+            "is_open_ended_low": False, "is_open_ended_high": False,
+            "display_unit": "c",
+        }
+
+    # Pattern: "X°C or higher" / "X°C or above"
+    m = re.search(r"([\d.]+)\s*°?\s*c\s*or\s+(?:higher|above)", q)
+    if m:
+        low_c = float(m.group(1))
+        return {
+            "low_f": _celsius_to_f(low_c), "high_f": 999.0,
+            "is_open_ended_low": False, "is_open_ended_high": True,
+            "display_unit": "c",
+        }
+
+    # Pattern: "X°C or below" / "X°C or lower"
+    m = re.search(r"([\d.]+)\s*°?\s*c\s*or\s+(?:below|lower)", q)
+    if m:
+        high_c = float(m.group(1))
+        return {
+            "low_f": -999.0, "high_f": _celsius_to_f(high_c),
+            "is_open_ended_low": True, "is_open_ended_high": False,
+            "display_unit": "c",
+        }
+
+    # Pattern: single discrete value, e.g. "...be 28°C on July 7?"
+    # Must come last so it doesn't shadow the between/or-above/or-below forms.
+    m = re.search(r"be\s+([\d.]+)\s*°?\s*c\b", q)
+    if m:
+        value_c = float(m.group(1))
+        return {
+            "low_f": _celsius_to_f(value_c), "high_f": _celsius_to_f(value_c + 1.0),
+            "is_open_ended_low": False, "is_open_ended_high": False,
+            "display_unit": "c",
+        }
+
+    return None
+
+
+def _parse_bucket(question):
+    """
+    Parse temperature bucket bounds (always returned in °F, the internal
+    canonical unit) from a question string, and detect which metric
+    ("high" or "low") the market resolves against.
+
+    Tries the °C parser when the question is quoted in Celsius, else falls
+    back to the original °F parser (kept byte-for-byte to avoid regressing
+    the 9 already-live US cities).
+
+    Returns dict with keys: low_f, high_f, is_open_ended_low,
+    is_open_ended_high, metric, display_unit.
+    Returns None if parse fails.
+    """
+    q = question.lower()
+    metric = "low" if "lowest temperature" in q else "high"
+
+    if re.search(r"\d\s*°?\s*c\b", q):
+        result = _parse_bucket_celsius(q)
+    else:
+        result = _parse_bucket_fahrenheit(q)
+
+    if result is None:
+        return None
+
+    result.setdefault("display_unit", "f")
+    result["metric"] = metric
+    return result
 
 
 def fetch_best_ask(yes_token, cfg=None):

@@ -8,11 +8,15 @@ bets.csv columns (M4 adds side, brain_multiplier, brain_rationale):
   side, ask_price, stake, shares, gross_if_win, fee_if_win, net_profit_if_win,
   net_loss_if_lose, ensemble_prob, edge_pct, gfs_mean_f, ecmwf_mean_f,
   n_members, brain_multiplier, brain_rationale,
-  status, result, actual_high_f, settled_at, pnl, is_test
+  status, result, actual_high_f, settled_at, pnl, is_test, metric
 
   side: "YES" (buy YES token) | "NO" (buy NO token at 1-ask)
   brain_multiplier: Kelly multiplier set by brain (1.0 = no change; 0.0 = vetoed)
   brain_rationale: one-line reason from the brain (empty if brain disabled)
+  metric: "high" or "low" — which daily extreme this bucket resolves against
+  (2026-07 Celsius/low-temp city expansion). Rows written before this column
+  existed have no "metric" key at all; callers must treat missing as "high"
+  via bet.get("metric", "high") — never assume the key is present.
 
 bankroll.json:
   {"balance": 500.00, "start": 500.00, "history": [{"ts": ..., "balance": ...}]}
@@ -36,6 +40,9 @@ BETS_COLS = [
     "ensemble_prob", "edge_pct", "gfs_mean_f", "ecmwf_mean_f", "n_members",
     "brain_multiplier", "brain_rationale",           # M3: brain sizing metadata
     "status", "result", "actual_high_f", "settled_at", "pnl", "is_test",
+    "metric",                                        # 2026-07 Celsius/low-temp expansion:
+                                                      # "high" or "low"; missing on old rows
+                                                      # (they predate the column) means "high".
 ]
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
@@ -107,11 +114,51 @@ def _cast_bet(row):
     return out
 
 
+def _migrate_header_if_needed():
+    """Rewrite bets.csv when BETS_COLS gained columns the on-disk header lacks.
+
+    Without this, append_bet writes new-schema rows into an old-header file:
+    the extra trailing values are orphaned by DictReader and a low-temp bet
+    silently loses its metric field — and then settles against the daily HIGH
+    (2026-07-06 verifier BLOCKER). Migration backfills additive columns
+    ("metric" -> "high") and is atomic (temp file + os.replace).
+    Refuses to touch the file if the existing header contains columns BETS_COLS
+    does not (that is real drift, not an additive migration — fail loud).
+    """
+    if not os.path.exists(BETS_PATH):
+        return
+    with open(BETS_PATH, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        old_header = list(reader.fieldnames or [])
+        if old_header == BETS_COLS:
+            return
+        unknown = [c for c in old_header if c not in BETS_COLS]
+        if unknown:
+            logger.error("bets.csv header has columns not in BETS_COLS (%s) — "
+                         "refusing to migrate; rows may misalign.", unknown)
+            return
+        rows = list(reader)
+    defaults = {"metric": "high"}
+    tmp = BETS_PATH + ".migrating"
+    with open(tmp, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=BETS_COLS, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            for col in BETS_COLS:
+                if col not in row or row.get(col) is None:
+                    row[col] = defaults.get(col, "")
+            writer.writerow(row)
+    os.replace(tmp, BETS_PATH)
+    logger.info("bets.csv migrated: header %d -> %d columns (backfilled %s)",
+                len(old_header), len(BETS_COLS), list(defaults))
+
+
 def load_bets():
     """Return list of bet dicts from bets.csv. Empty list if file doesn't exist."""
     _ensure_data_dir()
     if not os.path.exists(BETS_PATH):
         return []
+    _migrate_header_if_needed()
     with open(BETS_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         # Guard against the M4 schema-drift bug: if the file header doesn't match
@@ -129,6 +176,7 @@ def append_bet(bet_dict):
     Also deducts stake from bankroll immediately.
     """
     _ensure_data_dir()
+    _migrate_header_if_needed()
     file_exists = os.path.exists(BETS_PATH)
     with open(BETS_PATH, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=BETS_COLS, extrasaction="ignore")

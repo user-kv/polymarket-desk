@@ -64,21 +64,7 @@ def fetch_observed_high_openmeteo(lat, lon, date_str, tz="America/Chicago"):
     date_str: 'YYYY-MM-DD'
     Returns float °F or None.
     """
-    url = (
-        f"https://archive-api.open-meteo.com/v1/archive"
-        f"?latitude={lat}&longitude={lon}"
-        f"&start_date={date_str}&end_date={date_str}"
-        f"&daily=temperature_2m_max&timezone={tz}"
-    )
-    try:
-        data = _get(url)
-        daily = data.get("daily", {})
-        temps = daily.get("temperature_2m_max", [])
-        if temps and temps[0] is not None:
-            return round(_c_to_f(temps[0]), 1)
-    except Exception as e:
-        logger.warning(f"Open-Meteo archive error for {date_str} at {lat},{lon}: {e}")
-    return None
+    return fetch_observed_extreme_openmeteo(lat, lon, date_str, tz, metric="high")
 
 
 def fetch_observed_high_nws(station, date_str):
@@ -87,6 +73,38 @@ def fetch_observed_high_nws(station, date_str):
     station: ICAO code e.g. 'KDAL'
     date_str: 'YYYY-MM-DD'
     Returns float °F or None.
+    """
+    return fetch_observed_extreme_nws(station, date_str, metric="high")
+
+
+def fetch_observed_extreme_openmeteo(lat, lon, date_str, tz="America/Chicago", metric="high"):
+    """
+    Fetch historical daily max (metric="high") or min (metric="low") temperature
+    from Open-Meteo archive. date_str: 'YYYY-MM-DD'. Returns float °F or None.
+    """
+    daily_field = "temperature_2m_max" if metric == "high" else "temperature_2m_min"
+    url = (
+        f"https://archive-api.open-meteo.com/v1/archive"
+        f"?latitude={lat}&longitude={lon}"
+        f"&start_date={date_str}&end_date={date_str}"
+        f"&daily={daily_field}&timezone={tz}"
+    )
+    try:
+        data = _get(url)
+        daily = data.get("daily", {})
+        temps = daily.get(daily_field, [])
+        if temps and temps[0] is not None:
+            return round(_c_to_f(temps[0]), 1)
+    except Exception as e:
+        logger.warning(f"Open-Meteo archive error for {date_str} at {lat},{lon}: {e}")
+    return None
+
+
+def fetch_observed_extreme_nws(station, date_str, metric="high"):
+    """
+    Fetch observed daily max (metric="high") or min (metric="low") from
+    api.weather.gov hourly observations for a station.
+    station: ICAO code e.g. 'KDAL'. date_str: 'YYYY-MM-DD'. Returns float °F or None.
     """
     # NWS uses the station's hourly obs; we get a time range for that day
     try:
@@ -104,7 +122,7 @@ def fetch_observed_high_nws(station, date_str):
             if temp_c is not None:
                 temps_f.append(_c_to_f(temp_c))
         if temps_f:
-            return round(max(temps_f), 1)
+            return round((max if metric == "high" else min)(temps_f), 1)
     except Exception as e:
         logger.warning(f"NWS obs error for {station} {date_str}: {e}")
     return None
@@ -115,33 +133,50 @@ def fetch_observed_high(city_cfg, date_str):
     Try both sources; return (high_f, source_name, cross_check_diff).
     Returns (None, 'error', None) if both fail.
     """
+    return fetch_observed_extreme(city_cfg, date_str, metric="high")
+
+
+def fetch_observed_low(city_cfg, date_str):
+    """
+    Try both sources for the daily LOW; return (low_f, source_name, cross_check_diff).
+    Returns (None, 'error', None) if both fail.
+    """
+    return fetch_observed_extreme(city_cfg, date_str, metric="low")
+
+
+def fetch_observed_extreme(city_cfg, date_str, metric="high"):
+    """
+    Try both sources for the requested metric ("high" or "low");
+    return (value_f, source_name, cross_check_diff).
+    Returns (None, 'error', None) if both fail.
+    """
     lat = city_cfg["lat"]
     lon = city_cfg["lon"]
     station = city_cfg.get("station", "")
     tz = city_cfg.get("tz", "America/Chicago")
 
-    openmeteo_high = fetch_observed_high_openmeteo(lat, lon, date_str, tz)
-    nws_high = fetch_observed_high_nws(station, date_str)
+    openmeteo_val = fetch_observed_extreme_openmeteo(lat, lon, date_str, tz, metric=metric)
+    nws_val = fetch_observed_extreme_nws(station, date_str, metric=metric)
 
     logger.info(
-        f"{city_cfg['name']} {date_str}: "
-        f"Open-Meteo={openmeteo_high}F  NWS={nws_high}F"
+        f"{city_cfg['name']} {date_str} [{metric}]: "
+        f"Open-Meteo={openmeteo_val}F  NWS={nws_val}F"
     )
 
-    if openmeteo_high is not None and nws_high is not None:
-        diff = abs(openmeteo_high - nws_high)
+    if openmeteo_val is not None and nws_val is not None:
+        diff = abs(openmeteo_val - nws_val)
         if diff > 5:
             logger.warning(
-                f"SOURCE DISAGREEMENT: Open-Meteo={openmeteo_high}F vs NWS={nws_high}F "
-                f"(diff={diff:.1f}F) for {station} {date_str}. Using NWS."
+                f"SOURCE DISAGREEMENT: Open-Meteo={openmeteo_val}F vs NWS={nws_val}F "
+                f"(diff={diff:.1f}F) for {station} {date_str} [{metric}]. Using NWS."
             )
-        return (nws_high, "nws+openmeteo_crosscheck", diff)
+        return (nws_val, "nws+openmeteo_crosscheck", diff)
 
-    if nws_high is not None:
-        return (nws_high, "nws", None)
+    if nws_val is not None:
+        return (nws_val, "nws", None)
 
-    if openmeteo_high is not None:
-        return (openmeteo_high, "openmeteo_archive", None)
+    if openmeteo_val is not None:
+        return (openmeteo_val, "openmeteo_archive", None)
 
     return (None, "error", None)
 
@@ -180,10 +215,15 @@ def settle_bet(bet, city_cfg, cfg):
     # The resolution date is the day of end_date
     target_date = weather_day.isoformat()
 
-    actual_high_f, source, cross_diff = fetch_observed_high(city_cfg, target_date)
+    # Missing "metric" key (bets placed before this column existed) means "high".
+    # Dispatch to fetch_observed_high/fetch_observed_low (not fetch_observed_extreme
+    # directly) so existing call-site monkeypatches on fetch_observed_high keep working.
+    metric = bet.get("metric") or "high"
+    fetch_fn = fetch_observed_high if metric == "high" else fetch_observed_low
+    actual_high_f, source, cross_diff = fetch_fn(city_cfg, target_date)
 
     if actual_high_f is None:
-        logger.warning(f"Could not fetch observed high for {bet.get('city')} {target_date}")
+        logger.warning(f"Could not fetch observed {metric} for {bet.get('city')} {target_date}")
         return None
 
     # Determine win or loss

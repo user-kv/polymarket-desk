@@ -14,15 +14,18 @@ any one time. This module:
 PHASE-1 SCOPE (2026-06-16): Polymarket actually runs temperature markets in ~43
 cities, but ~34 of them use Celsius + a different bucket format (a single
 discrete value like "be 28C", and some are LOWEST-temperature markets rather
-than highest) that lib/polymarket.py's `_parse_bucket` and lib/forecasts.py's
-daily-HIGH-only ensemble don't support yet. Adding those without that work
-would silently mis-evaluate them. So `fetch_resolution_map` only returns
-cities whose markets match the *exact* format already supported: "highest
-temperature ... between X-Y°F" / "X°F or above/below" — currently 9 US cities
-(Atlanta, Austin, Dallas, Denver, Houston, LA, Miami, NYC, SF) vs. the 2
-(Dallas, Atlanta) previously hard-coded. Extending to the Celsius/low-temp
-cities is a separate follow-up (new bucket parser + a daily-LOW ensemble
-function) — see the note left in config.json's `_cities_note`.
+than highest). Originally `fetch_resolution_map` only returned cities whose
+markets matched the *exact* format then supported: "highest temperature ...
+between X-Y°F" / "X°F or above/below" — the 9 US cities (Atlanta, Austin,
+Dallas, Denver, Houston, LA, Miami, NYC, SF).
+
+2026-07 EXPANSION: lib/polymarket.py's `_parse_bucket` now also parses °C
+buckets (range / open-ended / single discrete value) and detects
+"lowest temperature" markets, converting everything to °F at parse time;
+lib/forecasts.py now has a daily-LOW ensemble path alongside daily-HIGH. So
+the format filter below is lifted — any city whose question contains
+"highest temperature" or "lowest temperature" and parses successfully is
+included, regardless of °F/°C or high/low.
 """
 
 import os
@@ -39,10 +42,9 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 AIRPORTS_CACHE = os.path.join(DATA_DIR, "airports_cache.json")
 AIRPORTS_URL = "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
 
-# Matches "... highest temperature in <city> be ..." with a trailing °F bucket
-# of the supported shapes (range / open-ended). Only used to find candidate
-# city names; the actual bucket-format gate is QUESTION_FAHRENHEIT_HIGH_RE.
-CITY_NAME_RE = re.compile(r"highest temperature in ([a-z\s\.]+?) be")
+# Matches "... highest/lowest temperature in <city> be ...". Used to find
+# candidate city names for both °F and °C, high and low markets.
+CITY_NAME_RE = re.compile(r"(?:highest|lowest) temperature in ([a-z\s\.]+?) be")
 
 
 def _get(url, timeout=20):
@@ -83,10 +85,13 @@ def _extract_icao(text):
 
 def fetch_resolution_map(cfg):
     """
-    Scan Gamma API (no city filter) for active 'highest temperature in X' °F
-    markets in the already-supported range/open-ended bucket format.
+    Scan Gamma API (no city filter) for active 'highest/lowest temperature in X'
+    markets in any supported bucket format (°F or °C, range/open-ended/single
+    discrete value). Format validity is delegated to lib.polymarket._parse_bucket
+    — a market is included only if that parser can actually make sense of it.
     Returns {city_name_lowercase: icao_code}.
     """
+    from lib.polymarket import _parse_bucket
     base = cfg.get("gamma_api_base", "https://gamma-api.polymarket.com")
     page_size = cfg.get("scan_page_size", 100)
     max_pages = cfg.get("scan_max_offset_pages", 50)
@@ -107,8 +112,10 @@ def fetch_resolution_map(cfg):
         for m in batch:
             q = m.get("question", "")
             ql = q.lower()
-            if "highest temperature" not in ql or "°f" not in ql:
-                continue  # phase-1: Fahrenheit highest-temp markets only
+            if "highest temperature" not in ql and "lowest temperature" not in ql:
+                continue
+            if _parse_bucket(q) is None:
+                continue  # unsupported bucket format — skip rather than mis-evaluate
             mm = CITY_NAME_RE.search(ql)
             if not mm:
                 continue
@@ -123,7 +130,7 @@ def fetch_resolution_map(cfg):
             else:
                 logger.warning(f"Could not find ICAO code for {city} ({q!r})")
         time.sleep(0.05)
-    logger.info(f"Found {len(out)} cities with a supported °F bucket format")
+    logger.info(f"Found {len(out)} cities with a supported bucket format (°F/°C, high/low)")
     return out
 
 
@@ -156,13 +163,11 @@ def build_and_apply(cfg, config_path):
     new_cfg = dict(cfg)
     new_cfg["cities"] = cities
     new_cfg["_cities_note"] = (
-        "Auto-built 2026-06-16 from live Polymarket data via lib/cities.py "
-        "(9 US cities, Fahrenheit highest-temp range/open-ended buckets only). "
-        "Polymarket also runs ~34 more cities using Celsius + single-value "
-        "buckets and/or LOWEST-temperature markets — not yet supported by "
-        "lib/polymarket.py's bucket parser or the daily-high-only ensemble. "
-        "Re-run `python papertrader.py cities --apply` after that support "
-        "lands to pick those up too."
+        "Auto-built from live Polymarket data via lib/cities.py. Since the "
+        "2026-07 expansion, both °F and °C bucket formats and both "
+        "highest- and lowest-temperature markets are supported "
+        "(lib/polymarket.py's _parse_bucket + lib/forecasts.py's daily-low "
+        "ensemble path)."
     )
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump(new_cfg, f, indent=2)

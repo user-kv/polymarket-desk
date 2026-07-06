@@ -169,7 +169,7 @@ def cmd_scan(cfg, test_mode=False, explain=False):
             end_date_str = m["end_date"][:10]  # YYYY-MM-DD
             try:
                 # Compute daily high ensemble using the cached raw ensembles
-                fc = forecasts.get_forecast_for_city(city_cfg, end_date_str, scan_cfg, raw_ensembles=raw_ensembles)
+                fc = engine.get_forecast_for_market(m, city_cfg, end_date_str, scan_cfg, raw_ensembles=raw_ensembles)
                 log.info(
                     f"  {city} on {end_date_str}: GFS mean={fc['gfs_mean_f']:.1f}°F  "
                     f"ECMWF mean={fc['ecmwf_mean_f']:.1f}°F  "
@@ -463,9 +463,8 @@ def cmd_cities(cfg, args):
     for c in new_cities:
         print(f"  {c['name']:20s} station={c['station']:6s} lat={c['lat']:8.4f} lon={c['lon']:9.4f}")
     print(
-        "\nNote: only Fahrenheit highest-temp range/open-ended bucket markets are "
-        "supported right now. Celsius/single-value/lowest-temp markets are skipped "
-        "(see config.json's _cities_note)."
+        "\nBoth °F/°C and highest/lowest-temperature bucket formats are now "
+        "supported (see config.json's _cities_note)."
     )
 
 

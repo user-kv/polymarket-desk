@@ -26,6 +26,23 @@ from datetime import datetime, timezone
 logger = logging.getLogger("engine")
 
 
+def get_forecast_for_market(market, city_cfg, target_date_str, cfg=None, raw_ensembles=None):
+    """
+    Route a market to the correct ensemble series: daily HIGH (default) or,
+    when market["metric"] == "low" (Polymarket's LOWEST-temperature markets),
+    the daily MIN ensemble computed by lib/forecasts.compute_daily_low_ensemble.
+
+    Everything downstream (bucket_probability_by_model, models_agree,
+    near_mean_buffer, evaluate_bucket) is metric-agnostic — it just consumes
+    numbers under the same key names — so no other engine logic changes.
+    """
+    from lib import forecasts
+    metric = market.get("metric", "high")
+    return forecasts.get_forecast_for_city(
+        city_cfg, target_date_str, cfg, raw_ensembles=raw_ensembles, metric=metric
+    )
+
+
 def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
     """
     Evaluate a single market bucket against all discipline rules.
@@ -371,6 +388,7 @@ def simulate_fill(market, evaluation, cfg):
         "bucket_high_f": market["bucket_high_f"],
         "is_open_ended_low": market.get("is_open_ended_low", False),
         "is_open_ended_high": market.get("is_open_ended_high", False),
+        "metric": market.get("metric", "high"),
         "side": side,
         "ask_price": ask,
         "stake": stake,

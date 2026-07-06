@@ -415,6 +415,78 @@ class TestDoubleNotFoundIsNoData(unittest.TestCase):
                 m, 60, fetch_fn=fetch_mixed, sleep_fn=lambda s: None)
 
 
+class TestKalshiCategoryPriority(unittest.TestCase):
+    """Priority categories (climate/weather/politics/etc.) are fetched before the rest,
+    regardless of file order; null category goes to pass 2."""
+
+    def test_priority_categories_fetched_first(self):
+        tmp = tempfile.mkdtemp()
+        in_path = os.path.join(tmp, "kalshi_settled.jsonl")
+        out_path = os.path.join(tmp, "prices", "kalshi_candles.jsonl")
+        rows = [
+            {"id": "KXSPORTS-NULLCAT", "event_ticker": "KXSPORTS",
+             "close_time": "2025-01-01T00:00:00Z", "category": None},
+            {"id": "KXWEATHER-1", "event_ticker": "KXWEATHER",
+             "close_time": "2025-01-01T00:00:00Z", "category": "Weather"},
+            {"id": "KXSPORTS-2", "event_ticker": "KXSPORTS",
+             "close_time": "2025-01-01T00:00:00Z", "category": "sports"},
+            {"id": "KXPOLITICS-1", "event_ticker": "KXPOLITICS",
+             "close_time": "2025-01-01T00:00:00Z", "category": "Politics"},
+        ]
+        with open(in_path, "w", encoding="utf-8") as f:
+            for r in rows:
+                f.write(json.dumps(r) + "\n")
+
+        def fake_fetch(url):
+            return {"candlesticks": [{"end_period_ts": 1, "price": {"close": 0.5}}]}
+
+        w, err = fp2.fetch_kalshi(
+            2, interval=60, fetch_fn=fake_fetch, sleep_fn=lambda s: None,
+            in_path=in_path, out_path=out_path, call_sleep=0,
+        )
+        self.assertEqual(w, 2)
+        self.assertEqual(err, 0)
+        with open(out_path, encoding="utf-8") as f:
+            fetched_ids = {json.loads(line)["id"] for line in f}
+        self.assertEqual(fetched_ids, {"KXWEATHER-1", "KXPOLITICS-1"})
+
+
+class TestPolymarketVolumeOrdering(unittest.TestCase):
+    """Candidates are fetched highest-volume-first, not in file order."""
+
+    def test_fetch_order_by_volume_desc(self):
+        tmp = tempfile.mkdtemp()
+        in_path = os.path.join(tmp, "polymarket_resolved.jsonl")
+        out_path = os.path.join(tmp, "prices", "polymarket_trades.jsonl")
+        rows = [
+            {"id": "111", "condition_id": "0xlow", "question": "low?", "volume": "5"},
+            {"id": "222", "condition_id": "0xhigh", "question": "high?", "volume": "500"},
+            {"id": "333", "condition_id": "0xmid", "question": "mid?", "volume": "50"},
+        ]
+        with open(in_path, "w", encoding="utf-8") as f:
+            for r in rows:
+                f.write(json.dumps(r) + "\n")
+
+        fetch_order = []
+
+        def fake_fetch(url):
+            # record which condition is being fetched, then end pagination immediately
+            for cid in ("0xhigh", "0xmid", "0xlow"):
+                if f"market={cid}" in url:
+                    if "offset=0" in url:
+                        fetch_order.append(cid)
+                    return []
+            return []
+
+        w, thin, err = fp2.fetch_polymarket(
+            10, fetch_fn=fake_fetch, sleep_fn=lambda s: None,
+            in_glob=in_path, out_path=out_path, call_sleep=0,
+        )
+        self.assertEqual(w, 3)
+        self.assertEqual(err, 0)
+        self.assertEqual(fetch_order, ["0xhigh", "0xmid", "0xlow"])
+
+
 class TestHardeningGuards(unittest.TestCase):
     """The two verifier-flagged latent traps must now fail loudly, not guess."""
 

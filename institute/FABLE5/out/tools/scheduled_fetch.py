@@ -98,6 +98,7 @@ def main():
     run(["c2_backtest.py"])          # pre-registered; re-runs as the corpus grows
     run(["c3_study.py"])             # pre-registered; underpowered until PM data grows
     run(["s1_geopolitics.py"])       # forward forecast capture; exits 0 if no GROQ_API_KEY
+    run(["s2_fda.py"])               # FDA cell, sfp3 only; exits 0 if no GROQ_API_KEY
     run(["gen_dashboard.py"])
     notify_phone()
     log("=== scheduled fetch done ===")

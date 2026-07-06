@@ -44,24 +44,28 @@
   @media (max-width: 640px) { body { padding: 12px; } .barlabel { width: 84px; } }
 </style></head><body>
 <h1>The Institute — data &amp; cell dashboard</h1>
-<p class="sub">Generated 2026-07-05 23:28 UTC · paper only · ARCHITECTURE v4 (converged)</p>
+<p class="sub">Generated 2026-07-06 00:09 UTC · paper only · ARCHITECTURE v4 (converged)</p>
 
 <div class="grid">
   <div class="tile"><div class="k">Kalshi candle histories</div>
     <div class="v">6,620</div>
     <div class="d">1,058,930 hourly candles · 53% with bid/ask</div>
-    <svg class="spark" width="120" height="28" viewBox="0 0 120 28" role="img" aria-label="trend"><polyline points="0.0,24.9 60.0,4.2 120.0,2.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+    <svg class="spark" width="120" height="28" viewBox="0 0 120 28" role="img" aria-label="trend"><polyline points="0.0,24.9 40.0,4.2 80.0,2.0 120.0,2.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
   <div class="tile"><div class="k">PM decision-time series</div>
     <div class="v">2,500</div>
     <div class="d">1,806 usable (&ge;10 trades, 72%) · 671,298 trade points</div>
-    <svg class="spark" width="120" height="28" viewBox="0 0 120 28" role="img" aria-label="trend"><polyline points="0.0,5.8 60.0,2.0 120.0,2.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+    <svg class="spark" width="120" height="28" viewBox="0 0 120 28" role="img" aria-label="trend"><polyline points="0.0,5.8 40.0,2.0 80.0,2.0 120.0,2.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
   <div class="tile"><div class="k">Kalshi settled outcomes</div>
     <div class="v">153,228</div>
     <div class="d">backtest ground truth (labels)</div></div>
   <div class="tile"><div class="k">Candle coverage of settled</div>
     <div class="v">4.3%</div>
     <div class="d">grows with each scheduled fetch</div></div>
+  <div class="tile"><div class="k">Weather paper bankroll</div><div class="v">$1,990</div><div class="d">of $2,000 start (open bets excluded from balance)</div><svg class="spark" width="220" height="34" viewBox="0 0 220 34" role="img" aria-label="equity curve"><polyline points="0.0,12.3 3.8,17.0 7.6,21.7 11.4,26.3 15.2,31.0 19.0,25.6 22.8,30.3 26.6,30.3 30.3,24.3 34.1,18.6 37.9,20.9 41.7,25.6 45.5,30.3 49.3,24.1 53.1,28.8 56.9,28.8 60.7,22.9 64.5,17.8 68.3,11.4 72.1,16.1 75.9,20.8 79.7,25.5 83.4,30.1 87.2,23.4 91.0,18.3 94.8,12.4 98.6,5.8 102.4,10.5 106.2,15.1 110.0,19.8 113.8,24.5 117.6,19.0 121.4,23.7 125.2,18.3 129.0,12.8 132.8,6.2 136.6,10.8 140.3,15.5 144.1,20.2 147.9,15.3 151.7,19.9 155.5,14.7 159.3,9.3 163.1,3.0 166.9,7.7 170.7,12.3 174.5,17.0 178.3,10.4 182.1,5.4 185.9,10.1 189.7,14.8 193.4,9.3 197.2,4.1 201.0,8.8 204.8,13.4 208.6,8.4 212.4,3.4 216.2,8.1 220.0,12.8" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
 </div>
+
+<div class="panel"><h2>LLM analyst A/B scoreboard (lower Brier = better; kill rule at 50 settled)</h2><table><thead><tr><th>Cell</th><th>Variant</th><th>Frozen</th><th>Settled</th><th>Brier (analyst)</th><th>Brier (market)</th></tr></thead><tbody><tr><td>geopolitics</td><td class="mono">sfp3</td><td class="mono">8</td><td class="mono">0</td><td class="mono">—</td><td class="mono">—</td></tr>
+<tr><td>geopolitics</td><td class="mono">swarm10</td><td class="mono">8</td><td class="mono">0</td><td class="mono">—</td><td class="mono">—</td></tr></tbody></table></div>
 
 <div class="panel"><h2>Kalshi candle histories by category (markets)</h2><div class="barrow"><span class="barlabel">entertainment</span><span class="bartrack"><span class="bar" style="width:100.0%"></span></span><span class="barval">2,365</span></div>
 <div class="barrow"><span class="barlabel">elections</span><span class="bartrack"><span class="bar" style="width:59.3%"></span></span><span class="barval">1,403</span></div>
@@ -79,7 +83,7 @@
 <tbody><tr><td class="mono">C1</td><td>Weather ensemble</td><td><span class="dot" style="background:var(--status-good)"></span>Graduation candidate</td><td class="muted">LIVE paper since 2026-06-20: 27/50 settled, 25 wins (93%), +14.7% ROI NET of fees ($+390) — >=+10% branch; SPRT + family correction at n>=50</td></tr>
 <tr><td class="mono">C2</td><td>Kalshi longshot fade</td><td><span class="dot" style="background:var(--status-warning)"></span>Backtest study + forward seed</td><td class="muted">451 fades, win 97.8%, net ROI -0.16% — PRELIMINARY (corpus below pre-registered minimum)</td></tr>
 <tr><td class="mono">C3</td><td>PM behavioral validation</td><td><span class="dot" style="background:var(--status-warning)"></span>Pre-registered study</td><td class="muted">longshot n=26 (+3.3%), favorite n=4 (-24.1%) — both UNDERPOWERED (need 500/bucket); PM long tail too thin, grows ~7/day</td></tr>
-<tr><td class="mono">S1</td><td>Geopolitics news (0% fee)</td><td><span class="dot" style="background:var(--muted)"></span>Forward-only seed</td><td class="muted">Wired to Groq free tier ($0) — waiting for GROQ_API_KEY to start capturing forecasts</td></tr>
+<tr><td class="mono">S1</td><td>Geopolitics news (0% fee)</td><td><span class="dot" style="background:var(--status-good)"></span>Forward-only seed</td><td class="muted">16 frozen forecasts, 0 settled — forward record accruing</td></tr>
 <tr><td class="mono">S2</td><td>CPI / macro</td><td><span class="dot" style="background:var(--muted)"></span>Forward-only seed</td><td class="muted">Monthly cadence; cannot graduate in-window</td></tr></tbody></table></div>
 
 <p class="foot">Data stores are local &amp; gitignored (re-fetchable). This page regenerates after every

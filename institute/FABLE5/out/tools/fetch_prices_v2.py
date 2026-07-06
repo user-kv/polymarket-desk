@@ -73,6 +73,21 @@ RETRY_STATUSES = (429, 500, 502, 503, 504)
 MAX_RETRIES = 5
 LOOKBACK_SECONDS = 60 * 24 * 3600  # 60 days; see docstring
 
+# Kalshi category prioritization: these categories are fetched first (pass 1), everything
+# else (including null/missing category) falls to pass 2. Matched via substring on the
+# lowercased category string, so "climate & weather" etc. still hit.
+PRIORITY_CATS = [
+    "climate", "weather", "politics", "world", "economics", "financials",
+    "companies", "science", "health", "crypto",
+]
+
+
+def _is_priority_category(cat):
+    if not cat:
+        return False
+    cat = str(cat).lower()
+    return any(p in cat for p in PRIORITY_CATS)
+
 
 # --------------------------------------------------------------------------------------
 # HTTP seam -- tests inject a fake in place of fetch_json / pass fetch_fn explicitly.
@@ -275,33 +290,49 @@ def fetch_kalshi(max_markets, interval=60, fetch_fn=fetch_json, sleep_fn=time.sl
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     done = _load_done_ids(out_path)
     written = err = 0
+
+    def _process(m, out):
+        nonlocal written, err
+        mid = str(m.get("id"))
+        if mid in done:
+            return
+        done.add(mid)
+        try:
+            candles, used = fetch_kalshi_candles_for_market(m, interval, fetch_fn, sleep_fn)
+        except Exception:
+            err += 1
+            return
+        out.write(json.dumps({
+            "venue": "kalshi",
+            "id": mid,
+            "event_ticker": m.get("event_ticker"),
+            "period_interval": interval,
+            "candles": candles,
+            "source_endpoint": used,
+            "fetched_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        }, ensure_ascii=True) + "\n")
+        out.flush()
+        written += 1
+        if written % 100 == 0:
+            print(f"  kalshi-candles {written} (err={err})")
+        sleep_fn(call_sleep)
+
+    # Two passes over the input file (no full in-memory materialization): pass 1 handles
+    # markets whose category matches PRIORITY_CATS, pass 2 handles the rest (including
+    # null/missing category). Stops as soon as max_markets total have been written.
     with open(out_path, "a", encoding="utf-8") as out:
         for m in _iter_jsonl(in_path):
             if written >= max_markets:
                 break
-            mid = str(m.get("id"))
-            if mid in done:
-                continue
-            done.add(mid)
-            try:
-                candles, used = fetch_kalshi_candles_for_market(m, interval, fetch_fn, sleep_fn)
-            except Exception:
-                err += 1
-                continue
-            out.write(json.dumps({
-                "venue": "kalshi",
-                "id": mid,
-                "event_ticker": m.get("event_ticker"),
-                "period_interval": interval,
-                "candles": candles,
-                "source_endpoint": used,
-                "fetched_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-            }, ensure_ascii=True) + "\n")
-            out.flush()
-            written += 1
-            if written % 100 == 0:
-                print(f"  kalshi-candles {written} (err={err})")
-            sleep_fn(call_sleep)
+            if _is_priority_category(m.get("category")):
+                _process(m, out)
+        if written < max_markets:
+            for m in _iter_jsonl(in_path):
+                if written >= max_markets:
+                    break
+                if _is_priority_category(m.get("category")):
+                    continue
+                _process(m, out)
     return written, err
 
 
@@ -332,6 +363,16 @@ def _trades_for(cid, fetch_fn=fetch_json, sleep_fn=time.sleep, call_sleep=0.2, c
     return pts
 
 
+def _parse_volume(v):
+    """Defensively parse a volume field: stringified float, float, int, or null -> 0."""
+    if v is None:
+        return 0.0
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def fetch_polymarket(max_markets, fetch_fn=fetch_json, sleep_fn=time.sleep,
                       in_glob=POLY_RESOLVED_GLOB, out_path=POLY_TRADES_OUT, call_sleep=0.2):
     in_files = glob.glob(in_glob)
@@ -345,42 +386,50 @@ def fetch_polymarket(max_markets, fetch_fn=fetch_json, sleep_fn=time.sleep,
         cid = row.get("condition_id")
         if cid:
             seen_cid.add(str(cid))
-    written = thin = err = 0
-    out = open(out_path, "a", encoding="utf-8")
+
+    # Volume targeting: collect (volume, mid, cid, market) candidates cheaply (no fetching)
+    # from the input files, skipping already-done ones, then fetch highest-volume-first.
+    # Candidate tuples for the full corpus (~260k markets) are a few tens of MB -- fine to
+    # hold in memory; only the (comparatively expensive) trade fetch is ordered/deferred.
+    candidates = []
     for path in sorted(glob.glob(in_glob)):
-        if written >= max_markets:
-            break
         for m in _iter_jsonl(path):
-            if written >= max_markets:
-                break
             mid = str(m.get("id"))
             cid = m.get("condition_id")
             if mid in done or not cid or str(cid) in seen_cid:
                 continue
             seen_cid.add(str(cid))
-            try:
-                points = _trades_for(cid, fetch_fn, sleep_fn, call_sleep)
-            except Exception:
-                err += 1
-                continue
-            done.add(mid)
-            if len(points) < 2:
-                thin += 1
-            out.write(json.dumps({
-                "venue": "polymarket",
-                "id": mid,
-                "condition_id": cid,
-                "question": m.get("question"),
-                "outcomes": m.get("outcomes"),
-                "outcome_prices": m.get("outcome_prices"),
-                "n_trades": len(points),
-                "points": points,
-                "fetched_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-            }, ensure_ascii=True) + "\n")
-            out.flush()
-            written += 1
-            if written % 100 == 0:
-                print(f"  poly-trades {written} (thin<2={thin}, err={err})")
+            candidates.append((_parse_volume(m.get("volume")), mid, cid, m))
+    candidates.sort(key=lambda t: t[0], reverse=True)
+
+    written = thin = err = 0
+    out = open(out_path, "a", encoding="utf-8")
+    for _, mid, cid, m in candidates:
+        if written >= max_markets:
+            break
+        try:
+            points = _trades_for(cid, fetch_fn, sleep_fn, call_sleep)
+        except Exception:
+            err += 1
+            continue
+        done.add(mid)
+        if len(points) < 2:
+            thin += 1
+        out.write(json.dumps({
+            "venue": "polymarket",
+            "id": mid,
+            "condition_id": cid,
+            "question": m.get("question"),
+            "outcomes": m.get("outcomes"),
+            "outcome_prices": m.get("outcome_prices"),
+            "n_trades": len(points),
+            "points": points,
+            "fetched_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        }, ensure_ascii=True) + "\n")
+        out.flush()
+        written += 1
+        if written % 100 == 0:
+            print(f"  poly-trades {written} (thin<2={thin}, err={err})")
     out.close()
     return written, thin, err
 

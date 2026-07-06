@@ -145,6 +145,84 @@ def compute_daily_high_ensemble(ensemble_data, target_date_str):
     }
 
 
+def compute_daily_low_ensemble(ensemble_data, target_date_str):
+    """
+    Same extraction as compute_daily_high_ensemble but takes the daily MIN
+    hourly temperature per member instead of the MAX — used for Polymarket's
+    LOWEST-temperature markets.
+
+    Returns the SAME key names as compute_daily_high_ensemble (gfs_highs_f,
+    ecmwf_highs_f, all_highs_f, combined_mean_f, ...) even though the values
+    are daily lows, not highs. This is deliberate: bucket_probability,
+    bucket_probability_by_model, models_agree, and near_mean_buffer are all
+    metric-agnostic (they just consume numbers under these key names) — reusing
+    the same shape means none of that code needs a metric-aware branch.
+    """
+    hourly = ensemble_data.get("hourly", {})
+    times = hourly.get("time", [])
+
+    target_indices = [
+        i for i, t in enumerate(times) if t.startswith(target_date_str)
+    ]
+    if not target_indices:
+        raise ValueError(f"No hourly data for date {target_date_str}")
+
+    gfs_lows = []
+    ecmwf_lows = []
+    icon_lows = []
+    gem_lows = []
+    ukmo_lows = []
+
+    for key, vals in hourly.items():
+        if not key.startswith("temperature_2m_member"):
+            continue
+        try:
+            day_vals = [vals[i] for i in target_indices if vals[i] is not None]
+            if not day_vals:
+                continue
+            daily_low_c = min(day_vals)
+            daily_low_f = _c_to_f(daily_low_c)
+        except (IndexError, TypeError):
+            continue
+
+        if "ukmo" in key.lower():
+            ukmo_lows.append(daily_low_f)
+        elif "ncep_gefs" in key or "gfs" in key.lower():
+            gfs_lows.append(daily_low_f)
+        elif "ecmwf" in key:
+            ecmwf_lows.append(daily_low_f)
+        elif "icon" in key.lower():
+            icon_lows.append(daily_low_f)
+        elif "gem" in key.lower():
+            gem_lows.append(daily_low_f)
+
+    if not gfs_lows:
+        raise ValueError("No GFS members found in ensemble data")
+    if not ecmwf_lows:
+        raise ValueError("No ECMWF members found in ensemble data")
+
+    gfs_mean = sum(gfs_lows) / len(gfs_lows)
+    ecmwf_mean = sum(ecmwf_lows) / len(ecmwf_lows)
+    all_lows = gfs_lows + ecmwf_lows + icon_lows + gem_lows + ukmo_lows
+
+    return {
+        "gfs_highs_f": gfs_lows,
+        "ecmwf_highs_f": ecmwf_lows,
+        "icon_highs_f": icon_lows,
+        "gem_highs_f": gem_lows,
+        "ukmo_highs_f": ukmo_lows,
+        "gfs_mean_f": gfs_mean,
+        "ecmwf_mean_f": ecmwf_mean,
+        "all_highs_f": all_lows,
+        "n_gfs": len(gfs_lows),
+        "n_ecmwf": len(ecmwf_lows),
+        "n_icon": len(icon_lows),
+        "n_gem": len(gem_lows),
+        "n_ukmo": len(ukmo_lows),
+        "combined_mean_f": sum(all_lows) / len(all_lows),
+    }
+
+
 def bucket_probability_by_model(forecast, low_f, high_f, model_weights=None):
     """
     RMSE-weighted-by-MODEL bucket probability (M2 upgrade from equal-weight).
@@ -246,6 +324,25 @@ def _extract_all_members(ensemble_data, target_date_str):
     return highs
 
 
+def _extract_all_members_low(ensemble_data, target_date_str):
+    """Same as _extract_all_members but takes the daily MIN instead of MAX.
+    Used for single-model (e.g. AIFS-only) fetches on LOWEST-temperature markets."""
+    hourly = ensemble_data.get("hourly", {})
+    times = hourly.get("time", [])
+    target_indices = [i for i, t in enumerate(times) if t.startswith(target_date_str)]
+    lows = []
+    for key, vals in hourly.items():
+        if not key.startswith("temperature_2m_member"):
+            continue
+        try:
+            day_vals = [vals[i] for i in target_indices if vals[i] is not None]
+            if day_vals:
+                lows.append(_c_to_f(min(day_vals)))
+        except (IndexError, TypeError):
+            continue
+    return lows
+
+
 def fetch_raw_ensembles_for_city(city_cfg, cfg=None):
     """
     Fetch raw ensemble JSONs (main and aifs) for a city and return them.
@@ -273,11 +370,12 @@ def fetch_raw_ensembles_for_city(city_cfg, cfg=None):
     return {"main": raw_main, "aifs": raw_aifs}
 
 
-def get_forecast_for_city(city_cfg, target_date_str, cfg=None, raw_ensembles=None):
+def get_forecast_for_city(city_cfg, target_date_str, cfg=None, raw_ensembles=None, metric="high"):
     """
-    Extract daily highs from raw ensembles for the target date.
-    If raw_ensembles is not provided, fetches them.
-    
+    Extract daily highs (or, when metric=="low", daily lows) from raw
+    ensembles for the target date. If raw_ensembles is not provided, fetches
+    them. metric defaults to "high" so all existing callers are unaffected.
+
     If data/calibration.json has a saved bias correction for this city (see
     lib/calibration.py — derived from comparing past forecasts to actual
     outcomes), it's added to every member's high before returning.
@@ -288,11 +386,17 @@ def get_forecast_for_city(city_cfg, target_date_str, cfg=None, raw_ensembles=Non
     raw_main = raw_ensembles["main"]
     raw_aifs = raw_ensembles.get("aifs")
 
-    result = compute_daily_high_ensemble(raw_main, target_date_str)
+    if metric == "low":
+        result = compute_daily_low_ensemble(raw_main, target_date_str)
+    else:
+        result = compute_daily_high_ensemble(raw_main, target_date_str)
 
     # Merge AIFS separately
     if raw_aifs:
-        aifs_highs = _extract_all_members(raw_aifs, target_date_str)
+        aifs_highs = (
+            _extract_all_members_low(raw_aifs, target_date_str) if metric == "low"
+            else _extract_all_members(raw_aifs, target_date_str)
+        )
         if aifs_highs:
             merged = result["all_highs_f"] + aifs_highs
             result["aifs_highs_f"] = aifs_highs
