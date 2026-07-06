@@ -33,3 +33,17 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-07-06T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-july-5-2026-80-81f__2026-07-04T1200
+- outcome: WON
+- thesis: edge=6.56pt prob=0.0464 ask=0.112
+- root_cause: Edge of 7pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
+## LESSON 2026-07-06T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-july-5-2026-88-89f__2026-07-04T1200
+- outcome: WON
+- thesis: edge=6.39pt prob=0.0401 ask=0.104
+- root_cause: Edge of 6pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
