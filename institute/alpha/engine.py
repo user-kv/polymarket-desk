@@ -29,22 +29,25 @@ def _parse_prob(text):
     """
     if not text:
         return None
-    # Try decimal first: match "0.73", ".42", "1.0", "0.0" etc.
-    m = re.search(r"(?<!\d)(0?\.\d+|1\.0*|0\.0*)\b", text)
+    # Percent FIRST: "1.5%" must parse as 0.015 — the old decimal-first regex
+    # matched the leading "1." of "1.5" as probability 1.0 (a maximally
+    # confident forecast injected into the swarm mean; fixed 2026-07-07).
+    m = re.search(r"(?<!\d)(\d{1,3}(?:\.\d+)?)\s*%", text)
+    if m:
+        try:
+            pct = float(m.group(1))
+            if 0 <= pct <= 100:
+                return clip(pct / 100.0)
+        except ValueError:
+            pass
+    # Then bare decimal: "0.73", ".42", "1.0", "0.0" etc. (not followed by a
+    # digit, so "1.5" can't half-match as "1.")
+    m = re.search(r"(?<!\d)(0?\.\d+|1\.0*|0\.0*)(?!\d)", text)
     if m:
         try:
             val = float(m.group(1))
             if 0.0 <= val <= 1.0:
                 return clip(val)
-        except ValueError:
-            pass
-    # Try integer percent
-    m = re.search(r"\b(\d{1,3})%", text)
-    if m:
-        try:
-            pct = int(m.group(1))
-            if 0 <= pct <= 100:
-                return clip(pct / 100.0)
         except ValueError:
             pass
     return None

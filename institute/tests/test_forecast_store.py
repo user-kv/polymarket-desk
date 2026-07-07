@@ -8,7 +8,6 @@ Point-in-time honesty invariants verified here:
   - y is never read or modified.
 """
 import os
-import json
 import tempfile
 
 from institute.alpha.forecast_store import forecast_open

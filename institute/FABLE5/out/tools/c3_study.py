@@ -42,6 +42,7 @@ Output: prints a report; writes institute/data/history/c3_verdict.json.
 Run:    python c3_study.py (no args; a threshold override would void the
         pre-registration, so none is exposed).
 """
+import calendar
 import json
 import math
 import os
@@ -62,8 +63,10 @@ MIN_TRADES_PRIOR = 5
 MIN_N_TRADES = 10
 B1_MAX = 0.10
 B2_MIN = 0.70
-FEE_CUTOVER_TS = int(time.mktime(time.strptime("2026-03-30T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ"))
-                      - time.timezone)
+# calendar.timegm, not mktime-timezone: the latter assumes local STANDARD time,
+# so under DST every parsed timestamp shifted by 3600s depending on run date —
+# a reproducibility hole in a frozen protocol (2026-07-07 fix; thresholds untouched).
+FEE_CUTOVER_TS = int(calendar.timegm(time.strptime("2026-03-30T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")))
 MIN_LOSS_EVENTS_PER_FOLD = 30
 MIN_BUCKET_N = 500
 Z_BONFERRONI = 2.24  # 97.5th percentile, Bonferroni x2 for two buckets
@@ -96,8 +99,7 @@ def _parse_iso(s):
     if not s:
         return None
     try:
-        return int(time.mktime(time.strptime(str(s)[:19] + "Z", "%Y-%m-%dT%H:%M:%SZ"))
-                   - time.timezone)
+        return int(calendar.timegm(time.strptime(str(s)[:19] + "Z", "%Y-%m-%dT%H:%M:%SZ")))
     except Exception:
         return None
 
@@ -333,8 +335,10 @@ def evaluate():
 def main():
     report = evaluate()
     print(json.dumps(report, indent=2))
-    with open(VERDICT_OUT, "w", encoding="utf-8") as f:
+    tmp = VERDICT_OUT + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
+    os.replace(tmp, VERDICT_OUT)  # atomic: a truncated verdict reads as "no data"
 
 
 # --------------------------------------------------------------------------- #

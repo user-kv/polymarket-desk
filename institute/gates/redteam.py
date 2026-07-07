@@ -92,7 +92,7 @@ def attack_regime(strategy, rows, baseline_fn, **kw):
         return _finding(
             "regime",
             fatal=False,
-            reason=f"regime warn: 1/3 thirds has ev_net<=0 (non-fatal)",
+            reason="regime warn: 1/3 thirds has ev_net<=0 (non-fatal)",
             evidence=evidence,
         )
     return _finding(

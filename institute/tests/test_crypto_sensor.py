@@ -178,7 +178,7 @@ def test_settle_none_resolve_leaves_row_open():
 def test_resolve_outcome_yes_won():
     """closed=True, outcomePrices=[1,0] -> 1."""
     def fake_get(path, **kw):
-        return {"closed": True, "outcomePrices": '["1", "0"]'}
+        return {"closed": True, "outcomes": '["Yes", "No"]', "outcomePrices": '["1", "0"]'}
 
     row = {"market_id": "x"}
     assert resolve_outcome(row, _get=fake_get) == 1
@@ -187,7 +187,7 @@ def test_resolve_outcome_yes_won():
 def test_resolve_outcome_no_won():
     """closed=True, outcomePrices=[0,1] -> 0."""
     def fake_get(path, **kw):
-        return {"closed": True, "outcomePrices": '["0", "1"]'}
+        return {"closed": True, "outcomes": '["Yes", "No"]', "outcomePrices": '["0", "1"]'}
 
     row = {"market_id": "x"}
     assert resolve_outcome(row, _get=fake_get) == 0
@@ -196,7 +196,7 @@ def test_resolve_outcome_no_won():
 def test_resolve_outcome_not_closed():
     """closed=False -> None."""
     def fake_get(path, **kw):
-        return {"closed": False, "outcomePrices": '["0.5", "0.5"]'}
+        return {"closed": False, "outcomes": '["Yes", "No"]', "outcomePrices": '["0.5", "0.5"]'}
 
     row = {"market_id": "x"}
     assert resolve_outcome(row, _get=fake_get) is None
@@ -205,7 +205,7 @@ def test_resolve_outcome_not_closed():
 def test_resolve_outcome_list_response():
     """If _get returns a list, first element is used."""
     def fake_get(path, **kw):
-        return [{"closed": True, "outcomePrices": '["1", "0"]'}]
+        return [{"closed": True, "outcomes": '["Yes", "No"]', "outcomePrices": '["1", "0"]'}]
 
     row = {"market_id": "x"}
     assert resolve_outcome(row, _get=fake_get) == 1
@@ -231,6 +231,7 @@ def _make_gamma_market(market_id, question, slug, end_date, prices, tokens):
         "question": question,
         "slug": slug,
         "endDate": end_date,
+        "outcomes": json.dumps(["Yes", "No"]),
         "outcomePrices": json.dumps([str(p) for p in prices]),
         "clobTokenIds": json.dumps(tokens),
     }
@@ -240,7 +241,6 @@ def test_fetch_active_crypto_filters_correctly():
     """One ETH daily within cutoff, one long-dated 'by Dec 31', one non-crypto -> only ETH survives."""
     now = datetime.datetime(2026, 6, 30, 12, 0, 0)
     cutoff_hours = 36
-    cutoff = now + datetime.timedelta(hours=cutoff_hours)
 
     # ETH daily within cutoff
     eth_end = "2026-07-01T12:00:00Z"  # ~24h from now, within 36h window
@@ -269,12 +269,8 @@ def test_fetch_active_crypto_filters_correctly():
             return page_one
         return []  # second call returns empty -> loop terminates
 
-    # Patch utcnow inside fetch by using a fixed now via direct call
-    # We need to pass now into fetch; since fetch_active_crypto uses datetime.datetime.utcnow()
-    # internally, we work around by checking results match expected filtering.
-    # The ETH end date must fall between real utcnow and utcnow+36h.
-    # Since tests run in 2026-06-30 context, eth_end = 2026-07-01T12:00:00Z is within 36h.
-    results = fetch_active_crypto(cutoff_hours=cutoff_hours, max_pages=20, _get=fake_get)
+    results = fetch_active_crypto(cutoff_hours=cutoff_hours, max_pages=20,
+                                  _get=fake_get, _now=now)
 
     assert len(results) == 1, f"expected 1 result, got {len(results)}: {results}"
     assert results[0]["market_id"] == "eth1"

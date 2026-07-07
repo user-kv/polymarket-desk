@@ -15,7 +15,6 @@ Member naming from Phase 0 discovery (June 2026):
 import urllib.request
 import json
 import logging
-from datetime import datetime, timezone, timedelta
 import math
 
 logger = logging.getLogger("forecasts")
@@ -223,7 +222,8 @@ def compute_daily_low_ensemble(ensemble_data, target_date_str):
     }
 
 
-def bucket_probability_by_model(forecast, low_f, high_f, model_weights=None):
+def bucket_probability_by_model(forecast, low_f, high_f, model_weights=None,
+                                display_unit="f"):
     """
     RMSE-weighted-by-MODEL bucket probability (M2 upgrade from equal-weight).
 
@@ -248,35 +248,52 @@ def bucket_probability_by_model(forecast, low_f, high_f, model_weights=None):
     for key, slug in _MODEL_KEYS:
         highs = forecast.get(key, [])
         if highs:
-            probs.append(bucket_probability(highs, low_f, high_f))
+            probs.append(bucket_probability(highs, low_f, high_f, display_unit))
             w = (model_weights or {}).get(slug, 1.0)
             weights.append(w)
     if not probs:
-        return bucket_probability(forecast.get("all_highs_f", []), low_f, high_f)
+        return bucket_probability(forecast.get("all_highs_f", []), low_f, high_f, display_unit)
     total_w = sum(weights)
     if total_w <= 0:
         return sum(probs) / len(probs)
     return sum(p * w for p, w in zip(probs, weights)) / total_w
 
 
-def bucket_probability(highs_f, low_f, high_f):
+def _reported_int(temp_f, display_unit="f"):
+    """The integer the resolution source would REPORT for this member, in the
+    market's native unit (°C markets resolve on the reported integer °C)."""
+    t = (temp_f - 32.0) * 5.0 / 9.0 if display_unit == "c" else temp_f
+    return math.floor(t + 0.5)
+
+
+def bucket_probability(highs_f, low_f, high_f, display_unit="f"):
     """
-    Fraction of ensemble members whose daily high falls in [low_f, high_f).
-    Open-ended low: low_f == -999 means 'anything below high_f'
-    Open-ended high: high_f == 999 means 'anything above low_f'
+    Fraction of ensemble members whose daily high, once rounded to the integer
+    the venue's resolution source reports (in the market's native unit),
+    falls inside the bucket — INCLUSIVE of both ends, matching how Polymarket
+    resolves "X-Y°" buckets (2026-07-07 fix: the old half-open [low, high)
+    rule dropped every member landing on the top edge, deflating YES probs
+    and inflating NO "edges" system-wide).
+    Open-ended low: low_f == -999 means 'anything at or below high_f'
+    Open-ended high: high_f == 999 means 'anything at or above low_f'
     """
+    if not highs_f:
+        return 0.0
+    lo = low_f if low_f == -999.0 else _reported_int(low_f, display_unit) if display_unit == "c" else low_f
+    hi = high_f if high_f == 999.0 else _reported_int(high_f, display_unit) if display_unit == "c" else high_f
     count = 0
     for h in highs_f:
+        r = _reported_int(h, display_unit)
         if low_f == -999.0:
-            if h <= high_f:
+            if r <= hi:
                 count += 1
         elif high_f == 999.0:
-            if h >= low_f:
+            if r >= lo:
                 count += 1
         else:
-            if low_f <= h < high_f:
+            if lo <= r <= hi:
                 count += 1
-    return count / len(highs_f) if highs_f else 0.0
+    return count / len(highs_f)
 
 
 def models_agree(gfs_mean_f, ecmwf_mean_f, max_diff_c=1.5):
@@ -406,9 +423,12 @@ def get_forecast_for_city(city_cfg, target_date_str, cfg=None, raw_ensembles=Non
             logger.debug(f"AIFS added {len(aifs_highs)} members (total={len(merged)})")
 
     # Apply self-correcting bias calibration, if any has been computed for this city.
+    # Bias (and RMSE weights) are fitted against observed daily HIGHS only, so
+    # they must not be applied to low-metric forecasts: a city whose highs run
+    # cold says nothing about its lows (2026-07-07 fix).
     try:
         from lib import calibration
-        corr = calibration.get_correction_f(city_cfg["name"])
+        corr = calibration.get_correction_f(city_cfg["name"]) if metric == "high" else 0.0
         if corr:
             # Shift every per-model group too (not just the pooled list) so
             # bucket_probability_by_model — which reads the per-model lists —
@@ -424,9 +444,11 @@ def get_forecast_for_city(city_cfg, target_date_str, cfg=None, raw_ensembles=Non
             logger.info(f"  Applied {corr:+.2f}°F calibration correction for {city_cfg['name']}")
         # M2: attach per-model RMSE weights so engine can pass them to
         # bucket_probability_by_model without re-reading the calibration file.
-        weights = calibration.get_model_weights(city_cfg["name"])
-        if weights:
-            result["model_weights"] = weights
+        # (High-fitted RMSE only — see the bias note above; lows stay equal-weight.)
+        if metric == "high":
+            weights = calibration.get_model_weights(city_cfg["name"])
+            if weights:
+                result["model_weights"] = weights
     except Exception as e:
         logger.warning(f"Calibration lookup failed (non-fatal, using uncorrected forecast): {e}")
 

@@ -112,6 +112,15 @@ def fetch_active_cpi(max_pages=15, _get=_gamma_get):
                 if len(prices) < 2:
                     continue
 
+                # outcomePrices order follows `outcomes` — never assume [YES, NO].
+                # Require literal Yes/No and index YES explicitly, else q_yes
+                # (and later settlement) records the market inverted.
+                labels = [str(o).strip().lower()
+                          for o in _parse_json_field(m.get("outcomes") or "[]")]
+                if sorted(labels) != ["no", "yes"]:
+                    continue
+                yes_idx = labels.index("yes")
+
                 market_id = str(m.get("id", "") or m.get("market_id", ""))
                 if not market_id:
                     continue
@@ -123,7 +132,7 @@ def fetch_active_cpi(max_pages=15, _get=_gamma_get):
                     "question": question,
                     "slug": slug,
                     "end_date": end_raw,
-                    "q_yes": prices[0],
+                    "q_yes": prices[yes_idx],
                     "indicator": parsed["indicator"],
                     "period": parsed["period"],
                     "lo": parsed["lo"],
@@ -229,13 +238,13 @@ def snapshot(
     if fetch is None:
         fetch = fetch_active_cpi
     if now is None:
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
 
     existing = load_jsonl(store_path)
-    already_open = {
-        r["market_id"] for r in existing
-        if r.get("status") == "open"
-    }
+    # Dedupe against EVERY existing row (settled included): Gamma can
+    # re-return a settled market, and pagination can repeat one mid-scan —
+    # either way a second row double-counts it downstream.
+    seen_ids = {r["market_id"] for r in existing}
 
     fetched = fetch()
     new_rows = []
@@ -244,8 +253,9 @@ def snapshot(
     dist_cache = {}
 
     for m in fetched:
-        if m["market_id"] in already_open:
+        if m["market_id"] in seen_ids:
             continue
+        seen_ids.add(m["market_id"])
 
         period = m["period"]
 
@@ -258,10 +268,15 @@ def snapshot(
                 try:
                     dist_cache[period] = _live_distribution(period)
                 except Exception:
-                    dist_cache[period] = {"mu": 0.0, "sigma": 0.2,
-                                          "weights": {}, "n_train": 0}
+                    # Data sources down this tick: SKIP the market and retry
+                    # next run. Snapshot is idempotent ("never re-forecast"),
+                    # so freezing a placeholder here would permanently burn
+                    # the market's one point-in-time forecast slot.
+                    dist_cache[period] = None
 
         dist = dist_cache[period]
+        if dist is None:
+            continue
         mu = dist["mu"]
         sigma = dist["sigma"]
 
@@ -355,6 +370,11 @@ def resolve_cpi(row, bls=None):
             return None  # not yet published
 
         mom = (curr_val / prev_val - 1.0) * 100.0
+        # The venue resolves on the PUBLISHED headline figure, which BLS rounds
+        # to 1 decimal — compare the rounded value (0.349 raw is a 0.3% print,
+        # not a 0.35 boundary case). Buckets are centred on rounded values, so
+        # 1-dp rounding also removes any half-open boundary ambiguity.
+        mom = round(mom, 1)
         return 1 if lo <= mom < hi else 0
 
     except Exception:
@@ -380,7 +400,7 @@ def settle(store_path=CPI_STORE, resolve=None, now=None):
     if resolve is None:
         resolve = resolve_cpi
     if now is None:
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
 
     rows = load_jsonl(store_path)
     settled_this_call = []

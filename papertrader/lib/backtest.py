@@ -18,13 +18,12 @@ Both render a console summary and write backtest.html.
 """
 
 import os
-import csv
 import glob
 import json
 import math
 import time
 import logging
-from datetime import datetime, timezone, timedelta, date
+from datetime import datetime, timezone, timedelta
 
 from lib import settlement, forecasts
 
@@ -135,6 +134,8 @@ def _load_snapshot_rows():
                 "bucket_high_f": m.get("bucket_high_f"),
                 "is_oe_low": bool(m.get("is_open_ended_low", False)),
                 "is_oe_high": bool(m.get("is_open_ended_high", False)),
+                "metric": m.get("metric", "high"),
+                "display_unit": m.get("display_unit", "f"),
                 "ask_price": float(ask),
                 "ensemble_prob": float(ev.get("ensemble_prob", 0.0)),
                 "scan_ts": scan_ts,
@@ -241,6 +242,10 @@ def score_markets(cfg, get_actual=None):
         city_cfg = city_lookup.get(r["city"])
         if city_cfg is None:
             continue
+        # The observed-value cache fetches daily HIGHS only; scoring a
+        # lowest-temperature market against the high would be silently wrong.
+        if r.get("metric", "high") != "high":
+            continue
         target_date = r["end_date"][:10]
         if not target_date:
             continue
@@ -250,7 +255,7 @@ def score_markets(cfg, get_actual=None):
             continue
         won = settlement.did_bucket_win(
             actual, float(r["bucket_low_f"]), float(r["bucket_high_f"]),
-            r["is_oe_low"], r["is_oe_high"],
+            r["is_oe_low"], r["is_oe_high"], r.get("display_unit", "f"),
         )
         # lead time (hours) between the chosen scan and resolution
         lead_h = None

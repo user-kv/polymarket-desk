@@ -5,7 +5,6 @@ Each function returns a dict so gate1 can log the full picture.
 """
 import math
 import random
-import statistics
 import itertools
 
 from institute.scoring import market_relative_S
@@ -280,6 +279,17 @@ def sprt(win_loss, p0, p1, alpha=0.05, beta=0.05):
     favour of H1 (edge = p1) or to accept H0. 'continue' means data are
     consistent with both — collect more.
     """
+    # Guards (2026-07-07; conservative-only, no threshold change): p0 straight
+    # from a mean price can be 0.0 or 1.0 (log/zero-division crash), and any
+    # p0 >= p1 (e.g. mean price > 0.88 with the +0.10 target) would silently
+    # INVERT the test. A degenerate hypothesis pair can never accept H1.
+    eps = 1e-9
+    p0 = min(max(p0, eps), 1.0 - eps)
+    p1 = min(max(p1, eps), 1.0 - eps)
+    if p1 <= p0:
+        return {"decision": "invalid_hypotheses", "llr": 0.0, "n_used": 0,
+                "p0": p0, "p1": p1}
+
     log_A = math.log((1.0 - beta) / alpha)   # accept H1 boundary
     log_B = math.log(beta / (1.0 - alpha))   # accept H0 boundary
 

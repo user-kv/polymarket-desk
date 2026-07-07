@@ -1,6 +1,5 @@
 """Tests for institute.alpha.calibrate — offline, no network (A6)."""
-import math
-from institute.alpha.calibrate import extremize, maybe_calibrate, ALPHA, CALIB_MIN_N
+from institute.alpha.calibrate import extremize, maybe_calibrate, CALIB_MIN_N
 
 
 def test_extremize_half_is_half():

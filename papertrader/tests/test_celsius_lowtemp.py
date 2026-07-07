@@ -11,8 +11,6 @@ Covers:
 
 Run:  PYTHONPATH=papertrader python -m pytest papertrader/tests/test_celsius_lowtemp.py -q
 """
-import os
-import tempfile
 
 from lib.polymarket import _parse_bucket
 from lib import ledger as ledger_mod
@@ -40,7 +38,7 @@ def test_celsius_single_value():
     b = _parse_bucket(q)
     assert b is not None
     assert b["low_f"] == 28 * 9 / 5 + 32
-    assert b["high_f"] == 29 * 9 / 5 + 32   # [X, X+1) in °C
+    assert b["high_f"] == 28 * 9 / 5 + 32   # degenerate [X, X]: wins iff reported °C == X
     assert b["is_open_ended_low"] is False and b["is_open_ended_high"] is False
 
 
@@ -68,7 +66,7 @@ def test_lowest_temperature_detection_celsius():
     assert b is not None
     assert b["metric"] == "low"
     assert b["low_f"] == 10 * 9 / 5 + 32
-    assert b["high_f"] == 11 * 9 / 5 + 32
+    assert b["high_f"] == 10 * 9 / 5 + 32
 
 
 def test_lowest_temperature_detection_fahrenheit_range():

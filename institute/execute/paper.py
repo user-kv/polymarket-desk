@@ -16,7 +16,7 @@ PAPER_LEDGER = os.path.join(_DATA, "paper_ledger.jsonl")
 
 
 def _utcnow_iso():
-    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def open_position(strategy, market_snapshot, baseline_fn, ledger_path=PAPER_LEDGER, **kw) -> dict | None:

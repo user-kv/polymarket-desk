@@ -11,7 +11,6 @@ cost/observability dashboard; this file is the offline, always-available version
 """
 
 from __future__ import annotations
-import json
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 

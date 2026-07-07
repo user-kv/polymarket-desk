@@ -21,6 +21,7 @@ of these after results exist voids the study):
 Output: prints a report; writes institute/data/history/c2_verdict.json.
 Run:    python c2_backtest.py [--threshold 0.10] (threshold override voids study)
 """
+import calendar
 import argparse
 import json
 import math
@@ -56,9 +57,11 @@ def _iter_jsonl(path):
 
 
 def _parse_iso(s):
+    # calendar.timegm, not mktime-timezone: mktime assumes local STANDARD time,
+    # so under DST parsed timestamps shifted 3600s depending on run date
+    # (2026-07-07 reproducibility fix; thresholds untouched).
     try:
-        return int(time.mktime(time.strptime(str(s)[:19] + "Z", "%Y-%m-%dT%H:%M:%SZ"))
-                   - time.timezone)
+        return int(calendar.timegm(time.strptime(str(s)[:19] + "Z", "%Y-%m-%dT%H:%M:%SZ")))
     except Exception:
         return None
 
@@ -167,8 +170,10 @@ def main():
     if a.threshold != 0.10:
         report["verdict"] = "EXPLORATORY (threshold overridden) — " + report.get("verdict", "")
     print(json.dumps(report, indent=2))
-    with open(VERDICT_OUT, "w", encoding="utf-8") as f:
+    tmp = VERDICT_OUT + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
+    os.replace(tmp, VERDICT_OUT)  # atomic: a truncated verdict reads as "no data"
 
 
 if __name__ == "__main__":

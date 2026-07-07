@@ -3,8 +3,6 @@
 Turns a list of graduated cells into a risk-managed book. Nothing gets capital
 unless the evidence earns it; dominated correlated exposure is blocked at Gate 5.
 """
-import math
-
 from institute.scoring import clip
 from institute.portfolio.factor import cell_vector, correlation
 
@@ -68,6 +66,12 @@ def cluster(cells):
 
     for i in range(n):
         for j in range(i + 1, n):
+            # Same archetype ALWAYS clusters, even when it has no factor
+            # vector yet (unknown archetypes get {} -> corr 0.0, which would
+            # let two identical-archetype cells dodge CLUSTER_CAP).
+            if cells[i]["archetype"] == cells[j]["archetype"]:
+                union(i, j)
+                continue
             va = cell_vector(cells[i]["archetype"])
             vb = cell_vector(cells[j]["archetype"])
             c = correlation(va, vb)

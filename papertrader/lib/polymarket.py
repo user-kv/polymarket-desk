@@ -233,9 +233,10 @@ def _parse_bucket_celsius(q):
       "...between 27-28°C..." / "...between 27 and 28°C..."
       "...28°C or higher/above..."
       "...15°C or below/lower..."
-      "...be 28°C..." (single discrete value; Polymarket buckets these as
-        the half-open interval [X, X+1) in °C, matching the site's own
-        1-degree-wide bucket convention)
+      "...be 28°C..." (single discrete value; wins iff the reported integer
+        °C equals X, so it is stored as the degenerate inclusive bucket
+        [X, X] — resolution rounds the observation to integer °C and
+        compares inclusively, see lib/settlement.did_bucket_win)
 
     Returns dict with keys: low_f, high_f, is_open_ended_low,
     is_open_ended_high, display_unit. Returns None if parse fails.
@@ -277,7 +278,7 @@ def _parse_bucket_celsius(q):
     if m:
         value_c = float(m.group(1))
         return {
-            "low_f": _celsius_to_f(value_c), "high_f": _celsius_to_f(value_c + 1.0),
+            "low_f": _celsius_to_f(value_c), "high_f": _celsius_to_f(value_c),
             "is_open_ended_low": False, "is_open_ended_high": False,
             "display_unit": "c",
         }

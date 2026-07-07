@@ -20,13 +20,12 @@ memory twin of the tool test-harness and blocks memory-poisoning.
 from __future__ import annotations
 import sqlite3
 import re
-import math
 import json
 from datetime import datetime, timezone
 from pathlib import Path
 from dataclasses import dataclass, asdict
 
-from desk.memory.write_gate import check_lesson, WriteGateError
+from desk.memory.write_gate import check_lesson
 
 MEM_DIR = Path(__file__).resolve().parent
 LESSONS_DIR = MEM_DIR / "lessons"

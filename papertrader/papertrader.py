@@ -17,7 +17,7 @@ import os
 import json
 import logging
 import argparse
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone
 
 # ── force UTF-8 console so --explain's ✓/✗/° glyphs don't crash on Windows cp1252 ──
 for _stream in (sys.stdout, sys.stderr):
@@ -100,7 +100,8 @@ def cmd_scan(cfg, test_mode=False, explain=False):
     # Step 1: Fetch markets
     log.info("Fetching weather markets from Gamma API...")
     try:
-        markets = polymarket.fetch_weather_markets(scan_cfg)
+        markets = polymarket.fetch_weather_markets(
+            scan_cfg, cutoff_hours=scan_cfg.get("max_hours_to_resolution", 48))
     except Exception as e:
         log.error(f"Market fetch failed (Gamma API) — skipping scan this cycle so "
                   f"settle/commit can still run: {e}")

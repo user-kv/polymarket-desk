@@ -43,7 +43,7 @@ BASELINE_MECHANISM = {
 
 
 def _utcnow_iso():
-    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def resolve_baseline(name):

@@ -94,7 +94,11 @@ def collect():
     try:
         h = json.load(open(bk, encoding="utf-8"))
         stats["equity"] = [round(e["balance"], 2) for e in h.get("history", [])][-80:]
+        # a partial schema (history but no top-level balance) must not leave
+        # balance=None with equity non-empty — render() formats balance as a number
         stats["balance"] = h.get("balance")
+        if stats["balance"] is None and stats["equity"]:
+            stats["balance"] = stats["equity"][-1]
     except Exception:
         stats["equity"], stats["balance"] = [], None
 
@@ -250,8 +254,9 @@ def render(stats):
                 f'stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" '
                 f'stroke-linecap="round"/></svg>')
 
+    import html as _html
     cat_bars = "\n".join(
-        f'<div class="barrow"><span class="barlabel">{c}</span>'
+        f'<div class="barrow"><span class="barlabel">{_html.escape(str(c))}</span>'
         f'<span class="bartrack"><span class="bar" style="width:{(n/cat_max)*100:.1f}%"></span></span>'
         f'<span class="barval">{n:,}</span></div>'
         for c, n in cats.items()

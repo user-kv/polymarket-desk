@@ -18,7 +18,7 @@ from institute.gates import mechanism, redteam
 
 
 def _utcnow_iso():
-    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def run_cell(archetype, baseline_name, rows=None, use_llm=False, log=True) -> dict:

@@ -83,8 +83,14 @@ def _parse_period(question, slug):
     )
     if m_month:
         month = _month_num(m_month.group(1))
-        year = datetime.datetime.utcnow().year
         if month:
+            # Year inference: a CPI market snapshotted in January that says
+            # "December CPI" means LAST December, not 11 months ahead. Pick
+            # the year that keeps the data month within (now-10mo, now+2mo].
+            now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+            year = now.year
+            if month - now.month > 2:
+                year -= 1
             return f"{year:04d}-{month:02d}"
 
     return None

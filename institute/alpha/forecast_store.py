@@ -40,7 +40,7 @@ def forecast_open(
         fetch_forecaster = forecast_market
 
     if now is None:
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
 
     rows = load_jsonl(store_path)
     newly_forecast = []

@@ -43,6 +43,9 @@ BETS_COLS = [
     "metric",                                        # 2026-07 Celsius/low-temp expansion:
                                                       # "high" or "low"; missing on old rows
                                                       # (they predate the column) means "high".
+    "display_unit",                                  # "f" or "c" — the market's quoted unit;
+                                                      # settlement must round in the NATIVE unit.
+                                                      # Missing on old rows means "f".
 ]
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
@@ -138,7 +141,7 @@ def _migrate_header_if_needed():
                          "refusing to migrate; rows may misalign.", unknown)
             return
         rows = list(reader)
-    defaults = {"metric": "high"}
+    defaults = {"metric": "high", "display_unit": "f"}
     tmp = BETS_PATH + ".migrating"
     with open(tmp, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=BETS_COLS, extrasaction="ignore")
@@ -206,10 +209,14 @@ def update_bet(bet_id, updates):
         logger.warning(f"update_bet: bet_id {bet_id} not found")
         return False
 
-    with open(BETS_PATH, "w", newline="", encoding="utf-8") as f:
+    # Atomic rewrite: a crash mid-write must not truncate the whole ledger
+    # (the migration path already did this; the hotter settlement path didn't).
+    tmp = BETS_PATH + ".updating"
+    with open(tmp, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=BETS_COLS, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(bets)
+    os.replace(tmp, BETS_PATH)
     return True
 
 

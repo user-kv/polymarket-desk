@@ -24,7 +24,7 @@ REGISTRY = os.path.normpath(REGISTRY)
 
 
 def _utcnow_iso():
-    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _mean_price(rows, baseline_fn):

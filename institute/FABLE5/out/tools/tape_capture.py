@@ -42,7 +42,6 @@ Usage:
     python tape_capture.py --selftest
 """
 import argparse
-import datetime
 import hashlib
 import json
 import os
@@ -107,7 +106,7 @@ def fetch_with_retry(url, fetch_fn=fetch_json, sleep_fn=time.sleep, max_retries=
                 attempt += 1
                 continue
             raise
-        except (urllib.error.URLError, TimeoutError) as e:
+        except (urllib.error.URLError, TimeoutError):
             if attempt < max_retries:
                 sleep_fn(0.5 * (2 ** attempt))
                 attempt += 1
@@ -332,7 +331,12 @@ def fetch_kalshi_tape(max_rows=2000, fetch_fn=fetch_json, sleep_fn=time.sleep,
     seen = load_seen_set(out_path)
     appended = []
     skipped_malformed = 0
-    cursor = (state.get("kalshi") or {}).get("cursor")
+    # Always start from the TOP of the tape (no cursor): Kalshi's trades cursor
+    # pages toward OLDER trades, so resuming from a saved cursor walks further
+    # into history every run and never captures new trades. The seen-set
+    # (hit_seen) is the real resume mechanism — page newest→older until we
+    # reach trades already on disk. (2026-07-07 fix; saved cursors ignored.)
+    cursor = None
     hit_seen = False
     guard = 0
     while len(appended) < max_rows and not hit_seen and guard < 50:
@@ -373,7 +377,7 @@ def fetch_kalshi_tape(max_rows=2000, fetch_fn=fetch_json, sleep_fn=time.sleep,
         sleep_fn(call_sleep)
     append_rows(out_path, appended)
     state["kalshi"] = {
-        "cursor": cursor,
+        "cursor": None,  # never reused as a start point — see comment above
         "last_ts": appended[0]["ts"] if appended else (state.get("kalshi") or {}).get("last_ts"),
         "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }

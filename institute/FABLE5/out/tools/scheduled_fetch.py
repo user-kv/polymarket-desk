@@ -31,8 +31,15 @@ def log(msg):
 
 
 def run(args_list):
-    p = subprocess.run([sys.executable] + args_list, cwd=HERE,
-                       capture_output=True, text=True, timeout=3 * 3600)
+    # TimeoutExpired is RAISED, not returned as an exit code — uncaught it
+    # would kill the whole nightly chain (studies, dashboard, phone notify)
+    # on one hung fetcher.
+    try:
+        p = subprocess.run([sys.executable] + args_list, cwd=HERE,
+                           capture_output=True, text=True, timeout=3 * 3600)
+    except subprocess.TimeoutExpired:
+        log(f"TIMEOUT (3h) cmd={' '.join(args_list)} — killed, continuing chain")
+        return 124
     tail = (p.stdout or "").strip().splitlines()[-3:]
     log(f"exit={p.returncode} cmd={' '.join(args_list)} | " + " / ".join(tail))
     if p.returncode != 0:

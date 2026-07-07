@@ -22,7 +22,7 @@ import urllib.request
 import json
 import logging
 import os
-from datetime import datetime, timezone, timedelta, date
+from datetime import datetime, timezone, timedelta
 
 logger = logging.getLogger("settlement")
 
@@ -42,20 +42,41 @@ def _c_to_f(c):
     return c * 9.0 / 5.0 + 32.0
 
 
-def did_bucket_win(actual_high_f, low_f, high_f, is_oe_low, is_oe_high):
+def _round_half_up(x):
+    import math
+    return math.floor(x + 0.5)
+
+
+def did_bucket_win(actual_high_f, low_f, high_f, is_oe_low, is_oe_high,
+                   display_unit="f"):
     """
     Single source of truth for resolving a temperature bucket.
 
-    Returns True if actual_high_f falls inside the bucket.
-      - open-ended low  ("X°F or below"):  win if actual <= high_f
-      - open-ended high ("X°F or higher"): win if actual >= low_f
-      - closed bucket   ("X-Y°F"):         win if low_f <= actual < high_f
+    The venue resolves against the source's REPORTED temperature — an integer
+    in the market's quoted unit — and closed buckets ("94-95°F") include BOTH
+    ends (adjacent buckets are 92-93 / 94-95 / 96-97: the top integer belongs
+    to the bucket). The old half-open `low <= t < high` rule mis-resolved every
+    odd-degree observed high (fixed 2026-07-07).
+
+    So: round the observation to the nearest integer in the market's native
+    unit (°C markets must be resolved in °C — rounding the °F-converted value
+    moves the boundary), then compare inclusively.
+      - open-ended low  ("X or below"):  win if reported <= high bound
+      - open-ended high ("X or higher"): win if reported >= low bound
+      - closed bucket   ("X-Y"):         win if low <= reported <= high
     """
+    if display_unit == "c":
+        t = _round_half_up((actual_high_f - 32.0) * 5.0 / 9.0)
+        lo = _round_half_up((low_f - 32.0) * 5.0 / 9.0) if low_f > -999.0 else low_f
+        hi = _round_half_up((high_f - 32.0) * 5.0 / 9.0) if high_f < 999.0 else high_f
+    else:
+        t = _round_half_up(actual_high_f)
+        lo, hi = low_f, high_f
     if is_oe_low:
-        return actual_high_f <= high_f
+        return t <= hi
     if is_oe_high:
-        return actual_high_f >= low_f
-    return low_f <= actual_high_f < high_f
+        return t >= lo
+    return lo <= t <= hi
 
 
 def fetch_observed_high_openmeteo(lat, lon, date_str, tz="America/Chicago"):
@@ -100,18 +121,27 @@ def fetch_observed_extreme_openmeteo(lat, lon, date_str, tz="America/Chicago", m
     return None
 
 
-def fetch_observed_extreme_nws(station, date_str, metric="high"):
+def fetch_observed_extreme_nws(station, date_str, metric="high", tz="America/Chicago"):
     """
     Fetch observed daily max (metric="high") or min (metric="low") from
     api.weather.gov hourly observations for a station.
     station: ICAO code e.g. 'KDAL'. date_str: 'YYYY-MM-DD'. Returns float °F or None.
+
+    The window is the station's LOCAL calendar day (the day the market is
+    about), not the UTC day — a UTC window for a US station includes the
+    previous local evening and drops the target evening (fixed 2026-07-07).
     """
-    # NWS uses the station's hourly obs; we get a time range for that day
     try:
-        # Build a 30h window: day 00Z to next-day 06Z
+        from zoneinfo import ZoneInfo
+        y, mo, d = (int(p) for p in date_str.split("-"))
+        start_local = datetime(y, mo, d, tzinfo=ZoneInfo(tz))
+        end_local = start_local + timedelta(days=1)
+        fmt = "%Y-%m-%dT%H:%M:%SZ"
+        start_utc = start_local.astimezone(timezone.utc).strftime(fmt)
+        end_utc = end_local.astimezone(timezone.utc).strftime(fmt)
         url = (
             f"https://api.weather.gov/stations/{station}/observations"
-            f"?start={date_str}T00:00:00Z&end={date_str}T23:59:59Z&limit=100"
+            f"?start={start_utc}&end={end_utc}&limit=500"
         )
         data = _get(url)
         features = data.get("features", [])
@@ -156,7 +186,7 @@ def fetch_observed_extreme(city_cfg, date_str, metric="high"):
     tz = city_cfg.get("tz", "America/Chicago")
 
     openmeteo_val = fetch_observed_extreme_openmeteo(lat, lon, date_str, tz, metric=metric)
-    nws_val = fetch_observed_extreme_nws(station, date_str, metric=metric)
+    nws_val = fetch_observed_extreme_nws(station, date_str, metric=metric, tz=tz)
 
     logger.info(
         f"{city_cfg['name']} {date_str} [{metric}]: "
@@ -232,7 +262,9 @@ def settle_bet(bet, city_cfg, cfg):
     is_oe_low = str(bet.get("is_open_ended_low", "False")).lower() in ("true", "1")
     is_oe_high = str(bet.get("is_open_ended_high", "False")).lower() in ("true", "1")
 
-    bucket_happened = did_bucket_win(actual_high_f, low_f, high_f, is_oe_low, is_oe_high)
+    display_unit = bet.get("display_unit") or "f"
+    bucket_happened = did_bucket_win(actual_high_f, low_f, high_f,
+                                     is_oe_low, is_oe_high, display_unit)
     # M4: for NO bets the win condition is inverted — we win when the bucket does NOT happen.
     side = bet.get("side", "YES")
     won = bucket_happened if side == "YES" else not bucket_happened
@@ -285,7 +317,12 @@ def settle_all(cfg, city_lookup):
             if result is None:
                 continue  # not ready yet
 
-            update_bet(bet["bet_id"], result)
+            # Only credit the bankroll if the ledger write actually landed —
+            # otherwise the bet stays open and the next cycle would credit it AGAIN.
+            if not update_bet(bet["bet_id"], result):
+                logger.error(f"Ledger update failed for {bet['bet_id']}; "
+                             "skipping bankroll credit (will retry next cycle)")
+                continue
             pnl = result["pnl"]
             if bet.get("is_test", "N") != "Y":
                 update_bankroll(result.get("bankroll_delta", pnl), note=f"settle {bet['bet_id']} {result['result']}")

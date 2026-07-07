@@ -23,7 +23,9 @@ def test_one_bad_bet_does_not_block_others(monkeypatch):
     monkeypatch.setattr(ledger, "update_bankroll", lambda *a, **k: None)
 
     updated = []
-    monkeypatch.setattr(ledger, "update_bet", lambda bid, res: updated.append(bid))
+    # settle_all only credits the bankroll when update_bet reports success
+    monkeypatch.setattr(ledger, "update_bet",
+                        lambda bid, res: (updated.append(bid), True)[1])
 
     def fake_settle(bet, city_cfg, cfg):
         if bet["bet_id"] == "BAD":

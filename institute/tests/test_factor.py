@@ -1,5 +1,5 @@
 """A4 portfolio/factor.py: structural factor correlation tests."""
-from institute.portfolio.factor import cell_vector, correlation, corr_matrix, CELL_FACTORS
+from institute.portfolio.factor import cell_vector, correlation, corr_matrix
 
 
 def test_weather_weather_corr_is_one():

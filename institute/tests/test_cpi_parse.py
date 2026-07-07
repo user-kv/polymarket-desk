@@ -2,7 +2,6 @@
 
 Offline and deterministic -- no network.
 """
-import math
 
 from institute.verticals.cpi.parse import parse_market
 

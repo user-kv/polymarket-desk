@@ -275,6 +275,8 @@ def discover(max_markets, fetch_fn=fetch_json, sleep_fn=time.sleep):
             d = fetch_fn(url)
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError):
             continue
+        if not isinstance(d, dict):
+            continue  # fetch_json returns None on an empty body — don't crash the run
         batch = [m for e in (d.get("events") or []) for m in (e.get("markets") or [])
                  if not m.get("closed")]
         sleep_fn(0.1)
@@ -288,6 +290,9 @@ def discover(max_markets, fetch_fn=fetch_json, sleep_fn=time.sleep):
             outcomes = _maybe_json_parse(m.get("outcomes"))
             prices = _maybe_json_parse(m.get("outcomePrices"))
             if not isinstance(outcomes, list) or len(outcomes) != 2:
+                continue
+            # require literal Yes/No — see s1_geopolitics discover() note
+            if sorted(str(o).strip().lower() for o in outcomes) != ["no", "yes"]:
                 continue
             if not isinstance(prices, list) or len(prices) != 2:
                 continue
@@ -548,11 +553,17 @@ def check_settlement(market_id, fetch_fn=fetch_json):
     return None  # ambiguous close; leave unsettled for a future run
 
 
-def settle_pending(path=FORECASTS_PATH, fetch_fn=fetch_json):
-    appended = 0
+def settle_pending(path=FORECASTS_PATH, fetch_fn=fetch_json,
+                   sleep_fn=time.sleep, max_queries=200):
+    # Throttled and capped — see s1_geopolitics.settle_pending for rationale.
+    appended = queried = 0
     for key, _row in find_unsettled(path):
+        if queried >= max_queries:
+            break
         market_id = key.split("|", 1)[0]
         outcome = check_settlement(market_id, fetch_fn)
+        queried += 1
+        sleep_fn(0.15)
         if outcome is None:
             continue
         append_row({

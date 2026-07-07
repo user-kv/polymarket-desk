@@ -25,7 +25,6 @@ from pathlib import Path
 from dataclasses import dataclass
 
 from desk.kernel import fitness
-from desk.memory import store
 
 PAPERTRADER = Path(__file__).resolve().parents[1] / "papertrader"
 BETS_CSV = PAPERTRADER / "data" / "bets.csv"

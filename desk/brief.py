@@ -176,7 +176,11 @@ def brief_scan(scan_path: Path, debate: bool = DEBATE_ENABLED, only_actionable=T
         market = entry.get("market", {})
         ev = entry.get("evaluation", {})
         fc = entry.get("forecast_summary", {})
-        if only_actionable and ev.get("action") == "SKIP" and float(ev.get("edge_pct", -99)) < 3:
+        try:
+            edge = float(ev.get("edge_pct"))
+        except (TypeError, ValueError):
+            edge = -99.0   # null/malformed edge in one entry must not abort the brief
+        if only_actionable and ev.get("action") == "SKIP" and edge < 3:
             continue   # don't waste reasoning on clearly-dead markets
         out.append(build_brief(market, fc, ev, debate).as_dict())
     return out

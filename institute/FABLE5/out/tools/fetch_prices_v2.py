@@ -112,7 +112,7 @@ def fetch_with_retry(url, fetch_fn=fetch_json, sleep_fn=time.sleep, max_retries=
                 attempt += 1
                 continue
             raise
-        except (urllib.error.URLError, TimeoutError) as e:
+        except (urllib.error.URLError, TimeoutError):
             if attempt < max_retries:
                 sleep_fn(0.5 * (2 ** attempt))
                 attempt += 1
@@ -340,14 +340,22 @@ def fetch_kalshi(max_markets, interval=60, fetch_fn=fetch_json, sleep_fn=time.sl
 # Polymarket trades (same store/schema as fetch_prices.py)
 # --------------------------------------------------------------------------------------
 def _trades_for(cid, fetch_fn=fetch_json, sleep_fn=time.sleep, call_sleep=0.2, cap=5000):
+    """Returns (points, truncated). truncated=True means a mid-pagination
+    failure cut the series short — the caller must NOT mark the market done,
+    or a transient outage permanently poisons its decision-time series."""
     pts, offset, page = [], 0, 500
+    truncated = False
     while len(pts) < cap:
         url = f"{POLY_TRADES}?market={cid}&limit={page}&offset={offset}"
         try:
             batch = fetch_with_retry(url, fetch_fn, sleep_fn)
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError):
+            truncated = True
             break
-        if not isinstance(batch, list) or not batch:
+        if not isinstance(batch, list):
+            truncated = True
+            break
+        if not batch:
             break
         for tr in batch:
             if tr.get("outcomeIndex") == 0:  # YES side
@@ -360,7 +368,7 @@ def _trades_for(cid, fetch_fn=fetch_json, sleep_fn=time.sleep, call_sleep=0.2, c
         offset += page
         sleep_fn(call_sleep)
     pts.sort(key=lambda x: x[0])
-    return pts
+    return pts, truncated
 
 
 def _parse_volume(v):
@@ -408,8 +416,13 @@ def fetch_polymarket(max_markets, fetch_fn=fetch_json, sleep_fn=time.sleep,
         if written >= max_markets:
             break
         try:
-            points = _trades_for(cid, fetch_fn, sleep_fn, call_sleep)
+            points, truncated = _trades_for(cid, fetch_fn, sleep_fn, call_sleep)
         except Exception:
+            err += 1
+            continue
+        if truncated:
+            # transient failure mid-series: skip WITHOUT marking done so the
+            # next run re-fetches the full tape
             err += 1
             continue
         done.add(mid)
@@ -452,7 +465,10 @@ def update_manifest_kalshi_candles(count, path=KALSHI_CANDLES_OUT, manifest_path
         "file": os.path.relpath(path, os.path.dirname(manifest_path)),
     }
     os.makedirs(os.path.dirname(manifest_path), exist_ok=True)
-    json.dump(manifest, open(manifest_path, "w", encoding="utf-8"), indent=2)
+    tmp = manifest_path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2)
+    os.replace(tmp, manifest_path)
     return manifest
 
 
@@ -525,7 +541,7 @@ def probe(fetch_fn=fetch_json, sleep_fn=time.sleep):
     n_checked = n_ge10 = 0
     for m in poly_candidates:
         try:
-            pts = _trades_for(m.get("condition_id"), fetch_fn, sleep_fn, call_sleep=0.2, cap=20)
+            pts, _ = _trades_for(m.get("condition_id"), fetch_fn, sleep_fn, call_sleep=0.2, cap=20)
         except Exception:
             continue
         n_checked += 1

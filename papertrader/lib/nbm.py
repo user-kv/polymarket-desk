@@ -18,9 +18,12 @@ NBM_MIN_PROB = 0.03  # default: veto YES if < 3% of members say bucket happens
 
 
 def get_raw_member_probability(forecast, bucket_low_f, bucket_high_f,
-                               is_oe_low=False, is_oe_high=False):
+                               is_oe_low=False, is_oe_high=False,
+                               display_unit="f"):
     """
-    Count fraction of ensemble members whose predicted daily high falls in bucket.
+    Count fraction of ensemble members whose predicted daily high falls in bucket,
+    using the same reported-integer, inclusive-ends convention as
+    lib/forecasts.bucket_probability (kept in one place — delegate to it).
 
     Args:
         forecast: dict from forecasts.py containing 'all_highs_f' (list of floats,
@@ -28,26 +31,19 @@ def get_raw_member_probability(forecast, bucket_low_f, bucket_high_f,
         bucket_low_f, bucket_high_f: bucket boundaries in °F
         is_oe_low:  open-ended low  ("X°F or below")
         is_oe_high: open-ended high ("X°F or above")
+        display_unit: "f" or "c" — the market's quoted unit
 
     Returns float 0.0–1.0, or None if no member data available.
     """
+    from lib.forecasts import bucket_probability
     members = forecast.get("all_highs_f", [])
     if not members:
         return None
-
-    count = 0
-    for high in members:
-        if is_oe_low:
-            if high <= bucket_high_f:
-                count += 1
-        elif is_oe_high:
-            if high >= bucket_low_f:
-                count += 1
-        else:
-            if bucket_low_f <= high < bucket_high_f:
-                count += 1
-
-    return count / len(members)
+    # bucket_probability derives open-endedness from the -999/999 sentinels,
+    # which callers already pass for open-ended buckets.
+    lo = -999.0 if is_oe_low else bucket_low_f
+    hi = 999.0 if is_oe_high else bucket_high_f
+    return bucket_probability(members, lo, hi, display_unit)
 
 
 def should_veto_yes(forecast, market, min_prob=None):
@@ -73,6 +69,7 @@ def should_veto_yes(forecast, market, min_prob=None):
         float(market.get("bucket_high_f", 999)),
         is_oe_low=str(market.get("is_open_ended_low", "False")).lower() in ("true", "1"),
         is_oe_high=str(market.get("is_open_ended_high", "False")).lower() in ("true", "1"),
+        display_unit=market.get("display_unit", "f"),
     )
 
     if prob is None:

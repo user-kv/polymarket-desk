@@ -1,5 +1,4 @@
 """Tests for the immutable kernel: invariants + fitness math."""
-import math
 import sys
 from pathlib import Path
 

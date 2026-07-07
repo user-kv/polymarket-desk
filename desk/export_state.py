@@ -196,7 +196,11 @@ def build_state():
 
 def main():
     state = build_state()
-    OUT.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    # atomic: this file is committed and read remotely by the dashboard —
+    # a crash mid-write must not leave truncated JSON for the next git add
+    tmp = OUT.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    tmp.replace(OUT)
     b, t = state["bankroll"], state["bets"]
     print(f"wrote {OUT.relative_to(ROOT)} "
           f"(balance={b['balance']} pnl={b['pnl']} bets={t['total']} "

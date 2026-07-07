@@ -1,7 +1,7 @@
 """A4 portfolio/allocator.py: Kelly sizing, clustering, and cap tests."""
 from institute.portfolio.allocator import (
     kelly_fraction, allocate,
-    CELL_CAP, CLUSTER_CAP, ARCHETYPE_CAP, TOTAL_CAP,
+    CELL_CAP, CLUSTER_CAP, TOTAL_CAP,
 )
 
 

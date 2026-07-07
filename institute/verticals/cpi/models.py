@@ -8,9 +8,7 @@ sigma = estimate of the model's own forecast error stdev (floored at 0.05)
 
 No network.  All pure functions -- testable in isolation.
 """
-import math
 import statistics
-import datetime
 
 
 _SIGMA_FLOOR = 0.05

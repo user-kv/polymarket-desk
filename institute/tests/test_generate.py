@@ -22,6 +22,6 @@ def test_budget_caps_proposals():
         def __init__(self, b):
             self.archetype = "x"; self.baseline = b
             self.mean_S = 0.1; self.ev_net = 0.1; self.n = 5
-    cells = [C(f"odds_follow") for _ in range(20)]
+    cells = [C("odds_follow") for _ in range(20)]
     out = generate.propose_from_map(cells, budget=3)
     assert len(out) == 3

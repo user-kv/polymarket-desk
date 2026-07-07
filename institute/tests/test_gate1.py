@@ -4,10 +4,7 @@ Structural checks only — the live dataset is small so we never assert 'pass'.
 We assert: correct shape, that perm.stat_obs > 0 matches the +EV anchor, and
 that trial logging increments the registry correctly.
 """
-import os
-import tempfile
 
-import pytest
 
 from institute.evidence import gate1
 from institute.corpus import registry

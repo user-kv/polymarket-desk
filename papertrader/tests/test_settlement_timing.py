@@ -11,7 +11,7 @@ These tests assert fetch_observed_high is NOT called when bailing early.
 
 Run:  PYTHONPATH=papertrader python -m pytest papertrader/tests/test_settlement_timing.py -q
 """
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 
 import lib.settlement as settlement
 

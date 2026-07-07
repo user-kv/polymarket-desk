@@ -268,6 +268,11 @@ def discover(max_markets, fetch_fn=fetch_json, sleep_fn=time.sleep):
             prices = _maybe_json_parse(m.get("outcomePrices"))
             if not isinstance(outcomes, list) or len(outcomes) != 2:
                 continue
+            # require literal Yes/No — a two-outcome candidate-vs-candidate
+            # market would otherwise be forecast AND scored with prices[0]
+            # assumed to be YES, silently biasing the A/B Brier
+            if sorted(str(o).strip().lower() for o in outcomes) != ["no", "yes"]:
+                continue
             if not isinstance(prices, list) or len(prices) != 2:
                 continue
             try:
@@ -608,11 +613,19 @@ def check_settlement(market_id, fetch_fn=fetch_json):
     return None  # ambiguous close; leave unsettled for a future run
 
 
-def settle_pending(path=FORECASTS_PATH, fetch_fn=fetch_json):
-    appended = 0
+def settle_pending(path=FORECASTS_PATH, fetch_fn=fetch_json,
+                   sleep_fn=time.sleep, max_queries=200):
+    # Throttled and capped: ambiguous/404 markets stay unsettled forever, so the
+    # query set grows monotonically — unthrottled it would eventually open
+    # hundreds of back-to-back Gamma calls before forecasting starts.
+    appended = queried = 0
     for key, _row in find_unsettled(path):
+        if queried >= max_queries:
+            break
         market_id = key.split("|", 1)[0]
         outcome = check_settlement(market_id, fetch_fn)
+        queried += 1
+        sleep_fn(0.15)
         if outcome is None:
             continue
         append_row({
@@ -742,7 +755,7 @@ def _selftest():
     before = list(_iter_jsonl(path))
     run(max_markets=15, fetch_fn=fake_fetch_no_resolve, complete_fn=fake_complete,
         sleep_fn=lambda s: None, path=path)
-    after = list(_iter_jsonl(path))
+    _ = list(_iter_jsonl(path))
     # GROQ_API_KEY unset in this test env -> run() should skip forecasting entirely
     # and add no rows; verify separately with key present via direct dedupe check.
     existing_keys = load_existing_keys(path)

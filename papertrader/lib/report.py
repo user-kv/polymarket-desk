@@ -17,7 +17,6 @@ import json
 import csv
 import logging
 import subprocess
-from datetime import datetime, timezone
 
 logger = logging.getLogger("report")
 
@@ -119,7 +118,6 @@ def generate_tracker():
         import openpyxl
         from openpyxl.styles import Font, PatternFill, Alignment
         from openpyxl.utils import get_column_letter
-        from openpyxl.formatting.rule import ColorScaleRule, DataBarRule, FormulaRule
     except ImportError:
         logger.error("openpyxl not installed. Run: pip install openpyxl")
         return None
@@ -249,7 +247,6 @@ def generate_tracker():
         ss.cell(row=row_n, column=11,
                 value=f"=IF({h_col}{row_n}=\"\",\"\",ROUND({j_col}{row_n}/{h_col}{row_n},4))")
         # CLV = closing - ask
-        h2_col = get_column_letter(8)
         n_col = get_column_letter(14)
         ss.cell(row=row_n, column=15,
                 value=f"=IF({n_col}{row_n}=\"\",\"\",ROUND({n_col}{row_n}-{h_col}{row_n},4))")

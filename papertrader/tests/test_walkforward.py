@@ -13,7 +13,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import lib.prob_calibration as pc
-from lib.walkforward import run_walkforward, _days_before
+from lib.walkforward import run_walkforward
 
 # ─── minimal fake cfg ───────────────────────────────────────────────────────
 _CFG = {

@@ -52,6 +52,19 @@ def _symbol_from_question(question):
     return "?"
 
 
+def _yes_index(market):
+    """Index of the YES outcome in outcomes/outcomePrices, or None if the
+    market is not a literal Yes/No binary (order must never be assumed)."""
+    try:
+        labels = [str(o).strip().lower()
+                  for o in _parse_json_string(market.get("outcomes") or "[]")]
+    except Exception:
+        return None
+    if sorted(labels) != ["no", "yes"]:
+        return None
+    return labels.index("yes")
+
+
 def _parse_utc_iso(s):
     """Parse ISO8601 Z-suffix datetime string -> datetime (utc, naive)."""
     s = s.rstrip("Z").rstrip("z")
@@ -64,7 +77,7 @@ def _parse_utc_iso(s):
         return datetime.datetime.strptime(s[:10], "%Y-%m-%d")
 
 
-def fetch_active_crypto(cutoff_hours=36, max_pages=20, _get=_gamma_get):
+def fetch_active_crypto(cutoff_hours=36, max_pages=20, _get=_gamma_get, _now=None):
     """Page through Gamma active markets; return normalized crypto-daily dicts.
 
     Keeps a market iff:
@@ -75,7 +88,8 @@ def fetch_active_crypto(cutoff_hours=36, max_pages=20, _get=_gamma_get):
 
     Wraps each page in try/except; on network error breaks and returns what we have.
     """
-    now = datetime.datetime.utcnow()
+    # naive-UTC clock, injectable so tests aren't wall-clock dependent
+    now = _now or datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
     cutoff = now + datetime.timedelta(hours=cutoff_hours)
     results = []
 
@@ -136,6 +150,12 @@ def fetch_active_crypto(cutoff_hours=36, max_pages=20, _get=_gamma_get):
                 if len(prices) < 2:
                     continue
 
+                # outcomePrices order follows `outcomes` — require literal
+                # Yes/No and index YES explicitly (never assume prices[0]).
+                yes_idx = _yes_index(m)
+                if yes_idx is None:
+                    continue
+
                 market_id = str(m.get("id", "") or m.get("market_id", ""))
                 if not market_id:
                     continue
@@ -145,7 +165,7 @@ def fetch_active_crypto(cutoff_hours=36, max_pages=20, _get=_gamma_get):
                     "question": question,
                     "slug": slug,
                     "end_date": end_raw,
-                    "q_yes": prices[0],
+                    "q_yes": prices[yes_idx],
                     "yes_token": str(tokens[0]),
                     "symbol": _symbol_from_question(question),
                 })
@@ -166,19 +186,20 @@ def snapshot(store_path=CRYPTO_STORE, fetch=fetch_active_crypto, now=None):
     Returns list of newly-appended rows.
     """
     if now is None:
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
 
     existing = load_jsonl(store_path)
-    already_open = {
-        r["market_id"] for r in existing
-        if r.get("status") == "open"
-    }
+    # Dedupe against EVERY existing row (not just open ones): crypto dailies
+    # never legitimately reopen, and Gamma occasionally re-returns a settled
+    # market as active — a second row would double-count it downstream.
+    seen_ids = {r["market_id"] for r in existing}
 
     fetched = fetch()
     new_rows = []
     for m in fetched:
-        if m["market_id"] in already_open:
+        if m["market_id"] in seen_ids:
             continue
+        seen_ids.add(m["market_id"])  # pagination can repeat a market mid-scan
         row = {
             "market_id": m["market_id"],
             "archetype": "crypto-daily",
@@ -219,7 +240,10 @@ def resolve_outcome(row, _get=_gamma_get):
         if prices_raw is None:
             return None
         prices = _parse_json_string(prices_raw)
-        yp = float(prices[0])
+        yes_idx = _yes_index(m)
+        if yes_idx is None:
+            return None
+        yp = float(prices[yes_idx])
         return 1 if yp >= 0.5 else 0
     except Exception:
         return None
@@ -232,7 +256,7 @@ def settle(store_path=CRYPTO_STORE, resolve=resolve_outcome, now=None):
     Overwrites the store with updated rows. Returns rows settled this call.
     """
     if now is None:
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
 
     rows = load_jsonl(store_path)
     settled_this_call = []

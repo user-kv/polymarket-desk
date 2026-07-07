@@ -85,7 +85,6 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
     ask = market.get("ask_price")
     hours_left = market.get("hours_left", 999)
     slug = market.get("slug", "")
-    city = market.get("city", "")
 
     rules = []
     all_pass = True
@@ -112,6 +111,7 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
         market["bucket_low_f"],
         market["bucket_high_f"],
         model_weights=forecast.get("model_weights"),
+        display_unit=market.get("display_unit", "f"),
     )
     edge = ensemble_prob - ask
     edge_pct = edge * 100.0
@@ -198,10 +198,11 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
         from lib.nbm import should_veto_yes as _nbm_veto
         nbm_blocked = _nbm_veto(forecast, market, min_prob=nbm_min_prob)
         r8 = not nbm_blocked
-        member_prob = sum(
-            1 for h in all_highs
-            if market.get("bucket_low_f", -999) <= h < market.get("bucket_high_f", 999)
-        ) / max(len(all_highs), 1)
+        from lib.forecasts import bucket_probability as _bp
+        member_prob = _bp(all_highs,
+                          market.get("bucket_low_f", -999.0),
+                          market.get("bucket_high_f", 999.0),
+                          market.get("display_unit", "f"))
         rules.append(("nbm_member_consensus", r8,
                       f"raw_member_prob={member_prob:.3f} min={nbm_min_prob:.3f}"))
         all_pass = all_pass and r8
@@ -268,6 +269,15 @@ def evaluate_bucket(market, forecast, current_open_bets, cfg, bankroll):
             cfg.get("min_stake", 1.0),
             min(no_side_result["no_stake"] * mult, cfg.get("max_stake", 100.0))
         )
+
+    # Exposure cap is a hard limit on the FINAL stake. Rule 5 checked it with the
+    # pre-sizing YES stake, but NO-Kelly and the brain multiplier both resize
+    # afterwards and could push open exposure past max_exposure (2026-07-07 fix).
+    headroom = max(0.0, max_exposure - exposure)
+    if all_pass:
+        stake = min(stake, headroom)
+    if is_no_bet:
+        no_side_result["no_stake"] = min(no_side_result["no_stake"], headroom)
         no_side_result["no_shares"] = round(
             no_side_result["no_stake"] / no_side_result["no_entry_price"], 4
         ) if no_side_result["no_entry_price"] > 0 else 0.0
@@ -389,6 +399,7 @@ def simulate_fill(market, evaluation, cfg):
         "is_open_ended_low": market.get("is_open_ended_low", False),
         "is_open_ended_high": market.get("is_open_ended_high", False),
         "metric": market.get("metric", "high"),
+        "display_unit": market.get("display_unit", "f"),
         "side": side,
         "ask_price": ask,
         "stake": stake,

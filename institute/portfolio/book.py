@@ -6,7 +6,7 @@ working, not a failure.
 """
 from institute.resolve import weather_adapter
 from institute import pipeline
-from institute.map.baselines import evaluate, longshot_fade, BASELINES
+from institute.map.baselines import evaluate, BASELINES
 from institute.portfolio import gate4, allocator
 
 
