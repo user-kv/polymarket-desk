@@ -1,0 +1,1256 @@
+{
+  "scan_timestamp": "2026-07-09T22:00:29Z",
+  "test_mode": false,
+  "markets_found": 14,
+  "markets_priced": 14,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 96-97\u00b0F on July 10?",
+        "slug": "highest-temperature-in-austin-on-july-10-2026-96-97f",
+        "market_id": "2853389",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "73163743280675401140195607090619159188855065668193991037785232088434873762670",
+        "no_token": "107430665579502344830982597941546406354537547335512534714158135879431025132603",
+        "bucket_low_f": 96.0,
+        "bucket_high_f": 97.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/austin/KAUS",
+        "volume_num": 990.678239,
+        "liquidity_num": 4454.2526,
+        "event_id": "682461",
+        "event_slug": "highest-temperature-in-austin-on-july-10-2026",
+        "ask_price": 0.12
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 96.97400000000002,
+        "ecmwf_mean_f": 94.94120000000005,
+        "combined_mean_f": 95.11155339805823,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer, bankroll_ok",
+        "edge_pct": 22.4,
+        "ensemble_prob": 0.344,
+        "ask_price": 0.12,
+        "gfs_mean_f": 97.0,
+        "ecmwf_mean_f": 94.9,
+        "combined_mean_f": 95.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.344 ask=0.120 edge=22.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=97.0F ecmwf=94.9F diff=1.13C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[96.0,97.0] mean=95.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$324.36 max=$343.96 exposure $324.36+$100.00 > $343.96"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.344 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.120 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.320 min=0.030"
+          ]
+        ],
+        "shares": 833.3333,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be 90\u00b0F or higher on July 10?",
+        "slug": "lowest-temperature-in-miami-on-july-10-2026-90forhigher",
+        "market_id": "2853542",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "32667750480894840260838876186892324654856617619458490021553820985767166980977",
+        "no_token": "102690628813820680964139201653769866755417761125514631618419000249511380592065",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 979.8199999999999,
+        "liquidity_num": 8294.88203,
+        "event_id": "682518",
+        "event_slug": "lowest-temperature-in-miami-on-july-10-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.62400000000001,
+        "ecmwf_mean_f": 79.46239999999997,
+        "combined_mean_f": 80.62796116504852,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 83.6,
+        "ecmwf_mean_f": 79.5,
+        "combined_mean_f": 80.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=83.6F ecmwf=79.5F diff=2.31C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[90.0,999.0] mean=80.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$324.36 max=$343.96 exposure $324.36+$20.00 > $343.96"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 86-87\u00b0F on July 10?",
+        "slug": "highest-temperature-in-miami-on-july-10-2026-86-87f",
+        "market_id": "2853367",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "18400114660426966150903434868339676202386960278982878240127914658850332333970",
+        "no_token": "59318595120985389103725359596421415807229912888606583344757211929512591283280",
+        "bucket_low_f": 86.0,
+        "bucket_high_f": 87.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 846.9631850000001,
+        "liquidity_num": 6308.07911,
+        "event_id": "682459",
+        "event_slug": "highest-temperature-in-miami-on-july-10-2026",
+        "ask_price": 0.027
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 90.398,
+        "ecmwf_mean_f": 89.8256,
+        "combined_mean_f": 91.3586407766991,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 0.77,
+        "ensemble_prob": 0.0347,
+        "ask_price": 0.027,
+        "gfs_mean_f": 90.4,
+        "ecmwf_mean_f": 89.8,
+        "combined_mean_f": 91.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.035 ask=0.027 edge=0.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=90.4F ecmwf=89.8F diff=0.32C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[86.0,87.0] mean=91.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$324.36 max=$343.96 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.035 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.027 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.058 min=0.030"
+          ]
+        ],
+        "shares": 185.1852,
+        "stake": 5.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be between 74-75\u00b0F on July 10?",
+        "slug": "lowest-temperature-in-miami-on-july-10-2026-74-75f",
+        "market_id": "2853534",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "50117775234879669367700877870198637005240420359753489690193973307861398610072",
+        "no_token": "8394346661391026227121410478503696054529746584018269238853097526485916304038",
+        "bucket_low_f": 74.0,
+        "bucket_high_f": 75.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 809.874761,
+        "liquidity_num": 4415.476,
+        "event_id": "682518",
+        "event_slug": "lowest-temperature-in-miami-on-july-10-2026",
+        "ask_price": 0.002
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.62400000000001,
+        "ecmwf_mean_f": 79.46239999999997,
+        "combined_mean_f": 80.62796116504852,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": 0.13,
+        "ensemble_prob": 0.0033,
+        "ask_price": 0.002,
+        "gfs_mean_f": 83.6,
+        "ecmwf_mean_f": 79.5,
+        "combined_mean_f": 80.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.003 ask=0.002 edge=0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=83.6F ecmwf=79.5F diff=2.31C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[74.0,75.0] mean=80.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$324.36 max=$343.96 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.003 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.002 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.005 min=0.030"
+          ]
+        ],
+        "shares": 2500.0,
+        "stake": 5.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 80-81\u00b0F on July 10?",
+        "slug": "highest-temperature-in-nyc-on-july-10-2026-80-81f",
+        "market_id": "2853330",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "44513230294181435091560427318717216516781957622145151931830507342250836666453",
+        "no_token": "78458606218636448001826789212386922289351905892771763257963002056949693465878",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 81.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA",
+        "volume_num": 967.5195000000001,
+        "liquidity_num": 7161.02718,
+        "event_id": "682456",
+        "event_slug": "highest-temperature-in-nyc-on-july-10-2026",
+        "ask_price": 0.006
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 93.12,
+        "ecmwf_mean_f": 88.90799999999999,
+        "combined_mean_f": 89.26660194174751,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.6,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.006,
+        "gfs_mean_f": 93.1,
+        "ecmwf_mean_f": 88.9,
+        "combined_mean_f": 89.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.006 edge=-0.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=93.1F ecmwf=88.9F diff=2.34C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[80.0,81.0] mean=89.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$324.36 max=$343.96 exposure $324.36+$20.00 > $343.96"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.006 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 3333.3333,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be 84\u00b0F or higher on July 10?",
+        "slug": "lowest-temperature-in-nyc-on-july-10-2026-84forhigher",
+        "market_id": "2853531",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "26867316489333357210057361199828316796180605420707523500695880332926986503182",
+        "no_token": "4084555293872237486676886396645519699097605606909814453252610604283373393548",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA",
+        "volume_num": 964.867383,
+        "liquidity_num": 6197.86133,
+        "event_id": "682517",
+        "event_slug": "lowest-temperature-in-nyc-on-july-10-2026",
+        "ask_price": 0.003
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 76.78399999999998,
+        "ecmwf_mean_f": 72.61159999999998,
+        "combined_mean_f": 73.85524271844663,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.3,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.003,
+        "gfs_mean_f": 76.8,
+        "ecmwf_mean_f": 72.6,
+        "combined_mean_f": 73.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.003 edge=-0.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=76.8F ecmwf=72.6F diff=2.32C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[84.0,999.0] mean=73.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$324.36 max=$343.96 exposure $324.36+$20.00 > $343.96"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.003 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 6666.6667,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 92-93\u00b0F on July 10?",
+        "slug": "highest-temperature-in-atlanta-on-july-10-2026-92-93f",
+        "market_id": "2853356",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "42829101633431515688664241119762068456629420636197230409530835741798273208597",
+        "no_token": "88240566339049047806329002198157073306149375709481325597081386231180715236905",
+        "bucket_low_f": 92.0,
+        "bucket_high_f": 93.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ga/atlanta/KATL",
+        "volume_num": 949.810916,
+        "liquidity_num": 6052.8428,
+        "event_id": "682458",
+        "event_slug": "highest-temperature-in-atlanta-on-july-10-2026",
+        "ask_price": 0.38
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 93.40199999999997,
+        "ecmwf_mean_f": 93.75480000000002,
+        "combined_mean_f": 92.72359223300975,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, outside_mean_buffer, bankroll_ok",
+        "edge_pct": -13.34,
+        "ensemble_prob": 0.2466,
+        "ask_price": 0.38,
+        "gfs_mean_f": 93.4,
+        "ecmwf_mean_f": 93.8,
+        "combined_mean_f": 92.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.247 ask=0.380 edge=-13.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=93.4F ecmwf=93.8F diff=0.20C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[92.0,93.0] mean=92.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$324.36 max=$343.96 exposure $324.36+$20.00 > $343.96"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.247 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.380 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.306 min=0.030"
+          ]
+        ],
+        "shares": 52.6316,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 68-69\u00b0F on July 10?",
+        "slug": "highest-temperature-in-san-francisco-on-july-10-2026-68-69f",
+        "market_id": "2853434",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "99614513670241334223446383525470917160180224809810094784126308332075579757230",
+        "no_token": "15720808459582511470709550222033565697004358202299702960097169124883529189939",
+        "bucket_low_f": 68.0,
+        "bucket_high_f": 69.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/san-francisco/KSFO",
+        "volume_num": 945.806537,
+        "liquidity_num": 2615.7366,
+        "event_id": "682465",
+        "event_slug": "highest-temperature-in-san-francisco-on-july-10-2026",
+        "ask_price": 0.27
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 75.14800000000001,
+        "ecmwf_mean_f": 72.06879999999998,
+        "combined_mean_f": 68.95116504854366,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, bankroll_ok, min_ensemble_prob",
+        "edge_pct": -18.88,
+        "ensemble_prob": 0.0812,
+        "ask_price": 0.27,
+        "gfs_mean_f": 75.1,
+        "ecmwf_mean_f": 72.1,
+        "combined_mean_f": 69.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.081 ask=0.270 edge=-18.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=75.1F ecmwf=72.1F diff=1.71C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[68.0,69.0] mean=69.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$324.36 max=$343.96 exposure $324.36+$20.00 > $343.96"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.081 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.270 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.087 min=0.030"
+          ]
+        ],
+        "shares": 74.0741,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 60-61\u00b0F on July 10?",
+        "slug": "highest-temperature-in-san-francisco-on-july-10-2026-60-61f",
+        "market_id": "2853430",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "48464241220038676695207432334527466483841071641286418285985074097708197503267",
+        "no_token": "43266339735730864935621608402122936035809396154907448905973120531094078296527",
+        "bucket_low_f": 60.0,
+        "bucket_high_f": 61.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/san-francisco/KSFO",
+        "volume_num": 800.589356,
+        "liquidity_num": 2556.94133,
+        "event_id": "682465",
+        "event_slug": "highest-temperature-in-san-francisco-on-july-10-2026",
+        "ask_price": 0.029
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 75.14800000000001,
+        "ecmwf_mean_f": 72.06879999999998,
+        "combined_mean_f": 68.95116504854366,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 2.23,
+        "ensemble_prob": 0.0513,
+        "ask_price": 0.029,
+        "gfs_mean_f": 75.1,
+        "ecmwf_mean_f": 72.1,
+        "combined_mean_f": 69.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.051 ask=0.029 edge=2.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=75.1F ecmwf=72.1F diff=1.71C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[60.0,61.0] mean=69.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$324.36 max=$343.96 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.051 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.029 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.063 min=0.030"
+          ]
+        ],
+        "shares": 341.2225,
+        "stake": 9.895452707021672,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 92-93\u00b0F on July 10?",
+        "slug": "highest-temperature-in-houston-on-july-10-2026-92-93f",
+        "market_id": "2853412",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "60626187264928837041232433743975987552014830388094407338281946660554811530195",
+        "no_token": "33557528585202565543971401524236966154867861714628105288404818989693791735501",
+        "bucket_low_f": 92.0,
+        "bucket_high_f": 93.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/houston/KHOU",
+        "volume_num": 931.967737,
+        "liquidity_num": 5617.611,
+        "event_id": "682463",
+        "event_slug": "highest-temperature-in-houston-on-july-10-2026",
+        "ask_price": 0.34
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 93.66399999999997,
+        "ecmwf_mean_f": 90.45160000000001,
+        "combined_mean_f": 92.68873786407764,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, bankroll_ok, min_ensemble_prob",
+        "edge_pct": -20.92,
+        "ensemble_prob": 0.1308,
+        "ask_price": 0.34,
+        "gfs_mean_f": 93.7,
+        "ecmwf_mean_f": 90.5,
+        "combined_mean_f": 92.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.131 ask=0.340 edge=-20.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=93.7F ecmwf=90.5F diff=1.78C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[92.0,93.0] mean=92.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$324.36 max=$343.96 exposure $324.36+$20.00 > $343.96"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.131 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.340 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.155 min=0.030"
+          ]
+        ],
+        "shares": 58.8235,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 88-89\u00b0F on July 10?",
+        "slug": "highest-temperature-in-houston-on-july-10-2026-88-89f",
+        "market_id": "2853410",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "20798663674542179932366683370212354637870883943768840680911603145778336386664",
+        "no_token": "47226949165730431327626864497479009370035641951964371327063671736904708152381",
+        "bucket_low_f": 88.0,
+        "bucket_high_f": 89.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/houston/KHOU",
+        "volume_num": 885.5727529999999,
+        "liquidity_num": 4978.69875,
+        "event_id": "682463",
+        "event_slug": "highest-temperature-in-houston-on-july-10-2026",
+        "ask_price": 0.14
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 93.66399999999997,
+        "ecmwf_mean_f": 90.45160000000001,
+        "combined_mean_f": 92.68873786407764,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob",
+        "edge_pct": -5.65,
+        "ensemble_prob": 0.0835,
+        "ask_price": 0.14,
+        "gfs_mean_f": 93.7,
+        "ecmwf_mean_f": 90.5,
+        "combined_mean_f": 92.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.084 ask=0.140 edge=-5.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=93.7F ecmwf=90.5F diff=1.78C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[88.0,89.0] mean=92.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$324.36 max=$343.96 exposure $324.36+$20.00 > $343.96"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.084 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.140 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.112 min=0.030"
+          ]
+        ],
+        "shares": 142.8571,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 100-101\u00b0F on July 10?",
+        "slug": "highest-temperature-in-houston-on-july-10-2026-100-101f",
+        "market_id": "2853416",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "63065475920479917649307747201932378487739582565457076277789514154721209504825",
+        "no_token": "75060938250300530166604309266224989074620085334457632866181060274821530443573",
+        "bucket_low_f": 100.0,
+        "bucket_high_f": 101.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/houston/KHOU",
+        "volume_num": 799.530416,
+        "liquidity_num": 7628.59661,
+        "event_id": "682463",
+        "event_slug": "highest-temperature-in-houston-on-july-10-2026",
+        "ask_price": 0.004
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 93.66399999999997,
+        "ecmwf_mean_f": 90.45160000000001,
+        "combined_mean_f": 92.68873786407764,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": 0.33,
+        "ensemble_prob": 0.0073,
+        "ask_price": 0.004,
+        "gfs_mean_f": 93.7,
+        "ecmwf_mean_f": 90.5,
+        "combined_mean_f": 92.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.007 ask=0.004 edge=0.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=93.7F ecmwf=90.5F diff=1.78C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[100.0,101.0] mean=92.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$324.36 max=$343.96 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.007 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.004 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.005 min=0.030"
+          ]
+        ],
+        "shares": 1250.0,
+        "stake": 5.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the highest temperature in Los Angeles be between 86-87\u00b0F on July 10?",
+        "slug": "highest-temperature-in-los-angeles-on-july-10-2026-86-87f",
+        "market_id": "2853425",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "27288089716827981957278505331059954859681242813801559468225021642551787112264",
+        "no_token": "22912034691281292467225386843862795095684314025979332114185225122502876650066",
+        "bucket_low_f": 86.0,
+        "bucket_high_f": 87.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/los-angeles/KLAX",
+        "volume_num": 825.3686660000001,
+        "liquidity_num": 9137.92128,
+        "event_id": "682464",
+        "event_slug": "highest-temperature-in-los-angeles-on-july-10-2026",
+        "ask_price": 0.003
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 79.604,
+        "ecmwf_mean_f": 88.34000000000002,
+        "combined_mean_f": 80.48902912621362,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 4.4,
+        "ensemble_prob": 0.047,
+        "ask_price": 0.003,
+        "gfs_mean_f": 79.6,
+        "ecmwf_mean_f": 88.3,
+        "combined_mean_f": 80.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.047 ask=0.003 edge=4.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=79.6F ecmwf=88.3F diff=4.85C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[86.0,87.0] mean=80.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$324.36 max=$343.96 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.047 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.003 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.078 min=0.030"
+          ]
+        ],
+        "shares": 6328.003,
+        "stake": 18.984008859191515,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 76-77\u00b0F on July 10?",
+        "slug": "highest-temperature-in-chicago-on-july-10-2026-76-77f",
+        "market_id": "2853376",
+        "end_date": "2026-07-10T12:00:00Z",
+        "end_dt": "2026-07-10 12:00:00+00:00",
+        "hours_left": 14.0,
+        "yes_token": "111632996530841073998655347921314653248296321508192033317474408757908614740276",
+        "no_token": "66058932876677321674198047228686796227746063272271948651232855085839621828538",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/il/chicago/KORD",
+        "volume_num": 815.4880899999998,
+        "liquidity_num": 5953.1762,
+        "event_id": "682460",
+        "event_slug": "highest-temperature-in-chicago-on-july-10-2026",
+        "ask_price": 0.057
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 84.006,
+        "ecmwf_mean_f": 82.08360000000002,
+        "combined_mean_f": 81.86941747572821,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -4.83,
+        "ensemble_prob": 0.0087,
+        "ask_price": 0.057,
+        "gfs_mean_f": 84.0,
+        "ecmwf_mean_f": 82.1,
+        "combined_mean_f": 81.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.009 ask=0.057 edge=-4.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=84.0F ecmwf=82.1F diff=1.07C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[76.0,77.0] mean=81.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$324.36 max=$343.96 exposure $324.36+$20.00 > $343.96"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.009 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.057 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.005 min=0.030"
+          ]
+        ],
+        "shares": 350.8772,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
