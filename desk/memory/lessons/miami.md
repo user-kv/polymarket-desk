@@ -40,3 +40,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-07-11T14:15:02Z | category: miami | bet: highest-temperature-in-miami-on-july-10-2026-94-95f__2026-07-09T0830
+- outcome: LOST
+- thesis: edge=16.2pt prob=0.213 ask=0.051
+- root_cause: Actual high 91F missed bucket [94,95] by 3F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
