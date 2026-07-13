@@ -47,3 +47,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-07-13T14:15:02Z | category: miami | bet: lowest-temperature-in-miami-on-july-12-2026-78-79f__2026-07-11T2230
+- outcome: WON
+- thesis: edge=14.4pt prob=0.146 ask=0.29
+- root_cause: Edge of 14pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
