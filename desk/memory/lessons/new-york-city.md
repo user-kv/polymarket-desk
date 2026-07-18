@@ -82,3 +82,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-07-18T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-july-17-2026-82-83f__2026-07-17T0830
+- outcome: LOST
+- thesis: edge=10.13pt prob=0.1703 ask=0.069
+- root_cause: Actual high 87F missed bucket [82,83] by 4F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
