@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-18T14:00:28+00:00",
+  "generated": "2026-07-18T14:15:02+00:00",
   "bankroll": {
     "balance": 1853.1098,
     "start": 2000.0,
@@ -1290,6 +1290,13 @@
         "rule": "Do not trade narrow temperature buckets in coastal microclimates during peak marine-layer seasons using only global ensembles, as these models frequently fail to capture localized onshore wind and fog cooling."
       },
       {
+        "ts": "2026-07-18T14:15:02Z",
+        "category": "new-york-city",
+        "outcome": "LOST",
+        "root_cause": "Actual high 87F missed bucket [82,83] by 4F \u2014 ensemble was confident but off.",
+        "rule": "Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails."
+      },
+      {
         "ts": "2026-07-17T14:15:02Z",
         "category": "new-york-city",
         "outcome": "LOST",
@@ -1372,13 +1379,6 @@
         "outcome": "LOST",
         "root_cause": "Chasing a nominal edge (6.0% vs 0.8% market implied) on a highly specific tail-risk bucket (70-71\u00b0F) that was more than 5\u00b0F below the consensus of both the GFS (78.2\u00b0F) and ECMWF (76.6\u00b0F) ensemble means.",
         "rule": "Avoid betting on narrow, extreme tail buckets that deviate significantly from the consensus model means, as the absolute probability of success remains extremely low regardless of the nominal calculated edge."
-      },
-      {
-        "ts": "2026-07-16T14:15:02Z",
-        "category": "miami",
-        "outcome": "LOST",
-        "root_cause": "Actual high 95F missed bucket [96,97] by 1F \u2014 ensemble was confident but off.",
-        "rule": "Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails."
       }
     ],
     "principles": [
@@ -1413,6 +1413,14 @@
         "claim": "Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.",
         "confidence": 1.0,
         "evidence_count": 6
+      },
+      {
+        "ts": "2026-07-18T14:15:02Z",
+        "category": "global",
+        "topic": "recurring-loss-pattern",
+        "claim": "Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.",
+        "confidence": 1.0,
+        "evidence_count": 13
       },
       {
         "ts": "2026-07-17T14:15:02Z",
@@ -1453,6 +1461,14 @@
         "claim": "Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.",
         "confidence": 1.0,
         "evidence_count": 7
+      },
+      {
+        "ts": "2026-07-18T14:15:02Z",
+        "category": "denver",
+        "topic": "general",
+        "claim": "Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.",
+        "confidence": 1.0,
+        "evidence_count": 11
       },
       {
         "ts": "2026-07-16T14:15:02Z",
@@ -1525,26 +1541,10 @@
         "claim": "Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.",
         "confidence": 0.817,
         "evidence_count": 4
-      },
-      {
-        "ts": "2026-07-02T14:15:02Z",
-        "category": "miami",
-        "topic": "general",
-        "claim": "Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.",
-        "confidence": 0.817,
-        "evidence_count": 4
-      },
-      {
-        "ts": "2026-07-06T14:15:02Z",
-        "category": "denver",
-        "topic": "general",
-        "claim": "Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.",
-        "confidence": 0.817,
-        "evidence_count": 4
       }
     ]
   },
   "digest": {
-    "text": "# Desk daily digest \u2014 2026-07-17T14:15:03Z (last 24h)\n\n- kernel intact: False  (KERNEL DRIFT: expected 3c299d618f36 got 5412951490a5 \u2014 self-mod FROZEN.)\n- self-modification: frozen (kill switch off)\n- lessons added: 2\n- tools promoted: 0\n\n## New lessons\n- [WON] seattle: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.\n- [LOST] new-york-city: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.\n\n## Category win-rates\n- atlanta: 85%\n- austin: 100%\n- chicago: 100%\n- dallas: 100%\n- denver: 100%\n- houston: 100%\n- miami: 48%\n- new-york-city: 81%\n- san-francisco: 70%\n- seattle: 72%"
+    "text": "# Desk daily digest \u2014 2026-07-18T14:15:02Z (last 24h)\n\n- kernel intact: False  (KERNEL DRIFT: expected 3c299d618f36 got 5412951490a5 \u2014 self-mod FROZEN.)\n- self-modification: frozen (kill switch off)\n- lessons added: 4\n- tools promoted: 0\n\n## New lessons\n- [LOST] chicago: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.\n- [WON] denver: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.\n- [WON] denver: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.\n- [LOST] new-york-city: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.\n\n## Category win-rates\n- atlanta: 85%\n- austin: 100%\n- chicago: 80%\n- dallas: 100%\n- denver: 100%\n- houston: 100%\n- miami: 48%\n- new-york-city: 73%\n- san-francisco: 70%\n- seattle: 72%"
   }
 }
