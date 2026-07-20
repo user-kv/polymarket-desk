@@ -61,3 +61,17 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-07-20T14:15:02Z | category: miami | bet: lowest-temperature-in-miami-on-july-19-2026-74-75f__2026-07-18T1330
+- outcome: WON
+- thesis: edge=6.53pt prob=0.0917 ask=0.157
+- root_cause: Edge of 7pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
+## LESSON 2026-07-20T14:15:02Z | category: miami | bet: highest-temperature-in-miami-on-july-19-2026-94-95f__2026-07-18T1800
+- outcome: WON
+- thesis: edge=5.33pt prob=0.1467 ask=0.2
+- root_cause: Edge of 5pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
