@@ -1,0 +1,544 @@
+{
+  "scan_timestamp": "2026-07-21T21:00:28Z",
+  "test_mode": false,
+  "markets_found": 6,
+  "markets_priced": 6,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 102-103\u00b0F on July 22?",
+        "slug": "highest-temperature-in-austin-on-july-22-2026-102-103f",
+        "market_id": "3009086",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 15.0,
+        "yes_token": "27240897098365051054824807714976069314966920102940371540369765292572998266219",
+        "no_token": "14090844443117331784771380555294733452756495507311488519892744628042958321872",
+        "bucket_low_f": 102.0,
+        "bucket_high_f": 103.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/austin/KAUS",
+        "volume_num": 956.5250509999998,
+        "liquidity_num": 3968.5458,
+        "event_id": "727279",
+        "event_slug": "highest-temperature-in-austin-on-july-22-2026",
+        "ask_price": 0.37
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 107.33599999999998,
+        "ecmwf_mean_f": 101.8976,
+        "combined_mean_f": 103.15417475728158,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer, bankroll_ok",
+        "edge_pct": 15.4,
+        "ensemble_prob": 0.524,
+        "ask_price": 0.37,
+        "gfs_mean_f": 107.3,
+        "ecmwf_mean_f": 101.9,
+        "combined_mean_f": 103.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.524 ask=0.370 edge=15.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=15.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=107.3F ecmwf=101.9F diff=3.02C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[102.0,103.0] mean=103.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$353.37 max=$357.92 exposure $353.37+$100.00 > $357.92"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.524 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.370 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.393 min=0.030"
+          ]
+        ],
+        "shares": 270.2703,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be between 84-85\u00b0F on July 22?",
+        "slug": "lowest-temperature-in-miami-on-july-22-2026-84-85f",
+        "market_id": "3009327",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 15.0,
+        "yes_token": "4872001772566062809670906548530933066583709351059074269884827474631048143111",
+        "no_token": "99455346084962469715868564242771884899047724237538890865209185377517947634131",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 92.829805,
+        "liquidity_num": 169.4974,
+        "event_id": "727346",
+        "event_slug": "lowest-temperature-in-miami-on-july-22-2026",
+        "ask_price": 0.15
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.718,
+        "ecmwf_mean_f": 81.24440000000001,
+        "combined_mean_f": 80.8367961165049,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -12.24,
+        "ensemble_prob": 0.0276,
+        "ask_price": 0.15,
+        "gfs_mean_f": 82.7,
+        "ecmwf_mean_f": 81.2,
+        "combined_mean_f": 80.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.028 ask=0.150 edge=-12.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=15.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=82.7F ecmwf=81.2F diff=0.82C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[84.0,85.0] mean=80.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$353.37 max=$357.92 exposure $353.37+$20.00 > $357.92"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.028 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.150 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.024 min=0.030"
+          ]
+        ],
+        "shares": 133.3333,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the highest temperature in Los Angeles be between 76-77\u00b0F on July 22?",
+        "slug": "highest-temperature-in-los-angeles-on-july-22-2026-76-77f",
+        "market_id": "3009119",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 15.0,
+        "yes_token": "48394137501384739191778192250690198796974703350498063611873985373940537904033",
+        "no_token": "86606303108627248605981988011296014275542606446146470457781211330492768745515",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/los-angeles/KLAX",
+        "volume_num": 8867.790773000004,
+        "liquidity_num": 3458.0588,
+        "event_id": "727282",
+        "event_slug": "highest-temperature-in-los-angeles-on-july-22-2026",
+        "ask_price": 0.23
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 81.344,
+        "ecmwf_mean_f": 88.3544,
+        "combined_mean_f": 83.3768932038835,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob",
+        "edge_pct": -15.53,
+        "ensemble_prob": 0.0747,
+        "ask_price": 0.23,
+        "gfs_mean_f": 81.3,
+        "ecmwf_mean_f": 88.4,
+        "combined_mean_f": 83.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.075 ask=0.230 edge=-15.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=15.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=81.3F ecmwf=88.4F diff=3.89C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[76.0,77.0] mean=83.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$353.37 max=$357.92 exposure $353.37+$20.00 > $357.92"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.075 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.230 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.058 min=0.030"
+          ]
+        ],
+        "shares": 86.9565,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 84-85\u00b0F on July 22?",
+        "slug": "highest-temperature-in-denver-on-july-22-2026-84-85f",
+        "market_id": "3009097",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 15.0,
+        "yes_token": "9849832678721539841547502787817930685220055049735706381175539294027887192821",
+        "no_token": "55608784152205670948820421937947171218639029102012634875354783376924737512335",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/co/aurora/KBKF",
+        "volume_num": 886.6863360000001,
+        "liquidity_num": 6533.75319,
+        "event_id": "727280",
+        "event_slug": "highest-temperature-in-denver-on-july-22-2026",
+        "ask_price": 0.004
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 95.456,
+        "ecmwf_mean_f": 91.6628,
+        "combined_mean_f": 92.47213592233008,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 3.04,
+        "ensemble_prob": 0.0344,
+        "ask_price": 0.004,
+        "gfs_mean_f": 95.5,
+        "ecmwf_mean_f": 91.7,
+        "combined_mean_f": 92.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.034 ask=0.004 edge=3.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=15.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=95.5F ecmwf=91.7F diff=2.11C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[84.0,85.0] mean=92.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$353.37 max=$357.92 exposure $353.37+$13.65 > $357.92"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.034 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.004 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.039 min=0.030"
+          ]
+        ],
+        "shares": 3411.6559,
+        "stake": 13.64662355773093,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 68-69\u00b0F on July 22?",
+        "slug": "highest-temperature-in-chicago-on-july-22-2026-68-69f",
+        "market_id": "3009073",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 15.0,
+        "yes_token": "67087736727499000805327605943479485228731510937915312214679009821232166039824",
+        "no_token": "110597077537651273883397608677404495906818476793149491463623684803122883919112",
+        "bucket_low_f": 68.0,
+        "bucket_high_f": 69.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/il/chicago/KORD",
+        "volume_num": 835.9976950000002,
+        "liquidity_num": 3222.44854,
+        "event_id": "727278",
+        "event_slug": "highest-temperature-in-chicago-on-july-22-2026",
+        "ask_price": 0.04
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 75.24199999999999,
+        "ecmwf_mean_f": 74.40799999999999,
+        "combined_mean_f": 74.15058252427183,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -4.0,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.04,
+        "gfs_mean_f": 75.2,
+        "ecmwf_mean_f": 74.4,
+        "combined_mean_f": 74.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.040 edge=-4.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=15.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=75.2F ecmwf=74.4F diff=0.46C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[68.0,69.0] mean=74.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=True exposure=$353.37 max=$357.92 duplicate slugexposure $353.37+$20.00 > $357.92"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.040 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 500.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 90-91\u00b0F on July 22?",
+        "slug": "highest-temperature-in-nyc-on-july-22-2026-90-91f",
+        "market_id": "3009034",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 15.0,
+        "yes_token": "78818524652321889658617122186097796817659339069236652497062855036618659872455",
+        "no_token": "74432802651393291050085694482797500021754607017189302810299824978804276143336",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 91.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA",
+        "volume_num": 819.7981389999999,
+        "liquidity_num": 3303.92359,
+        "event_id": "727274",
+        "event_slug": "highest-temperature-in-nyc-on-july-22-2026",
+        "ask_price": 0.03
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 87.37400000000001,
+        "ecmwf_mean_f": 85.19719999999998,
+        "combined_mean_f": 84.52679611650483,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.35,
+        "ensemble_prob": 0.0265,
+        "ask_price": 0.03,
+        "gfs_mean_f": 87.4,
+        "ecmwf_mean_f": 85.2,
+        "combined_mean_f": 84.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.026 ask=0.030 edge=-0.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=15.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=87.4F ecmwf=85.2F diff=1.21C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[90.0,91.0] mean=84.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$353.37 max=$357.92 exposure $353.37+$20.00 > $357.92"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.026 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.030 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.019 min=0.030"
+          ]
+        ],
+        "shares": 666.6667,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
