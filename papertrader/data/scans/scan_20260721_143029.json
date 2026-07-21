@@ -1,0 +1,989 @@
+{
+  "scan_timestamp": "2026-07-21T14:30:29Z",
+  "test_mode": false,
+  "markets_found": 11,
+  "markets_priced": 11,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 90-91\u00b0F on July 22?",
+        "slug": "highest-temperature-in-atlanta-on-july-22-2026-90-91f",
+        "market_id": "3009052",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "97976850253974855484140583908224953185200711622789341277769847553908870816912",
+        "no_token": "95801829005011548115863275378968388456162390803547495270166246470943558002374",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 91.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ga/atlanta/KATL",
+        "volume_num": 997.3784289999999,
+        "liquidity_num": 4005.9018,
+        "event_id": "727276",
+        "event_slug": "highest-temperature-in-atlanta-on-july-22-2026",
+        "ask_price": 0.47
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 88.628,
+        "ecmwf_mean_f": 90.92479999999999,
+        "combined_mean_f": 89.9766019417476,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -12.48,
+        "ensemble_prob": 0.3452,
+        "ask_price": 0.47,
+        "gfs_mean_f": 88.6,
+        "ecmwf_mean_f": 90.9,
+        "combined_mean_f": 90.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.345 ask=0.470 edge=-12.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=88.6F ecmwf=90.9F diff=1.28C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[90.0,91.0] mean=90.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.345 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.470 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.306 min=0.030"
+          ]
+        ],
+        "shares": 42.5532,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 70-71\u00b0F on July 22?",
+        "slug": "highest-temperature-in-san-francisco-on-july-22-2026-70-71f",
+        "market_id": "3009128",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "58687260696982076124068107242265446883785612806927333963625232062336514591893",
+        "no_token": "37820524584189287747339290146915871941328798201133141226666713236685259316208",
+        "bucket_low_f": 70.0,
+        "bucket_high_f": 71.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/san-francisco/KSFO",
+        "volume_num": 995.4174170000001,
+        "liquidity_num": 2259.12362,
+        "event_id": "727283",
+        "event_slug": "highest-temperature-in-san-francisco-on-july-22-2026",
+        "ask_price": 0.104
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 75.03200000000001,
+        "ecmwf_mean_f": 73.964,
+        "combined_mean_f": 71.82077669902911,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 8.5pt would qualify but bucket straddles mean)",
+        "edge_pct": 8.53,
+        "ensemble_prob": 0.1893,
+        "ask_price": 0.104,
+        "gfs_mean_f": 75.0,
+        "ecmwf_mean_f": 74.0,
+        "combined_mean_f": 71.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.189 ask=0.104 edge=8.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=75.0F ecmwf=74.0F diff=0.59C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[70.0,71.0] mean=71.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.189 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.104 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.150 min=0.030"
+          ]
+        ],
+        "shares": 432.2961,
+        "stake": 44.958789411553006,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 98-99\u00b0F on July 22?",
+        "slug": "highest-temperature-in-houston-on-july-22-2026-98-99f",
+        "market_id": "3009109",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "37680537545794798047916421756302543763642957751070045397140146375553810408395",
+        "no_token": "52851469248833926885880955573242834203959719873358522765646289846127483360505",
+        "bucket_low_f": 98.0,
+        "bucket_high_f": 99.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/houston/KHOU",
+        "volume_num": 964.3813159999999,
+        "liquidity_num": 2814.3116,
+        "event_id": "727281",
+        "event_slug": "highest-temperature-in-houston-on-july-22-2026",
+        "ask_price": 0.16
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 104.39000000000001,
+        "ecmwf_mean_f": 100.33879999999999,
+        "combined_mean_f": 101.1007766990291,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": -4.07,
+        "ensemble_prob": 0.1193,
+        "ask_price": 0.16,
+        "gfs_mean_f": 104.4,
+        "ecmwf_mean_f": 100.3,
+        "combined_mean_f": 101.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.119 ask=0.160 edge=-4.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=104.4F ecmwf=100.3F diff=2.25C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[98.0,99.0] mean=101.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.119 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.160 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.165 min=0.030"
+          ]
+        ],
+        "shares": 125.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 102-103\u00b0F on July 22?",
+        "slug": "highest-temperature-in-houston-on-july-22-2026-102-103f",
+        "market_id": "3009111",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "84882383550543443102978776981694280318953213014955010616594684301042475202223",
+        "no_token": "76684077118635269768194997924292780029968300861658797501420588904381155585106",
+        "bucket_low_f": 102.0,
+        "bucket_high_f": 103.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/houston/KHOU",
+        "volume_num": 955.742436,
+        "liquidity_num": 3642.8747,
+        "event_id": "727281",
+        "event_slug": "highest-temperature-in-houston-on-july-22-2026",
+        "ask_price": 0.38
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 104.39000000000001,
+        "ecmwf_mean_f": 100.33879999999999,
+        "combined_mean_f": 101.1007766990291,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -5.28,
+        "ensemble_prob": 0.3272,
+        "ask_price": 0.38,
+        "gfs_mean_f": 104.4,
+        "ecmwf_mean_f": 100.3,
+        "combined_mean_f": 101.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.327 ask=0.380 edge=-5.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=104.4F ecmwf=100.3F diff=2.25C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[102.0,103.0] mean=101.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.327 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.380 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.286 min=0.030"
+          ]
+        ],
+        "shares": 52.6316,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 90-91\u00b0F on July 22?",
+        "slug": "highest-temperature-in-houston-on-july-22-2026-90-91f",
+        "market_id": "3009105",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "89878900657174622276323619277931739586458943739596844969019270256958777631398",
+        "no_token": "111864804250314749521836352725374170155613956862398961858609025236892470166815",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 91.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/houston/KHOU",
+        "volume_num": 955.705833,
+        "liquidity_num": 11542.03929,
+        "event_id": "727281",
+        "event_slug": "highest-temperature-in-houston-on-july-22-2026",
+        "ask_price": 0.002
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 104.39000000000001,
+        "ecmwf_mean_f": 100.33879999999999,
+        "combined_mean_f": 101.1007766990291,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.2,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.002,
+        "gfs_mean_f": 104.4,
+        "ecmwf_mean_f": 100.3,
+        "combined_mean_f": 101.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.002 edge=-0.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=104.4F ecmwf=100.3F diff=2.25C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[90.0,91.0] mean=101.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.002 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 10000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the highest temperature in Los Angeles be 86\u00b0F or higher on July 22?",
+        "slug": "highest-temperature-in-los-angeles-on-july-22-2026-86forhigher",
+        "market_id": "3009124",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "94437636493033437385999742331641132782840783837204248229567793567879122633863",
+        "no_token": "89826989018845587393367271808292989915487642244372317139342734236322273121236",
+        "bucket_low_f": 86.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/los-angeles/KLAX",
+        "volume_num": 920.7625999999999,
+        "liquidity_num": 8373.23647,
+        "event_id": "727282",
+        "event_slug": "highest-temperature-in-los-angeles-on-july-22-2026",
+        "ask_price": 0.002
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 81.90799999999999,
+        "ecmwf_mean_f": 88.3544,
+        "combined_mean_f": 83.61980582524274,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, min_ask_for_yes",
+        "edge_pct": 32.69,
+        "ensemble_prob": 0.3289,
+        "ask_price": 0.002,
+        "gfs_mean_f": 81.9,
+        "ecmwf_mean_f": 88.4,
+        "combined_mean_f": 83.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.329 ask=0.002 edge=32.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=81.9F ecmwf=88.4F diff=3.58C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[86.0,999.0] mean=83.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.329 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.002 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.316 min=0.030"
+          ]
+        ],
+        "shares": 50000.0,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the highest temperature in Los Angeles be between 68-69\u00b0F on July 22?",
+        "slug": "highest-temperature-in-los-angeles-on-july-22-2026-68-69f",
+        "market_id": "3009115",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "70386166024444883143574909215457578642989910196575912619124134901753304160837",
+        "no_token": "10965864934323936438009742269646901817146738054827213876855208555249939880088",
+        "bucket_low_f": 68.0,
+        "bucket_high_f": 69.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/los-angeles/KLAX",
+        "volume_num": 820.088761,
+        "liquidity_num": 6686.34818,
+        "event_id": "727282",
+        "event_slug": "highest-temperature-in-los-angeles-on-july-22-2026",
+        "ask_price": 0.002
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 81.90799999999999,
+        "ecmwf_mean_f": 88.3544,
+        "combined_mean_f": 83.61980582524274,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.2,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.002,
+        "gfs_mean_f": 81.9,
+        "ecmwf_mean_f": 88.4,
+        "combined_mean_f": 83.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.002 edge=-0.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=81.9F ecmwf=88.4F diff=3.58C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[68.0,69.0] mean=83.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.002 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 10000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 98-99\u00b0F on July 22?",
+        "slug": "highest-temperature-in-austin-on-july-22-2026-98-99f",
+        "market_id": "3009084",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "64055118834978574819062433254417435130518912836372682536306937990170468910370",
+        "no_token": "35097458776960558683765067415522409552966947597367918908638948896004898556092",
+        "bucket_low_f": 98.0,
+        "bucket_high_f": 99.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/austin/KAUS",
+        "volume_num": 896.2049589999999,
+        "liquidity_num": 6336.28344,
+        "event_id": "727279",
+        "event_slug": "highest-temperature-in-austin-on-july-22-2026",
+        "ask_price": 0.043
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 107.324,
+        "ecmwf_mean_f": 101.8976,
+        "combined_mean_f": 103.13495145631067,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 0.82,
+        "ensemble_prob": 0.0512,
+        "ask_price": 0.043,
+        "gfs_mean_f": 107.3,
+        "ecmwf_mean_f": 101.9,
+        "combined_mean_f": 103.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.051 ask=0.043 edge=0.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=107.3F ecmwf=101.9F diff=3.01C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[98.0,99.0] mean=103.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.051 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.043 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.078 min=0.030"
+          ]
+        ],
+        "shares": 116.2791,
+        "stake": 5.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 92-93\u00b0F on July 22?",
+        "slug": "highest-temperature-in-seattle-on-july-22-2026-92-93f",
+        "market_id": "3009020",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "623020034099374238577276009640511340528175629941839658514321962858294495425",
+        "no_token": "40472513117897908768415667125198678583457317454771724589019489585921377648837",
+        "bucket_low_f": 92.0,
+        "bucket_high_f": 93.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/wa/seatac/KSEA",
+        "volume_num": 879.1514039999998,
+        "liquidity_num": 3416.2183,
+        "event_id": "727273",
+        "event_slug": "highest-temperature-in-seattle-on-july-22-2026",
+        "ask_price": 0.4
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 96.85800000000002,
+        "ecmwf_mean_f": 90.8568,
+        "combined_mean_f": 88.79504854368932,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree",
+        "edge_pct": -14.88,
+        "ensemble_prob": 0.2512,
+        "ask_price": 0.4,
+        "gfs_mean_f": 96.9,
+        "ecmwf_mean_f": 90.9,
+        "combined_mean_f": 88.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.251 ask=0.400 edge=-14.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=96.9F ecmwf=90.9F diff=3.33C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[92.0,93.0] mean=88.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.251 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.400 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.184 min=0.030"
+          ]
+        ],
+        "shares": 50.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 88-89\u00b0F on July 22?",
+        "slug": "highest-temperature-in-denver-on-july-22-2026-88-89f",
+        "market_id": "3009099",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "32725024742470568127821571629050020658435831376796746294634567049848829929461",
+        "no_token": "58689337379856627059546918840446178011649356043938364923504902754082706109181",
+        "bucket_low_f": 88.0,
+        "bucket_high_f": 89.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/co/aurora/KBKF",
+        "volume_num": 850.0127600000001,
+        "liquidity_num": 6100.32598,
+        "event_id": "727280",
+        "event_slug": "highest-temperature-in-denver-on-july-22-2026",
+        "ask_price": 0.038
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 95.34799999999998,
+        "ecmwf_mean_f": 91.6628,
+        "combined_mean_f": 91.96271844660193,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 7.62,
+        "ensemble_prob": 0.1142,
+        "ask_price": 0.038,
+        "gfs_mean_f": 95.3,
+        "ecmwf_mean_f": 91.7,
+        "combined_mean_f": 92.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.114 ask=0.038 edge=7.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=95.3F ecmwf=91.7F diff=2.05C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[88.0,89.0] mean=92.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.114 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.038 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.136 min=0.030"
+          ]
+        ],
+        "shares": 984.5756,
+        "stake": 37.413873367671535,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 100-101\u00b0F on July 22?",
+        "slug": "highest-temperature-in-dallas-on-july-22-2026-100-101f",
+        "market_id": "3009040",
+        "end_date": "2026-07-22T12:00:00Z",
+        "end_dt": "2026-07-22 12:00:00+00:00",
+        "hours_left": 21.5,
+        "yes_token": "92375935426711393645519236903525058985065232229873862787472571867644691420670",
+        "no_token": "60702599413915879083852305206626060864961803319666421632439626971462189250791",
+        "bucket_low_f": 100.0,
+        "bucket_high_f": 101.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/dallas/KDAL",
+        "volume_num": 830.85303,
+        "liquidity_num": 4639.70525,
+        "event_id": "727275",
+        "event_slug": "highest-temperature-in-dallas-on-july-22-2026",
+        "ask_price": 0.028
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 106.15799999999999,
+        "ecmwf_mean_f": 103.35479999999998,
+        "combined_mean_f": 105.26650485436896,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 1.87,
+        "ensemble_prob": 0.0467,
+        "ask_price": 0.028,
+        "gfs_mean_f": 106.2,
+        "ecmwf_mean_f": 103.4,
+        "combined_mean_f": 105.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.047 ask=0.028 edge=1.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=21.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=106.2F ecmwf=103.4F diff=1.56C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[100.0,101.0] mean=105.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$253.37 max=$377.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.047 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.028 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.053 min=0.030"
+          ]
+        ],
+        "shares": 324.2144,
+        "stake": 9.078002170957836,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
