@@ -26,3 +26,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-07-25T14:15:01Z | category: austin | bet: highest-temperature-in-austin-on-july-24-2026-98-99f__2026-07-23T1701
+- outcome: LOST
+- thesis: edge=5.82pt prob=0.1882 ask=0.13
+- root_cause: Actual high 95F missed bucket [98,99] by 3F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
