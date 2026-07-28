@@ -61,3 +61,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-07-28T14:15:02Z | category: chicago | bet: highest-temperature-in-chicago-on-july-27-2026-84-85f__2026-07-26T0830
+- outcome: WON
+- thesis: edge=9.2pt prob=0.028 ask=0.12
+- root_cause: Edge of 9pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+

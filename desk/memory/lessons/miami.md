@@ -96,3 +96,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-07-28T14:15:02Z | category: miami | bet: highest-temperature-in-miami-on-july-27-2026-92-93f__2026-07-26T1800
+- outcome: WON
+- thesis: edge=7.96pt prob=0.1204 ask=0.2
+- root_cause: Edge of 8pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
