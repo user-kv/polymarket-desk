@@ -110,3 +110,17 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-08-03T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-august-2-2026-86-87f__2026-08-01T1800
+- outcome: WON
+- thesis: edge=5.0pt prob=0.0 ask=0.05
+- root_cause: Edge of 5pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
+## LESSON 2026-08-03T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-august-2-2026-84-85f__2026-08-01T2000
+- outcome: WON
+- thesis: edge=13.41pt prob=0.1259 ask=0.26
+- root_cause: Edge of 13pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
