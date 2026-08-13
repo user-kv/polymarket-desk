@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-08-13T12:30:13Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 90-91\u00b0F on August 14?",
+        "slug": "highest-temperature-in-atlanta-on-august-14-2026-90-91f",
+        "market_id": "3555633",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 23.5,
+        "yes_token": "35010211170224498836124799741817415187722802125125370330950055466550635500728",
+        "no_token": "32486069178497959997098093502409947515387138312542816503071115167520331290844",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 91.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ga/atlanta/KATL",
+        "volume_num": 99.32130799999999,
+        "liquidity_num": 1919.8597,
+        "event_id": "841359",
+        "event_slug": "highest-temperature-in-atlanta-on-august-14-2026",
+        "ask_price": 0.02
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 96.21600000000001,
+        "ecmwf_mean_f": 95.91839999999998,
+        "combined_mean_f": 96.26155339805823,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.05,
+        "ensemble_prob": 0.0095,
+        "ask_price": 0.02,
+        "gfs_mean_f": 96.2,
+        "ecmwf_mean_f": 95.9,
+        "combined_mean_f": 96.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.010 ask=0.020 edge=-1.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=23.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=96.2F ecmwf=95.9F diff=0.17C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[90.0,91.0] mean=96.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$61.65 max=$397.98 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.010 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.020 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.010 min=0.030"
+          ]
+        ],
+        "shares": 1000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 74-75\u00b0F on August 14?",
+        "slug": "highest-temperature-in-denver-on-august-14-2026-74-75f",
+        "market_id": "3555679",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 23.5,
+        "yes_token": "72311946032705368571038809573579598364652079603922959716807964309827616131008",
+        "no_token": "89860829665520508128166967514703675834168153297084349683417212191097000664174",
+        "bucket_low_f": 74.0,
+        "bucket_high_f": 75.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/co/aurora/KBKF",
+        "volume_num": 84.98259999999999,
+        "liquidity_num": 6304.16851,
+        "event_id": "841363",
+        "event_slug": "highest-temperature-in-denver-on-august-14-2026",
+        "ask_price": 0.004
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 86.66000000000001,
+        "ecmwf_mean_f": 79.6964,
+        "combined_mean_f": 82.2366019417476,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": 0.6,
+        "ensemble_prob": 0.01,
+        "ask_price": 0.004,
+        "gfs_mean_f": 86.7,
+        "ecmwf_mean_f": 79.7,
+        "combined_mean_f": 82.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.010 ask=0.004 edge=0.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=23.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=86.7F ecmwf=79.7F diff=3.87C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[74.0,75.0] mean=82.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$61.65 max=$397.98 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.010 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.004 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.015 min=0.030"
+          ]
+        ],
+        "shares": 1250.0,
+        "stake": 5.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
