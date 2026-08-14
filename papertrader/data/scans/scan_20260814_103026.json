@@ -1,0 +1,1167 @@
+{
+  "scan_timestamp": "2026-08-14T10:30:26Z",
+  "test_mode": false,
+  "markets_found": 13,
+  "markets_priced": 13,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 70-71\u00b0F on August 14?",
+        "slug": "lowest-temperature-in-nyc-on-august-14-2026-70-71f",
+        "market_id": "3556077",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "26285440208737025167246244262449774913716043112837903109945680869982101709004",
+        "no_token": "40604325992117119993097315966382675951139982860365004519981965959096731728778",
+        "bucket_low_f": 70.0,
+        "bucket_high_f": 71.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA",
+        "volume_num": 980.935504,
+        "liquidity_num": 307.67998,
+        "event_id": "841522",
+        "event_slug": "lowest-temperature-in-nyc-on-august-14-2026",
+        "ask_price": 0.01
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 75.5,
+        "ecmwf_mean_f": 70.40119999999999,
+        "combined_mean_f": 72.23786407766988,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer, bankroll_ok, min_ask_for_yes",
+        "edge_pct": 17.67,
+        "ensemble_prob": 0.1867,
+        "ask_price": 0.01,
+        "gfs_mean_f": 75.5,
+        "ecmwf_mean_f": 70.4,
+        "combined_mean_f": 72.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.187 ask=0.010 edge=17.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=75.5F ecmwf=70.4F diff=2.83C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[70.0,71.0] mean=72.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$304.44 max=$349.43 exposure $304.44+$77.94 > $349.43"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.187 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.010 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.228 min=0.030"
+          ]
+        ],
+        "shares": 7794.482,
+        "stake": 77.94482028619528,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 84-85\u00b0F on August 15?",
+        "slug": "highest-temperature-in-nyc-on-august-15-2026-84-85f",
+        "market_id": "3575089",
+        "end_date": "2026-08-15T12:00:00Z",
+        "end_dt": "2026-08-15 12:00:00+00:00",
+        "hours_left": 25.5,
+        "yes_token": "30188262268882328139997008470092054476850551207656195453577168974409856182467",
+        "no_token": "80533835672003931108079324618258049706774524069088794240274959431020362816654",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA",
+        "volume_num": 889.9810340000001,
+        "liquidity_num": 3050.9706,
+        "event_id": "846323",
+        "event_slug": "highest-temperature-in-nyc-on-august-15-2026",
+        "ask_price": 0.38
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 85.51000000000002,
+        "ecmwf_mean_f": 85.97439999999999,
+        "combined_mean_f": 84.14601941747577,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 9.8pt would qualify but bucket straddles mean)",
+        "edge_pct": 9.85,
+        "ensemble_prob": 0.4785,
+        "ask_price": 0.38,
+        "gfs_mean_f": 85.5,
+        "ecmwf_mean_f": 86.0,
+        "combined_mean_f": 84.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.478 ask=0.380 edge=9.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=25.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=85.5F ecmwf=86.0F diff=0.26C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[84.0,85.0] mean=84.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$304.44 max=$349.43 exposure $304.44+$69.37 > $349.43"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.478 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.380 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.383 min=0.030"
+          ]
+        ],
+        "shares": 182.5504,
+        "stake": 69.36916775889317,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 72-73\u00b0F on August 14?",
+        "slug": "highest-temperature-in-denver-on-august-14-2026-72-73f",
+        "market_id": "3555678",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "38222062793857096478029574213653997424834119752693806094463849427476744901364",
+        "no_token": "14816991464628563202040293409605609049023406065777697861491383275919539265556",
+        "bucket_low_f": 72.0,
+        "bucket_high_f": 73.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/co/aurora/KBKF",
+        "volume_num": 964.4197869999998,
+        "liquidity_num": 3101.60809,
+        "event_id": "841363",
+        "event_slug": "highest-temperature-in-denver-on-august-14-2026",
+        "ask_price": 0.002
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 84.76399999999997,
+        "ecmwf_mean_f": 79.51999999999997,
+        "combined_mean_f": 82.50922330097086,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.2,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.002,
+        "gfs_mean_f": 84.8,
+        "ecmwf_mean_f": 79.5,
+        "combined_mean_f": 82.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.002 edge=-0.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=84.8F ecmwf=79.5F diff=2.91C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[72.0,73.0] mean=82.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.002 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 10000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 84-85\u00b0F on August 14?",
+        "slug": "highest-temperature-in-denver-on-august-14-2026-84-85f",
+        "market_id": "3555684",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "21058093785697341198558630233175808095676216125943972976378392170764439927669",
+        "no_token": "84671923424497867405596634358027803643933720746750798147436371990848955093044",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/co/aurora/KBKF",
+        "volume_num": 891.634077,
+        "liquidity_num": 1780.6786,
+        "event_id": "841363",
+        "event_slug": "highest-temperature-in-denver-on-august-14-2026",
+        "ask_price": 0.35
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 84.76399999999997,
+        "ecmwf_mean_f": 79.51999999999997,
+        "combined_mean_f": 82.50922330097086,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -4.79,
+        "ensemble_prob": 0.3021,
+        "ask_price": 0.35,
+        "gfs_mean_f": 84.8,
+        "ecmwf_mean_f": 79.5,
+        "combined_mean_f": 82.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.302 ask=0.350 edge=-4.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=84.8F ecmwf=79.5F diff=2.91C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[84.0,85.0] mean=82.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.302 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.350 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.257 min=0.030"
+          ]
+        ],
+        "shares": 57.1429,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 74-75\u00b0F on August 15?",
+        "slug": "highest-temperature-in-denver-on-august-15-2026-74-75f",
+        "market_id": "3575151",
+        "end_date": "2026-08-15T12:00:00Z",
+        "end_dt": "2026-08-15 12:00:00+00:00",
+        "hours_left": 25.5,
+        "yes_token": "11069643516368642775939290944180012672339434824802091041601873788554532042921",
+        "no_token": "21214745168322987152644512878726166306264919863985530191989823831454086872320",
+        "bucket_low_f": 74.0,
+        "bucket_high_f": 75.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/co/aurora/KBKF",
+        "volume_num": 87.006,
+        "liquidity_num": 2202.63268,
+        "event_id": "846329",
+        "event_slug": "highest-temperature-in-denver-on-august-15-2026",
+        "ask_price": 0.012
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 84.92000000000002,
+        "ecmwf_mean_f": 78.01520000000001,
+        "combined_mean_f": 80.48640776699025,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 3.63,
+        "ensemble_prob": 0.0483,
+        "ask_price": 0.012,
+        "gfs_mean_f": 84.9,
+        "ecmwf_mean_f": 78.0,
+        "combined_mean_f": 80.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.048 ask=0.012 edge=3.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=25.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=84.9F ecmwf=78.0F diff=3.84C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[74.0,75.0] mean=80.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.048 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.012 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.063 min=0.030"
+          ]
+        ],
+        "shares": 1338.5509,
+        "stake": 16.06261087213225,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 88-89\u00b0F on August 14?",
+        "slug": "highest-temperature-in-chicago-on-august-14-2026-88-89f",
+        "market_id": "3555662",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "2536649420322105344716427498662797184563848574565279874558078304814354150926",
+        "no_token": "88167417536301637116728452073596873254026323257982513077882994000473177721928",
+        "bucket_low_f": 88.0,
+        "bucket_high_f": 89.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/il/chicago/KORD",
+        "volume_num": 962.3023320000001,
+        "liquidity_num": 6973.79864,
+        "event_id": "841361",
+        "event_slug": "highest-temperature-in-chicago-on-august-14-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.32400000000001,
+        "ecmwf_mean_f": 79.97480000000004,
+        "combined_mean_f": 79.68718446601939,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 83.3,
+        "ecmwf_mean_f": 80.0,
+        "combined_mean_f": 79.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=83.3F ecmwf=80.0F diff=1.86C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[88.0,89.0] mean=79.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 88-89\u00b0F on August 15?",
+        "slug": "highest-temperature-in-miami-on-august-15-2026-88-89f",
+        "market_id": "3575122",
+        "end_date": "2026-08-15T12:00:00Z",
+        "end_dt": "2026-08-15 12:00:00+00:00",
+        "hours_left": 25.5,
+        "yes_token": "15626639373386331382071047121160586207115569257574320434837936441537754728220",
+        "no_token": "99459947097592126856543557658092375640675525753164374247880976247500415904446",
+        "bucket_low_f": 88.0,
+        "bucket_high_f": 89.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 903.8185,
+        "liquidity_num": 3661.4181,
+        "event_id": "846326",
+        "event_slug": "highest-temperature-in-miami-on-august-15-2026",
+        "ask_price": 0.03
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.27000000000002,
+        "ecmwf_mean_f": 88.95560000000002,
+        "combined_mean_f": 90.72456310679617,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 23.5pt would qualify but bucket straddles mean)",
+        "edge_pct": 23.54,
+        "ensemble_prob": 0.2654,
+        "ask_price": 0.03,
+        "gfs_mean_f": 89.3,
+        "ecmwf_mean_f": 89.0,
+        "combined_mean_f": 90.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.265 ask=0.030 edge=23.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=25.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=89.3F ecmwf=89.0F diff=0.17C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[88.0,89.0] mean=90.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$304.44 max=$349.43 exposure $304.44+$100.00 > $349.43"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.265 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.030 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.330 min=0.030"
+          ]
+        ],
+        "shares": 3333.3333,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be between 84-85\u00b0F on August 15?",
+        "slug": "lowest-temperature-in-miami-on-august-15-2026-84-85f",
+        "market_id": "3575355",
+        "end_date": "2026-08-15T12:00:00Z",
+        "end_dt": "2026-08-15 12:00:00+00:00",
+        "hours_left": 25.5,
+        "yes_token": "56833220679552388871811905419246504913696424640212625060469460248698844655803",
+        "no_token": "8405461394021626258592758922913493438870367824412522542713522395043773653862",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 8.876675,
+        "liquidity_num": 371.8721,
+        "event_id": "846415",
+        "event_slug": "lowest-temperature-in-miami-on-august-15-2026",
+        "ask_price": 0.16
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.648,
+        "ecmwf_mean_f": 80.10320000000002,
+        "combined_mean_f": 81.33135922330099,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": -1.86,
+        "ensemble_prob": 0.1414,
+        "ask_price": 0.16,
+        "gfs_mean_f": 83.6,
+        "ecmwf_mean_f": 80.1,
+        "combined_mean_f": 81.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.141 ask=0.160 edge=-1.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=25.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=83.6F ecmwf=80.1F diff=1.97C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[84.0,85.0] mean=81.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.141 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.160 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.117 min=0.030"
+          ]
+        ],
+        "shares": 125.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 86-87\u00b0F on August 14?",
+        "slug": "highest-temperature-in-miami-on-august-14-2026-86-87f",
+        "market_id": "3555645",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "113931089101419618267922006297279818970058870398951680319104820449707071404663",
+        "no_token": "15530398382332889254449662159090420989414024872615754637209677039273125012998",
+        "bucket_low_f": 86.0,
+        "bucket_high_f": 87.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 880.859235,
+        "liquidity_num": 3048.01381,
+        "event_id": "841360",
+        "event_slug": "highest-temperature-in-miami-on-august-14-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.97800000000001,
+        "ecmwf_mean_f": 88.8044,
+        "combined_mean_f": 90.73330097087373,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Favorite-longshot guard: model prob 3.7% < 15% floor (edge 3.6pt is illusory on a tail bucket)",
+        "edge_pct": 3.57,
+        "ensemble_prob": 0.0367,
+        "ask_price": 0.001,
+        "gfs_mean_f": 90.0,
+        "ecmwf_mean_f": 88.8,
+        "combined_mean_f": 90.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.037 ask=0.001 edge=3.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=90.0F ecmwf=88.8F diff=0.65C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[86.0,87.0] mean=90.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.037 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.053 min=0.030"
+          ]
+        ],
+        "shares": 15594.2637,
+        "stake": 15.594263722055391,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be between 78-79\u00b0F on August 14?",
+        "slug": "lowest-temperature-in-miami-on-august-14-2026-78-79f",
+        "market_id": "3556088",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "54477117697576436238872505363991890526756812289798844391369164331500934826376",
+        "no_token": "114046112340659432721412257458036974011683431419552525040535121931656370817411",
+        "bucket_low_f": 78.0,
+        "bucket_high_f": 79.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 879.803148,
+        "liquidity_num": 92.6272,
+        "event_id": "841523",
+        "event_slug": "lowest-temperature-in-miami-on-august-14-2026",
+        "ask_price": 0.11
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.816,
+        "ecmwf_mean_f": 80.01319999999998,
+        "combined_mean_f": 80.76427184466023,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, min_ensemble_prob",
+        "edge_pct": 1.12,
+        "ensemble_prob": 0.1212,
+        "ask_price": 0.11,
+        "gfs_mean_f": 83.8,
+        "ecmwf_mean_f": 80.0,
+        "combined_mean_f": 80.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.121 ask=0.110 edge=1.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=83.8F ecmwf=80.0F diff=2.11C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[78.0,79.0] mean=80.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.121 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.110 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.150 min=0.030"
+          ]
+        ],
+        "shares": 49.954,
+        "stake": 5.494943952271204,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 100-101\u00b0F on August 14?",
+        "slug": "highest-temperature-in-miami-on-august-14-2026-100-101f",
+        "market_id": "3555652",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "4542442150354917614586949385885217016864969966788898488082206465890420814695",
+        "no_token": "22057971370298932149256773166066984552874181372080260671800294653908989754288",
+        "bucket_low_f": 100.0,
+        "bucket_high_f": 101.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 853.6933050000001,
+        "liquidity_num": 2828.37336,
+        "event_id": "841360",
+        "event_slug": "highest-temperature-in-miami-on-august-14-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.97800000000001,
+        "ecmwf_mean_f": 88.8044,
+        "combined_mean_f": 90.73330097087373,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 90.0,
+        "ecmwf_mean_f": 88.8,
+        "combined_mean_f": 90.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=90.0F ecmwf=88.8F diff=0.65C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[100.0,101.0] mean=90.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 76-77\u00b0F on August 14?",
+        "slug": "highest-temperature-in-san-francisco-on-august-14-2026-76-77f",
+        "market_id": "3555718",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "73309386869066798530717105478344274585100115668577195882677882918048679682566",
+        "no_token": "93263460560258929828079339236171888414582557345647518943141501295670730867799",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/san-francisco/KSFO",
+        "volume_num": 88.067,
+        "liquidity_num": 4318.14269,
+        "event_id": "841366",
+        "event_slug": "highest-temperature-in-san-francisco-on-august-14-2026",
+        "ask_price": 0.004
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 72.598,
+        "ecmwf_mean_f": 70.0672,
+        "combined_mean_f": 67.60378640776699,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.4,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.004,
+        "gfs_mean_f": 72.6,
+        "ecmwf_mean_f": 70.1,
+        "combined_mean_f": 67.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.004 edge=-0.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=72.6F ecmwf=70.1F diff=1.41C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[76.0,77.0] mean=67.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.004 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 5000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the highest temperature in Los Angeles be between 80-81\u00b0F on August 14?",
+        "slug": "highest-temperature-in-los-angeles-on-august-14-2026-80-81f",
+        "market_id": "3555706",
+        "end_date": "2026-08-14T12:00:00Z",
+        "end_dt": "2026-08-14 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "65695099924058154195496583805511322572137482998192773543363919834075089374822",
+        "no_token": "45814874399382156174091586030547218349146736637880208034072856244857921145171",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 81.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ca/los-angeles/KLAX",
+        "volume_num": 856.8376,
+        "liquidity_num": 893.82098,
+        "event_id": "841365",
+        "event_slug": "highest-temperature-in-los-angeles-on-august-14-2026",
+        "ask_price": 0.028
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 75.62599999999999,
+        "ecmwf_mean_f": 82.69520000000003,
+        "combined_mean_f": 78.40067961165042,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.15,
+        "ensemble_prob": 0.0165,
+        "ask_price": 0.028,
+        "gfs_mean_f": 75.6,
+        "ecmwf_mean_f": 82.7,
+        "combined_mean_f": 78.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.016 ask=0.028 edge=-1.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=75.6F ecmwf=82.7F diff=3.93C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[80.0,81.0] mean=78.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$304.44 max=$349.43 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.016 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.028 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.015 min=0.030"
+          ]
+        ],
+        "shares": 714.2857,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
