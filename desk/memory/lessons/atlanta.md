@@ -54,3 +54,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-08-15T14:15:02Z | category: atlanta | bet: highest-temperature-in-atlanta-on-august-14-2026-98-99f__2026-08-13T2030
+- outcome: LOST
+- thesis: edge=8.15pt prob=0.1815 ask=0.1
+- root_cause: Actual high 91F missed bucket [98,99] by 7F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
