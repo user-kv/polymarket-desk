@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-08-15T19:00:14Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be 63\u00b0F or below on August 16?",
+        "slug": "lowest-temperature-in-nyc-on-august-16-2026-63forbelow",
+        "market_id": "3594567",
+        "end_date": "2026-08-16T12:00:00Z",
+        "end_dt": "2026-08-16 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "73495222956251539673795770259751915086835489973642753998482826957022680771224",
+        "no_token": "70762550331755489236871727446204551186690596543765748638703996995927256833033",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 63.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA",
+        "volume_num": 90.0,
+        "liquidity_num": 798.18923,
+        "event_id": "851393",
+        "event_slug": "lowest-temperature-in-nyc-on-august-16-2026",
+        "ask_price": 0.005
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 71.07200000000002,
+        "ecmwf_mean_f": 69.56240000000001,
+        "combined_mean_f": 69.83844660194178,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Favorite-longshot guard: model prob 4.2% < 15% floor (edge 3.7pt is illusory on a tail bucket)",
+        "edge_pct": 3.67,
+        "ensemble_prob": 0.0417,
+        "ask_price": 0.005,
+        "gfs_mean_f": 71.1,
+        "ecmwf_mean_f": 69.6,
+        "combined_mean_f": 69.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.042 ask=0.005 edge=3.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=71.1F ecmwf=69.6F diff=0.84C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,63.0] mean=69.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$44.99 max=$389.62 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.042 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.005 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.024 min=0.030"
+          ]
+        ],
+        "shares": 3589.4852,
+        "stake": 17.947425879396985,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be between 86-87\u00b0F on August 16?",
+        "slug": "lowest-temperature-in-miami-on-august-16-2026-86-87f",
+        "market_id": "3594585",
+        "end_date": "2026-08-16T12:00:00Z",
+        "end_dt": "2026-08-16 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "14161377364602776005046422029951823486645200913462808817852009849638100265510",
+        "no_token": "26485284196687853898557403928291942355209231779435611696496850873952481485906",
+        "bucket_low_f": 86.0,
+        "bucket_high_f": 87.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/fl/miami/KMIA",
+        "volume_num": 87.08,
+        "liquidity_num": 699.41821,
+        "event_id": "851394",
+        "event_slug": "lowest-temperature-in-miami-on-august-16-2026",
+        "ask_price": 0.01
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.23400000000001,
+        "ecmwf_mean_f": 82.22359999999999,
+        "combined_mean_f": 81.13912621359226,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.0,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.01,
+        "gfs_mean_f": 83.2,
+        "ecmwf_mean_f": 82.2,
+        "combined_mean_f": 81.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.010 edge=-1.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=83.2F ecmwf=82.2F diff=0.56C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[86.0,87.0] mean=81.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$44.99 max=$389.62 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.010 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 2000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
