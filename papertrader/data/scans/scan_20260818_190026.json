@@ -1,0 +1,811 @@
+{
+  "scan_timestamp": "2026-08-18T19:00:26Z",
+  "test_mode": false,
+  "markets_found": 9,
+  "markets_priced": 9,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 84-85\u00b0F on August 19?",
+        "slug": "highest-temperature-in-nyc-on-august-19-2026-84-85f",
+        "market_id": "3687088",
+        "end_date": "2026-08-19T12:00:00Z",
+        "end_dt": "2026-08-19 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "100057461449089321032394736614175292026836053505561932840676082285912014395877",
+        "no_token": "34773926442173115124872249161022890940299312545346562952910221551242064216124",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA",
+        "volume_num": 995.6720239999999,
+        "liquidity_num": 3938.5087,
+        "event_id": "868531",
+        "event_slug": "highest-temperature-in-nyc-on-august-19-2026",
+        "ask_price": 0.11
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.03,
+        "ecmwf_mean_f": 84.17119999999998,
+        "combined_mean_f": 85.48271844660194,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer",
+        "edge_pct": 13.24,
+        "ensemble_prob": 0.2424,
+        "ask_price": 0.11,
+        "gfs_mean_f": 89.0,
+        "ecmwf_mean_f": 84.2,
+        "combined_mean_f": 85.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.242 ask=0.110 edge=13.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=89.0F ecmwf=84.2F diff=2.70C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[84.0,85.0] mean=85.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$231.14 max=$332.60 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.242 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.110 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.277 min=0.030"
+          ]
+        ],
+        "shares": 562.3033,
+        "stake": 61.8533578023229,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 74-75\u00b0F on August 19?",
+        "slug": "lowest-temperature-in-nyc-on-august-19-2026-74-75f",
+        "market_id": "3686841",
+        "end_date": "2026-08-19T12:00:00Z",
+        "end_dt": "2026-08-19 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "88812044549683771857455532688582194898738356484010247974803030851794640308543",
+        "no_token": "88722069924921806778409030517455781394320599355428428247906363536282280667719",
+        "bucket_low_f": 74.0,
+        "bucket_high_f": 75.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA",
+        "volume_num": 98.364974,
+        "liquidity_num": 243.4409,
+        "event_id": "868415",
+        "event_slug": "lowest-temperature-in-nyc-on-august-19-2026",
+        "ask_price": 0.26
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 74.23400000000001,
+        "ecmwf_mean_f": 70.13119999999998,
+        "combined_mean_f": 71.3535922330097,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree",
+        "edge_pct": -2.62,
+        "ensemble_prob": 0.2338,
+        "ask_price": 0.26,
+        "gfs_mean_f": 74.2,
+        "ecmwf_mean_f": 70.1,
+        "combined_mean_f": 71.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.234 ask=0.260 edge=-2.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=74.2F ecmwf=70.1F diff=2.28C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[74.0,75.0] mean=71.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$231.14 max=$332.60 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.234 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.260 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.194 min=0.030"
+          ]
+        ],
+        "shares": 76.9231,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 90-91\u00b0F on August 19?",
+        "slug": "highest-temperature-in-nyc-on-august-19-2026-90-91f",
+        "market_id": "3687091",
+        "end_date": "2026-08-19T12:00:00Z",
+        "end_dt": "2026-08-19 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "57261297326694205855594195679578312233141023968289879690865639087851058068761",
+        "no_token": "80232461592589244849309097959105361332275286974587639871421780346369962781807",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 91.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA",
+        "volume_num": 917.241939,
+        "liquidity_num": 4314.8584,
+        "event_id": "868531",
+        "event_slug": "highest-temperature-in-nyc-on-august-19-2026",
+        "ask_price": 0.06
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.03,
+        "ecmwf_mean_f": 84.17119999999998,
+        "combined_mean_f": 85.48271844660194,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": 1.22,
+        "ensemble_prob": 0.0722,
+        "ask_price": 0.06,
+        "gfs_mean_f": 89.0,
+        "ecmwf_mean_f": 84.2,
+        "combined_mean_f": 85.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.072 ask=0.060 edge=1.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=89.0F ecmwf=84.2F diff=2.70C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[90.0,91.0] mean=85.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$231.14 max=$332.60 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.072 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.060 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.063 min=0.030"
+          ]
+        ],
+        "shares": 90.0951,
+        "stake": 5.405704905437357,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 100-101\u00b0F on August 19?",
+        "slug": "highest-temperature-in-houston-on-august-19-2026-100-101f",
+        "market_id": "3687166",
+        "end_date": "2026-08-19T12:00:00Z",
+        "end_dt": "2026-08-19 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "7653012140079456996773972601678042104255606856353862587042214553153983312845",
+        "no_token": "99225834847689010733361495845630490455890830800721439545719397695534428362812",
+        "bucket_low_f": 100.0,
+        "bucket_high_f": 101.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/houston/KHOU",
+        "volume_num": 940.7197199999999,
+        "liquidity_num": 4668.3433,
+        "event_id": "868538",
+        "event_slug": "highest-temperature-in-houston-on-august-19-2026",
+        "ask_price": 0.05
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 100.97600000000001,
+        "ecmwf_mean_f": 97.70000000000002,
+        "combined_mean_f": 97.66242718446598,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, min_ensemble_prob",
+        "edge_pct": 7.89,
+        "ensemble_prob": 0.1289,
+        "ask_price": 0.05,
+        "gfs_mean_f": 101.0,
+        "ecmwf_mean_f": 97.7,
+        "combined_mean_f": 97.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.129 ask=0.050 edge=7.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=101.0F ecmwf=97.7F diff=1.82C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[100.0,101.0] mean=97.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$231.14 max=$332.60 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.129 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.050 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.121 min=0.030"
+          ]
+        ],
+        "shares": 691.0099,
+        "stake": 34.550493443147836,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 80-81\u00b0F on August 19?",
+        "slug": "highest-temperature-in-seattle-on-august-19-2026-80-81f",
+        "market_id": "3687078",
+        "end_date": "2026-08-19T12:00:00Z",
+        "end_dt": "2026-08-19 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "6078554766347351974480315428458516412414137453492073759903759424633493472372",
+        "no_token": "25555201982974381759210124207164171340504268463961705642198102151700841087278",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 81.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/wa/seatac/KSEA",
+        "volume_num": 930.6870549999999,
+        "liquidity_num": 4804.0858,
+        "event_id": "868530",
+        "event_slug": "highest-temperature-in-seattle-on-august-19-2026",
+        "ask_price": 0.2
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 79.56800000000001,
+        "ecmwf_mean_f": 78.5612,
+        "combined_mean_f": 76.23514563106792,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold",
+        "edge_pct": -1.36,
+        "ensemble_prob": 0.1864,
+        "ask_price": 0.2,
+        "gfs_mean_f": 79.6,
+        "ecmwf_mean_f": 78.6,
+        "combined_mean_f": 76.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.186 ask=0.200 edge=-1.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=79.6F ecmwf=78.6F diff=0.56C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[80.0,81.0] mean=76.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$231.14 max=$332.60 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.186 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.200 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.117 min=0.030"
+          ]
+        ],
+        "shares": 100.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 84-85\u00b0F on August 19?",
+        "slug": "highest-temperature-in-denver-on-august-19-2026-84-85f",
+        "market_id": "3687153",
+        "end_date": "2026-08-19T12:00:00Z",
+        "end_dt": "2026-08-19 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "73799828884357544995876119571470132389948280485613284102051037083165485691777",
+        "no_token": "27087503983611928669501242383065723334829457078352129750251348799341193534600",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/co/aurora/KBKF",
+        "volume_num": 866.609948,
+        "liquidity_num": 2635.0076,
+        "event_id": "868537",
+        "event_slug": "highest-temperature-in-denver-on-august-19-2026",
+        "ask_price": 0.04
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 87.28400000000002,
+        "ecmwf_mean_f": 84.72200000000001,
+        "combined_mean_f": 86.64223300970873,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer, min_ask_for_yes",
+        "edge_pct": 20.67,
+        "ensemble_prob": 0.2467,
+        "ask_price": 0.04,
+        "gfs_mean_f": 87.3,
+        "ecmwf_mean_f": 84.7,
+        "combined_mean_f": 86.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.247 ask=0.040 edge=20.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=87.3F ecmwf=84.7F diff=1.42C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[84.0,85.0] mean=86.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$231.14 max=$332.60 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.247 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.040 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.267 min=0.030"
+          ]
+        ],
+        "shares": 2238.1034,
+        "stake": 89.5241352151678,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 78-79\u00b0F on August 19?",
+        "slug": "highest-temperature-in-chicago-on-august-19-2026-78-79f",
+        "market_id": "3687133",
+        "end_date": "2026-08-19T12:00:00Z",
+        "end_dt": "2026-08-19 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "87712236445610443049609965741917889536167757002630173144816790942015997672027",
+        "no_token": "54045041919175466198039417013811362332529752578061743630749228855898539447747",
+        "bucket_low_f": 78.0,
+        "bucket_high_f": 79.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/il/chicago/KORD",
+        "volume_num": 863.749951,
+        "liquidity_num": 3678.6547,
+        "event_id": "868535",
+        "event_slug": "highest-temperature-in-chicago-on-august-19-2026",
+        "ask_price": 0.38
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.87399999999998,
+        "ecmwf_mean_f": 78.31999999999998,
+        "combined_mean_f": 79.48650485436889,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -12.1,
+        "ensemble_prob": 0.259,
+        "ask_price": 0.38,
+        "gfs_mean_f": 82.9,
+        "ecmwf_mean_f": 78.3,
+        "combined_mean_f": 79.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.259 ask=0.380 edge=-12.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=82.9F ecmwf=78.3F diff=2.53C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[78.0,79.0] mean=79.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$231.14 max=$332.60 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.259 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.380 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.262 min=0.030"
+          ]
+        ],
+        "shares": 52.6316,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 76-77\u00b0F on August 19?",
+        "slug": "highest-temperature-in-chicago-on-august-19-2026-76-77f",
+        "market_id": "3687132",
+        "end_date": "2026-08-19T12:00:00Z",
+        "end_dt": "2026-08-19 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "26841150222756419840433058913673883003171148664887082239627147085774160373384",
+        "no_token": "71951130993243329344200465240968721156712714011868032462476661546148571553",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/il/chicago/KORD",
+        "volume_num": 841.025988,
+        "liquidity_num": 3032.5094,
+        "event_id": "868535",
+        "event_slug": "highest-temperature-in-chicago-on-august-19-2026",
+        "ask_price": 0.12
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.87399999999998,
+        "ecmwf_mean_f": 78.31999999999998,
+        "combined_mean_f": 79.48650485436889,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": 1.89,
+        "ensemble_prob": 0.1389,
+        "ask_price": 0.12,
+        "gfs_mean_f": 82.9,
+        "ecmwf_mean_f": 78.3,
+        "combined_mean_f": 79.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.139 ask=0.120 edge=1.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=82.9F ecmwf=78.3F diff=2.53C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[76.0,77.0] mean=79.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$231.14 max=$332.60 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.139 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.120 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.155 min=0.030"
+          ]
+        ],
+        "shares": 74.4177,
+        "stake": 8.930126710510782,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 102-103\u00b0F on August 19?",
+        "slug": "highest-temperature-in-austin-on-august-19-2026-102-103f",
+        "market_id": "3687143",
+        "end_date": "2026-08-19T12:00:00Z",
+        "end_dt": "2026-08-19 12:00:00+00:00",
+        "hours_left": 17.0,
+        "yes_token": "20901277956243454202772441665062325526508842237695243264372617905923101631316",
+        "no_token": "82367557084424546793475718345273545833693736627157234240831710294856667593619",
+        "bucket_low_f": 102.0,
+        "bucket_high_f": 103.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.wunderground.com/history/daily/us/tx/austin/KAUS",
+        "volume_num": 843.431723,
+        "liquidity_num": 2749.1289,
+        "event_id": "868536",
+        "event_slug": "highest-temperature-in-austin-on-august-19-2026",
+        "ask_price": 0.57
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 103.536,
+        "ecmwf_mean_f": 101.25479999999999,
+        "combined_mean_f": 101.43291262135922,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -19.21,
+        "ensemble_prob": 0.3779,
+        "ask_price": 0.57,
+        "gfs_mean_f": 103.5,
+        "ecmwf_mean_f": 101.3,
+        "combined_mean_f": 101.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.378 ask=0.570 edge=-19.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=17.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=103.5F ecmwf=101.3F diff=1.27C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[102.0,103.0] mean=101.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$231.14 max=$332.60 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.378 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.570 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.350 min=0.030"
+          ]
+        ],
+        "shares": 35.0877,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
