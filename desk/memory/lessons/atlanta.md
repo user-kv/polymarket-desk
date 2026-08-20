@@ -61,3 +61,17 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-08-20T14:15:02Z | category: atlanta | bet: highest-temperature-in-atlanta-on-august-19-2026-90-91f__2026-08-18T0600
+- outcome: WON
+- thesis: edge=21.71pt prob=0.0229 ask=0.24
+- root_cause: Edge of 22pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
+## LESSON 2026-08-20T14:15:02Z | category: atlanta | bet: highest-temperature-in-atlanta-on-august-19-2026-92-93f__2026-08-18T2330
+- outcome: WON
+- thesis: edge=7.44pt prob=0.1656 ask=0.24
+- root_cause: Edge of 7pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
