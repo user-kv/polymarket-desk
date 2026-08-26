@@ -61,3 +61,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-08-26T14:15:02Z | category: seattle | bet: highest-temperature-in-seattle-on-august-25-2026-86-87f__2026-08-24T2300
+- outcome: LOST
+- thesis: edge=5.02pt prob=0.1298 ask=0.18
+- root_cause: Lost despite a clean signal — likely normal variance or stale pricing before our scan.
+- rule: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.
+- tags: variance,latency,lost
+

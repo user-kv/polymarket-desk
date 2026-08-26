@@ -47,3 +47,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-08-26T14:15:02Z | category: san-francisco | bet: lowest-temperature-in-san-francisco-on-august-25-2026-52-53f__2026-08-25T0030
+- outcome: WON
+- thesis: edge=13.9pt prob=0.0 ask=0.139
+- root_cause: Edge of 14pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
