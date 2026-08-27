@@ -1,0 +1,633 @@
+{
+  "scan_timestamp": "2026-08-27T20:00:26Z",
+  "test_mode": false,
+  "markets_found": 7,
+  "markets_priced": 7,
+  "bets_placed": 0,
+  "near_misses": 1,
+  "results": [
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 106-107\u00b0F on August 28?",
+        "slug": "highest-temperature-in-austin-on-august-28-2026-106-107f",
+        "market_id": "3922401",
+        "end_date": "2026-08-28T12:00:00Z",
+        "end_dt": "2026-08-28 12:00:00+00:00",
+        "hours_left": 16.0,
+        "yes_token": "1837688253630377097366120745909483810713879356494552060267196560004277105949",
+        "no_token": "61254228708458676562187726515467604901179099879752838263259245871313285468150",
+        "bucket_low_f": 106.0,
+        "bucket_high_f": 107.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 96.527,
+        "liquidity_num": 3178.0358,
+        "event_id": "918591",
+        "event_slug": "highest-temperature-in-austin-on-august-28-2026",
+        "ask_price": 0.004
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 102.028,
+        "ecmwf_mean_f": 100.90000000000002,
+        "combined_mean_f": 99.68194174757272,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.21,
+        "ensemble_prob": 0.0019,
+        "ask_price": 0.004,
+        "gfs_mean_f": 102.0,
+        "ecmwf_mean_f": 100.9,
+        "combined_mean_f": 99.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.002 ask=0.004 edge=-0.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=16.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=102.0F ecmwf=100.9F diff=0.63C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[106.0,107.0] mean=99.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$460.61 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.002 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.004 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.005 min=0.030"
+          ]
+        ],
+        "shares": 5000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 102-103\u00b0F on August 28?",
+        "slug": "highest-temperature-in-austin-on-august-28-2026-102-103f",
+        "market_id": "3922399",
+        "end_date": "2026-08-28T12:00:00Z",
+        "end_dt": "2026-08-28 12:00:00+00:00",
+        "hours_left": 16.0,
+        "yes_token": "89245387370436231951667917944050367839039885779350613995388499949451268767492",
+        "no_token": "46467434915856509941753947183012271079659979379943714140140414275197778627698",
+        "bucket_low_f": 102.0,
+        "bucket_high_f": 103.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 912.874145,
+        "liquidity_num": 3872.3606,
+        "event_id": "918591",
+        "event_slug": "highest-temperature-in-austin-on-august-28-2026",
+        "ask_price": 0.26
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 102.028,
+        "ecmwf_mean_f": 100.90000000000002,
+        "combined_mean_f": 99.68194174757272,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "NEAR_MISS",
+        "reason": "Near-miss: edge=3.3pt (need 5pt). Logged.",
+        "edge_pct": 3.3,
+        "ensemble_prob": 0.293,
+        "ask_price": 0.26,
+        "gfs_mean_f": 102.0,
+        "ecmwf_mean_f": 100.9,
+        "combined_mean_f": 99.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.293 ask=0.260 edge=3.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=16.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=102.0F ecmwf=100.9F diff=0.63C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[102.0,103.0] mean=99.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$460.61 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.293 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.260 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.262 min=0.030"
+          ]
+        ],
+        "shares": 98.6432,
+        "stake": 25.647235700146716,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 98-99\u00b0F on August 28?",
+        "slug": "highest-temperature-in-dallas-on-august-28-2026-98-99f",
+        "market_id": "3922353",
+        "end_date": "2026-08-28T12:00:00Z",
+        "end_dt": "2026-08-28 12:00:00+00:00",
+        "hours_left": 16.0,
+        "yes_token": "24565114528329608078339658056502835817633523133191863587897120578076870982944",
+        "no_token": "13676315768589685311162363778525348220504797202714914600279833041601934982404",
+        "bucket_low_f": 98.0,
+        "bucket_high_f": 99.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kdal",
+        "volume_num": 952.205829,
+        "liquidity_num": 2961.6103,
+        "event_id": "918587",
+        "event_slug": "highest-temperature-in-dallas-on-august-28-2026",
+        "ask_price": 0.49
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 103.49,
+        "ecmwf_mean_f": 100.9472,
+        "combined_mean_f": 100.57038834951453,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -19.04,
+        "ensemble_prob": 0.2996,
+        "ask_price": 0.49,
+        "gfs_mean_f": 103.5,
+        "ecmwf_mean_f": 100.9,
+        "combined_mean_f": 100.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.300 ask=0.490 edge=-19.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=16.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=103.5F ecmwf=100.9F diff=1.41C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[98.0,99.0] mean=100.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$460.61 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.300 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.490 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.252 min=0.030"
+          ]
+        ],
+        "shares": 40.8163,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 84-85\u00b0F on August 28?",
+        "slug": "highest-temperature-in-chicago-on-august-28-2026-84-85f",
+        "market_id": "3922387",
+        "end_date": "2026-08-28T12:00:00Z",
+        "end_dt": "2026-08-28 12:00:00+00:00",
+        "hours_left": 16.0,
+        "yes_token": "104937181497888235472735819721689389292332557471366277194208901214356137917312",
+        "no_token": "114040524761003996392091775183827596805274454098051451242064864591127902653984",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kord",
+        "volume_num": 930.478483,
+        "liquidity_num": 3635.0286,
+        "event_id": "918590",
+        "event_slug": "highest-temperature-in-chicago-on-august-28-2026",
+        "ask_price": 0.22
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 84.43200000000002,
+        "ecmwf_mean_f": 83.08560000000001,
+        "combined_mean_f": 82.81951456310678,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 6.5pt would qualify but bucket straddles mean)",
+        "edge_pct": 6.47,
+        "ensemble_prob": 0.2847,
+        "ask_price": 0.22,
+        "gfs_mean_f": 84.4,
+        "ecmwf_mean_f": 83.1,
+        "combined_mean_f": 82.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.285 ask=0.220 edge=6.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=16.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=84.4F ecmwf=83.1F diff=0.75C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[84.0,85.0] mean=82.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$460.61 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.285 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.220 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.286 min=0.030"
+          ]
+        ],
+        "shares": 217.1486,
+        "stake": 47.77268415951195,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 94-95\u00b0F on August 28?",
+        "slug": "highest-temperature-in-miami-on-august-28-2026-94-95f",
+        "market_id": "3922378",
+        "end_date": "2026-08-28T12:00:00Z",
+        "end_dt": "2026-08-28 12:00:00+00:00",
+        "hours_left": 16.0,
+        "yes_token": "2027127057161552558949197488407952932936929849410298710312604252357984767257",
+        "no_token": "86743828978081521106308055292716011490415945552216597219900029168168337886992",
+        "bucket_low_f": 94.0,
+        "bucket_high_f": 95.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 902.823559,
+        "liquidity_num": 5057.2603,
+        "event_id": "918589",
+        "event_slug": "highest-temperature-in-miami-on-august-28-2026",
+        "ask_price": 0.07
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.27000000000001,
+        "ecmwf_mean_f": 88.4588,
+        "combined_mean_f": 89.9416504854369,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Favorite-longshot guard: model prob 13.3% < 15% floor (edge 6.3pt is illusory on a tail bucket)",
+        "edge_pct": 6.26,
+        "ensemble_prob": 0.1326,
+        "ask_price": 0.07,
+        "gfs_mean_f": 89.3,
+        "ecmwf_mean_f": 88.5,
+        "combined_mean_f": 89.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.133 ask=0.070 edge=6.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=16.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=89.3F ecmwf=88.5F diff=0.45C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[94.0,95.0] mean=89.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$460.61 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.133 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.070 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.087 min=0.030"
+          ]
+        ],
+        "shares": 554.0271,
+        "stake": 38.78189367286203,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 80-81\u00b0F on August 28?",
+        "slug": "highest-temperature-in-seattle-on-august-28-2026-80-81f",
+        "market_id": "3922336",
+        "end_date": "2026-08-28T12:00:00Z",
+        "end_dt": "2026-08-28 12:00:00+00:00",
+        "hours_left": 16.0,
+        "yes_token": "70956524974138991017805810352672707051120219488143982313491000885668583286497",
+        "no_token": "33120621324065901814363341094735010408806569427682855062026350831410490777357",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 81.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=ksea",
+        "volume_num": 89.994047,
+        "liquidity_num": 3523.87086,
+        "event_id": "918585",
+        "event_slug": "highest-temperature-in-seattle-on-august-28-2026",
+        "ask_price": 0.008
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 75.40599999999999,
+        "ecmwf_mean_f": 72.964,
+        "combined_mean_f": 71.35990291262138,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.8,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.008,
+        "gfs_mean_f": 75.4,
+        "ecmwf_mean_f": 73.0,
+        "combined_mean_f": 71.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.008 edge=-0.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=16.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=75.4F ecmwf=73.0F diff=1.36C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[80.0,81.0] mean=71.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$460.61 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.008 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 2500.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 94-95\u00b0F on August 28?",
+        "slug": "highest-temperature-in-denver-on-august-28-2026-94-95f",
+        "market_id": "3922410",
+        "end_date": "2026-08-28T12:00:00Z",
+        "end_dt": "2026-08-28 12:00:00+00:00",
+        "hours_left": 16.0,
+        "yes_token": "23022264400959789692152707110271533584914870218955147747597842654240136280751",
+        "no_token": "42901283161677310308802291634892539651919517223991347092832515270715865667460",
+        "bucket_low_f": 94.0,
+        "bucket_high_f": 95.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kbkf",
+        "volume_num": 898.706436,
+        "liquidity_num": 5046.1335,
+        "event_id": "918592",
+        "event_slug": "highest-temperature-in-denver-on-august-28-2026",
+        "ask_price": 0.39
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 92.35400000000001,
+        "ecmwf_mean_f": 91.11919999999996,
+        "combined_mean_f": 91.52582524271841,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob",
+        "edge_pct": -26.11,
+        "ensemble_prob": 0.1289,
+        "ask_price": 0.39,
+        "gfs_mean_f": 92.4,
+        "ecmwf_mean_f": 91.1,
+        "combined_mean_f": 91.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.129 ask=0.390 edge=-26.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=16.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=92.4F ecmwf=91.1F diff=0.69C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[94.0,95.0] mean=91.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$460.61 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.129 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.390 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.102 min=0.030"
+          ]
+        ],
+        "shares": 51.2821,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
