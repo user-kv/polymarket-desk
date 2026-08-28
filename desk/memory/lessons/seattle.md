@@ -68,3 +68,10 @@
 - rule: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.
 - tags: variance,latency,lost
 
+## LESSON 2026-08-28T14:15:02Z | category: seattle | bet: highest-temperature-in-seattle-on-august-27-2026-68-69f__2026-08-27T0830
+- outcome: LOST
+- thesis: edge=16.8pt prob=0.218 ask=0.05
+- root_cause: Actual high 73F missed bucket [68,69] by 4F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
