@@ -124,3 +124,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-08-29T14:15:02Z | category: chicago | bet: lowest-temperature-in-chicago-on-august-28-2026-60-61f__2026-08-28T1130
+- outcome: LOST
+- thesis: edge=8.36pt prob=0.2036 ask=0.12
+- root_cause: Actual high 64F missed bucket [60,61] by 3F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+

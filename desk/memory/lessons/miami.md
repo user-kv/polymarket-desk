@@ -152,3 +152,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-08-29T14:15:02Z | category: miami | bet: highest-temperature-in-miami-on-august-28-2026-94-95f__2026-08-27T2030
+- outcome: LOST
+- thesis: edge=9.21pt prob=0.1621 ask=0.07
+- root_cause: Actual high 91F missed bucket [94,95] by 3F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
