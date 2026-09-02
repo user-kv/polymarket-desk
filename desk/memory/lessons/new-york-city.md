@@ -194,3 +194,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-09-02T14:15:03Z | category: new-york-city | bet: lowest-temperature-in-nyc-on-september-1-2026-66-67f__2026-08-31T0830
+- outcome: WON
+- thesis: edge=8.33pt prob=0.0267 ask=0.11
+- root_cause: Edge of 8pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
