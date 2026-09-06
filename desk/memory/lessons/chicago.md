@@ -138,3 +138,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-09-06T14:15:02Z | category: chicago | bet: highest-temperature-in-chicago-on-september-5-2026-80-81f__2026-09-04T1330
+- outcome: LOST
+- thesis: edge=10.1pt prob=0.139 ask=0.24
+- root_cause: Actual high 80F missed bucket [80,81] by 0F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
