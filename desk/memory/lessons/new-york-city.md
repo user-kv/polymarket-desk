@@ -201,3 +201,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-09-07T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-september-6-2026-78-79f__2026-09-05T0830
+- outcome: LOST
+- thesis: edge=5.17pt prob=0.1817 ask=0.13
+- root_cause: Actual high 75F missed bucket [78,79] by 3F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+

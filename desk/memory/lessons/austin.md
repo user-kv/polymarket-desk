@@ -68,3 +68,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-09-07T14:15:02Z | category: austin | bet: highest-temperature-in-austin-on-september-6-2026-98-99f__2026-09-06T0400
+- outcome: LOST
+- thesis: edge=7.6pt prob=0.216 ask=0.14
+- root_cause: Actual high 96F missed bucket [98,99] by 2F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
