@@ -75,3 +75,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-09-08T14:15:03Z | category: austin | bet: highest-temperature-in-austin-on-september-7-2026-100-101f__2026-09-05T2130
+- outcome: WON
+- thesis: edge=8.59pt prob=0.1341 ask=0.22
+- root_cause: Edge of 9pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
