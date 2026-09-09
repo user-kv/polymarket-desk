@@ -145,3 +145,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-09-09T14:15:02Z | category: chicago | bet: highest-temperature-in-chicago-on-september-8-2026-82-83f__2026-09-07T0830
+- outcome: LOST
+- thesis: edge=12.65pt prob=0.0835 ask=0.21
+- root_cause: Lost despite a clean signal — likely normal variance or stale pricing before our scan.
+- rule: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.
+- tags: variance,latency,lost
+
