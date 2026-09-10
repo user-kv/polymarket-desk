@@ -75,3 +75,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-09-10T14:15:02Z | category: san-francisco | bet: lowest-temperature-in-san-francisco-on-september-9-2026-72-73f__2026-09-08T1800
+- outcome: WON
+- thesis: edge=8.0pt prob=0.01 ask=0.09
+- root_cause: Edge of 8pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+

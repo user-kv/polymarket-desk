@@ -96,3 +96,10 @@
 - rule: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.
 - tags: variance,latency,lost
 
+## LESSON 2026-09-10T14:15:02Z | category: atlanta | bet: lowest-temperature-in-atlanta-on-september-9-2026-72-73f__2026-09-08T0830
+- outcome: WON
+- thesis: edge=18.67pt prob=0.0033 ask=0.19
+- root_cause: Edge of 19pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
