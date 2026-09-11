@@ -1,0 +1,1523 @@
+{
+  "scan_timestamp": "2026-09-11T08:30:32Z",
+  "test_mode": false,
+  "markets_found": 17,
+  "markets_priced": 17,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the lowest temperature in Houston be between 76-77\u00b0F on September 11?",
+        "slug": "lowest-temperature-in-houston-on-september-11-2026-76-77f",
+        "market_id": "4401818",
+        "end_date": "2026-09-11T12:00:00Z",
+        "end_dt": "2026-09-11 12:00:00+00:00",
+        "hours_left": 3.5,
+        "yes_token": "28587996571106181822345660499768168757375699743148421289459157451615952006664",
+        "no_token": "90592079298928937042241129293525819977696906854714401031095980163380904037445",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=khou",
+        "volume_num": 99.95445,
+        "liquidity_num": 70.5168,
+        "event_id": "992687",
+        "event_slug": "lowest-temperature-in-houston-on-september-11-2026",
+        "ask_price": 0.56
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 79.29799999999999,
+        "ecmwf_mean_f": 75.04519999999998,
+        "combined_mean_f": 76.4932038834951,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -30.29,
+        "ensemble_prob": 0.2571,
+        "ask_price": 0.56,
+        "gfs_mean_f": 79.3,
+        "ecmwf_mean_f": 75.0,
+        "combined_mean_f": 76.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.257 ask=0.560 edge=-30.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=79.3F ecmwf=75.0F diff=2.36C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[76.0,77.0] mean=76.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.257 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.560 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.311 min=0.030"
+          ]
+        ],
+        "shares": 35.7143,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be 79\u00b0F or below on September 11?",
+        "slug": "highest-temperature-in-houston-on-september-11-2026-79forbelow",
+        "market_id": "4402242",
+        "end_date": "2026-09-11T12:00:00Z",
+        "end_dt": "2026-09-11 12:00:00+00:00",
+        "hours_left": 3.5,
+        "yes_token": "52224861362325156211928489389472385121924119511478744009696959672519714473195",
+        "no_token": "43196170760026151503423476884370567662028579147286755729887405879259710352109",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 79.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=khou",
+        "volume_num": 993.569248,
+        "liquidity_num": 2030.20369,
+        "event_id": "992758",
+        "event_slug": "highest-temperature-in-houston-on-september-11-2026",
+        "ask_price": 0.003
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 95.39599999999999,
+        "ecmwf_mean_f": 87.45080000000002,
+        "combined_mean_f": 90.12864077669906,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.3,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.003,
+        "gfs_mean_f": 95.4,
+        "ecmwf_mean_f": 87.5,
+        "combined_mean_f": 90.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.003 edge=-0.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=95.4F ecmwf=87.5F diff=4.41C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,79.0] mean=90.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.003 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 6666.6667,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 88-89\u00b0F on September 12?",
+        "slug": "highest-temperature-in-houston-on-september-12-2026-88-89f",
+        "market_id": "4434160",
+        "end_date": "2026-09-12T12:00:00Z",
+        "end_dt": "2026-09-12 12:00:00+00:00",
+        "hours_left": 27.5,
+        "yes_token": "115237418919899920631421729390083342760255933804163338046889242723363611964249",
+        "no_token": "112677098294513524034781966947989658778350763227934215084935767209493022861802",
+        "bucket_low_f": 88.0,
+        "bucket_high_f": 89.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=khou",
+        "volume_num": 987.4533060000002,
+        "liquidity_num": 4638.3719,
+        "event_id": "998102",
+        "event_slug": "highest-temperature-in-houston-on-september-12-2026",
+        "ask_price": 0.02
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 95.79200000000002,
+        "ecmwf_mean_f": 90.21919999999999,
+        "combined_mean_f": 93.71640776699026,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 1.67,
+        "ensemble_prob": 0.0367,
+        "ask_price": 0.02,
+        "gfs_mean_f": 95.8,
+        "ecmwf_mean_f": 90.2,
+        "combined_mean_f": 93.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.037 ask=0.020 edge=1.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=27.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=95.8F ecmwf=90.2F diff=3.10C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[88.0,89.0] mean=93.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.037 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.020 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.053 min=0.030"
+          ]
+        ],
+        "shares": 628.1819,
+        "stake": 12.563637329931975,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 90-91\u00b0F on September 11?",
+        "slug": "highest-temperature-in-dallas-on-september-11-2026-90-91f",
+        "market_id": "4401427",
+        "end_date": "2026-09-11T12:00:00Z",
+        "end_dt": "2026-09-11 12:00:00+00:00",
+        "hours_left": 3.5,
+        "yes_token": "88209788298468367292489613875640671710951863409885018809657218384666948997072",
+        "no_token": "5562173889213930655920678436216738613197934991697945327816200464593725947568",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 91.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kdal",
+        "volume_num": 997.150054,
+        "liquidity_num": 653.6163,
+        "event_id": "992592",
+        "event_slug": "highest-temperature-in-dallas-on-september-11-2026",
+        "ask_price": 0.02
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 101.296,
+        "ecmwf_mean_f": 97.92880000000001,
+        "combined_mean_f": 97.70776699029122,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.38,
+        "ensemble_prob": 0.0062,
+        "ask_price": 0.02,
+        "gfs_mean_f": 101.3,
+        "ecmwf_mean_f": 97.9,
+        "combined_mean_f": 97.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.006 ask=0.020 edge=-1.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=101.3F ecmwf=97.9F diff=1.87C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[90.0,91.0] mean=97.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.006 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.020 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.010 min=0.030"
+          ]
+        ],
+        "shares": 1000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be 89\u00b0F or below on September 11?",
+        "slug": "highest-temperature-in-dallas-on-september-11-2026-89forbelow",
+        "market_id": "4401426",
+        "end_date": "2026-09-11T12:00:00Z",
+        "end_dt": "2026-09-11 12:00:00+00:00",
+        "hours_left": 3.5,
+        "yes_token": "59650196531566530596149934317983786964730876216219134519579065926770945937753",
+        "no_token": "86107770155335818341396284063251182064287882802000914339919090174920771193049",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 89.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kdal",
+        "volume_num": 994.159971,
+        "liquidity_num": 1602.02831,
+        "event_id": "992592",
+        "event_slug": "highest-temperature-in-dallas-on-september-11-2026",
+        "ask_price": 0.002
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 101.296,
+        "ecmwf_mean_f": 97.92880000000001,
+        "combined_mean_f": 97.70776699029122,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": 0.24,
+        "ensemble_prob": 0.0044,
+        "ask_price": 0.002,
+        "gfs_mean_f": 101.3,
+        "ecmwf_mean_f": 97.9,
+        "combined_mean_f": 97.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.004 ask=0.002 edge=0.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=101.3F ecmwf=97.9F diff=1.87C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,89.0] mean=97.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.004 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.002 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.010 min=0.030"
+          ]
+        ],
+        "shares": 2500.0,
+        "stake": 5.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 106-107\u00b0F on September 12?",
+        "slug": "highest-temperature-in-dallas-on-september-12-2026-106-107f",
+        "market_id": "4433719",
+        "end_date": "2026-09-12T12:00:00Z",
+        "end_dt": "2026-09-12 12:00:00+00:00",
+        "hours_left": 27.5,
+        "yes_token": "105411410598315544627994644347464830197296915419470561421289908246337699059432",
+        "no_token": "47086043483427456175700047063246322309922359337121798174716781947737651223140",
+        "bucket_low_f": 106.0,
+        "bucket_high_f": 107.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kdal",
+        "volume_num": 98.9124,
+        "liquidity_num": 2885.673,
+        "event_id": "997944",
+        "event_slug": "highest-temperature-in-dallas-on-september-12-2026",
+        "ask_price": 0.02
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 103.97800000000001,
+        "ecmwf_mean_f": 100.91319999999999,
+        "combined_mean_f": 102.01728155339813,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 3.59,
+        "ensemble_prob": 0.0559,
+        "ask_price": 0.02,
+        "gfs_mean_f": 104.0,
+        "ecmwf_mean_f": 100.9,
+        "combined_mean_f": 102.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.056 ask=0.020 edge=3.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=27.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=104.0F ecmwf=100.9F diff=1.70C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[106.0,107.0] mean=102.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.056 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.020 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.073 min=0.030"
+          ]
+        ],
+        "shares": 1352.0162,
+        "stake": 27.040324366852506,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 84-85\u00b0F on September 12?",
+        "slug": "highest-temperature-in-chicago-on-september-12-2026-84-85f",
+        "market_id": "4433727",
+        "end_date": "2026-09-12T12:00:00Z",
+        "end_dt": "2026-09-12 12:00:00+00:00",
+        "hours_left": 27.5,
+        "yes_token": "114917270549788004425980698943409883241160050356678788596662278993732721570978",
+        "no_token": "109868683408286238770742521682127016703416364679549802403553122051278958096513",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kord",
+        "volume_num": 967.993283,
+        "liquidity_num": 2181.7589,
+        "event_id": "997945",
+        "event_slug": "highest-temperature-in-chicago-on-september-12-2026",
+        "ask_price": 0.55
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 85.79200000000003,
+        "ecmwf_mean_f": 82.79079999999999,
+        "combined_mean_f": 84.42621359223298,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -28.1,
+        "ensemble_prob": 0.269,
+        "ask_price": 0.55,
+        "gfs_mean_f": 85.8,
+        "ecmwf_mean_f": 82.8,
+        "combined_mean_f": 84.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.269 ask=0.550 edge=-28.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=27.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=85.8F ecmwf=82.8F diff=1.67C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[84.0,85.0] mean=84.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.269 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.550 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.316 min=0.030"
+          ]
+        ],
+        "shares": 36.3636,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be 90\u00b0F or higher on September 11?",
+        "slug": "lowest-temperature-in-miami-on-september-11-2026-90forhigher",
+        "market_id": "4401780",
+        "end_date": "2026-09-11T12:00:00Z",
+        "end_dt": "2026-09-11 12:00:00+00:00",
+        "hours_left": 3.5,
+        "yes_token": "68042661872395840664399630198414560549271525827331680182936177736020301867657",
+        "no_token": "50993197880302637128539312963610794511715881265016550901562982670739677191177",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 93.985,
+        "liquidity_num": 8797.78328,
+        "event_id": "992683",
+        "event_slug": "lowest-temperature-in-miami-on-september-11-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.44399999999999,
+        "ecmwf_mean_f": 78.24920000000002,
+        "combined_mean_f": 79.64233009708738,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 83.4,
+        "ecmwf_mean_f": 78.2,
+        "combined_mean_f": 79.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=83.4F ecmwf=78.2F diff=2.89C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[90.0,999.0] mean=79.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 96-97\u00b0F on September 12?",
+        "slug": "highest-temperature-in-miami-on-september-12-2026-96-97f",
+        "market_id": "4434132",
+        "end_date": "2026-09-12T12:00:00Z",
+        "end_dt": "2026-09-12 12:00:00+00:00",
+        "hours_left": 27.5,
+        "yes_token": "105326162043191692592883756379565983124401450011232386897150405702938955910441",
+        "no_token": "69379240195959568075559241910898270226061297001816062764256944256870332509465",
+        "bucket_low_f": 96.0,
+        "bucket_high_f": 97.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 90.68299999999999,
+        "liquidity_num": 3254.13693,
+        "event_id": "998099",
+        "event_slug": "highest-temperature-in-miami-on-september-12-2026",
+        "ask_price": 0.01
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 88.982,
+        "ecmwf_mean_f": 85.07839999999999,
+        "combined_mean_f": 87.55097087378645,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.17,
+        "ensemble_prob": 0.0083,
+        "ask_price": 0.01,
+        "gfs_mean_f": 89.0,
+        "ecmwf_mean_f": 85.1,
+        "combined_mean_f": 87.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.008 ask=0.010 edge=-0.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=27.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=89.0F ecmwf=85.1F diff=2.17C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[96.0,97.0] mean=87.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.008 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.010 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.005 min=0.030"
+          ]
+        ],
+        "shares": 2000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 104-105\u00b0F on September 12?",
+        "slug": "highest-temperature-in-austin-on-september-12-2026-104-105f",
+        "market_id": "4434141",
+        "end_date": "2026-09-12T12:00:00Z",
+        "end_dt": "2026-09-12 12:00:00+00:00",
+        "hours_left": 27.5,
+        "yes_token": "63162041979105351400631752647031707973946801805172514631999225954935165850579",
+        "no_token": "34626184304766223952501581595319873378832788840913025502262104168407925671724",
+        "bucket_low_f": 104.0,
+        "bucket_high_f": 105.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 92.6534,
+        "liquidity_num": 3400.8995,
+        "event_id": "998100",
+        "event_slug": "highest-temperature-in-austin-on-september-12-2026",
+        "ask_price": 0.03
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 102.04800000000002,
+        "ecmwf_mean_f": 100.13999999999997,
+        "combined_mean_f": 100.74116504854372,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 6.8,
+        "ensemble_prob": 0.098,
+        "ask_price": 0.03,
+        "gfs_mean_f": 102.0,
+        "ecmwf_mean_f": 100.1,
+        "combined_mean_f": 100.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.098 ask=0.030 edge=6.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=27.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=102.0F ecmwf=100.1F diff=1.06C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[104.0,105.0] mean=100.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.098 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.030 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.136 min=0.030"
+          ]
+        ],
+        "shares": 1725.1067,
+        "stake": 51.75320140611054,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 106-107\u00b0F on September 12?",
+        "slug": "highest-temperature-in-austin-on-september-12-2026-106-107f",
+        "market_id": "4434142",
+        "end_date": "2026-09-12T12:00:00Z",
+        "end_dt": "2026-09-12 12:00:00+00:00",
+        "hours_left": 27.5,
+        "yes_token": "67830140944129708080712295168289656976976043034367355766793300688899826808695",
+        "no_token": "43020669270022344878943390783441670997362920921862023304810058474410699671058",
+        "bucket_low_f": 106.0,
+        "bucket_high_f": 107.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 91.697,
+        "liquidity_num": 3499.8674,
+        "event_id": "998100",
+        "event_slug": "highest-temperature-in-austin-on-september-12-2026",
+        "ask_price": 0.02
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 102.04800000000002,
+        "ecmwf_mean_f": 100.13999999999997,
+        "combined_mean_f": 100.74116504854372,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.44,
+        "ensemble_prob": 0.0056,
+        "ask_price": 0.02,
+        "gfs_mean_f": 102.0,
+        "ecmwf_mean_f": 100.1,
+        "combined_mean_f": 100.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.006 ask=0.020 edge=-1.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=27.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=102.0F ecmwf=100.1F diff=1.06C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[106.0,107.0] mean=100.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.006 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.020 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.015 min=0.030"
+          ]
+        ],
+        "shares": 1000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 96-97\u00b0F on September 11?",
+        "slug": "highest-temperature-in-austin-on-september-11-2026-96-97f",
+        "market_id": "4402236",
+        "end_date": "2026-09-11T12:00:00Z",
+        "end_dt": "2026-09-11 12:00:00+00:00",
+        "hours_left": 3.5,
+        "yes_token": "63996818749716244087795443210423135782107147557718786939722333859013416299793",
+        "no_token": "108597342491018937190450351577486738145948508833356415903538220144318303551909",
+        "bucket_low_f": 96.0,
+        "bucket_high_f": 97.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 909.49737,
+        "liquidity_num": 1431.4723,
+        "event_id": "992757",
+        "event_slug": "highest-temperature-in-austin-on-september-11-2026",
+        "ask_price": 0.03
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 100.76400000000001,
+        "ecmwf_mean_f": 98.3616,
+        "combined_mean_f": 98.64582524271842,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 8.48,
+        "ensemble_prob": 0.1148,
+        "ask_price": 0.03,
+        "gfs_mean_f": 100.8,
+        "ecmwf_mean_f": 98.4,
+        "combined_mean_f": 98.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.115 ask=0.030 edge=8.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=100.8F ecmwf=98.4F diff=1.33C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[96.0,97.0] mean=98.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.115 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.030 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.136 min=0.030"
+          ]
+        ],
+        "shares": 2152.8145,
+        "stake": 64.58443360384288,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 72-73\u00b0F on September 11?",
+        "slug": "lowest-temperature-in-nyc-on-september-11-2026-72-73f",
+        "market_id": "4401743",
+        "end_date": "2026-09-11T12:00:00Z",
+        "end_dt": "2026-09-11 12:00:00+00:00",
+        "hours_left": 3.5,
+        "yes_token": "97571214436431631304700149857867030921818740886487117021159340184297717601777",
+        "no_token": "28817203419388237077985659547394537585831160770824790222268880042781141287564",
+        "bucket_low_f": 72.0,
+        "bucket_high_f": 73.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klga",
+        "volume_num": 911.7816339999999,
+        "liquidity_num": 34.9941,
+        "event_id": "992680",
+        "event_slug": "lowest-temperature-in-nyc-on-september-11-2026",
+        "ask_price": 0.7
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 72.64399999999999,
+        "ecmwf_mean_f": 69.1484,
+        "combined_mean_f": 69.66281553398056,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree",
+        "edge_pct": -48.53,
+        "ensemble_prob": 0.2147,
+        "ask_price": 0.7,
+        "gfs_mean_f": 72.6,
+        "ecmwf_mean_f": 69.1,
+        "combined_mean_f": 69.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.215 ask=0.700 edge=-48.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=72.6F ecmwf=69.1F diff=1.94C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[72.0,73.0] mean=69.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.215 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.700 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.165 min=0.030"
+          ]
+        ],
+        "shares": 28.5714,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be 80\u00b0F or higher on September 11?",
+        "slug": "lowest-temperature-in-nyc-on-september-11-2026-80forhigher",
+        "market_id": "4401747",
+        "end_date": "2026-09-11T12:00:00Z",
+        "end_dt": "2026-09-11 12:00:00+00:00",
+        "hours_left": 3.5,
+        "yes_token": "46936714958004851513559769029191140368716861040340129409808019619679084203021",
+        "no_token": "72934176676773822096906744264409436169331723879904503061647383157833819103565",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klga",
+        "volume_num": 90.991,
+        "liquidity_num": 7996.29231,
+        "event_id": "992680",
+        "event_slug": "lowest-temperature-in-nyc-on-september-11-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 72.64399999999999,
+        "ecmwf_mean_f": 69.1484,
+        "combined_mean_f": 69.66281553398056,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 72.6,
+        "ecmwf_mean_f": 69.1,
+        "combined_mean_f": 69.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=72.6F ecmwf=69.1F diff=1.94C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[80.0,999.0] mean=69.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 70-71\u00b0F on September 11?",
+        "slug": "highest-temperature-in-nyc-on-september-11-2026-70-71f",
+        "market_id": "4402210",
+        "end_date": "2026-09-11T12:00:00Z",
+        "end_dt": "2026-09-11 12:00:00+00:00",
+        "hours_left": 3.5,
+        "yes_token": "36675492906932500616536465167371194958299169619474752863875788558382098361517",
+        "no_token": "28458582835828802872522367445793477626282587034240306586761068062740537652449",
+        "bucket_low_f": 70.0,
+        "bucket_high_f": 71.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klga",
+        "volume_num": 885.241,
+        "liquidity_num": 12375.51019,
+        "event_id": "992755",
+        "event_slug": "highest-temperature-in-nyc-on-september-11-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.328,
+        "ecmwf_mean_f": 80.34439999999996,
+        "combined_mean_f": 80.11941747572813,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 82.3,
+        "ecmwf_mean_f": 80.3,
+        "combined_mean_f": 80.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=82.3F ecmwf=80.3F diff=1.10C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[70.0,71.0] mean=80.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be 92\u00b0F or higher on September 12?",
+        "slug": "highest-temperature-in-denver-on-september-12-2026-92forhigher",
+        "market_id": "4434155",
+        "end_date": "2026-09-12T12:00:00Z",
+        "end_dt": "2026-09-12 12:00:00+00:00",
+        "hours_left": 27.5,
+        "yes_token": "7707212871243003444737124227794712783906174892220743976317076416284793385623",
+        "no_token": "114981766467602115074873096858421147570432421702983812771509230480054328651788",
+        "bucket_low_f": 92.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kbkf",
+        "volume_num": 90.74619999999999,
+        "liquidity_num": 2838.46958,
+        "event_id": "998101",
+        "event_slug": "highest-temperature-in-denver-on-september-12-2026",
+        "ask_price": 0.005
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.54399999999998,
+        "ecmwf_mean_f": 82.9404,
+        "combined_mean_f": 82.6846601941748,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.5,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.005,
+        "gfs_mean_f": 83.5,
+        "ecmwf_mean_f": 82.9,
+        "combined_mean_f": 82.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.005 edge=-0.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=27.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=83.5F ecmwf=82.9F diff=0.34C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[92.0,999.0] mean=82.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.005 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 4000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the lowest temperature in San Francisco be between 60-61\u00b0F on September 12?",
+        "slug": "lowest-temperature-in-san-francisco-on-september-12-2026-60-61f",
+        "market_id": "4436308",
+        "end_date": "2026-09-12T12:00:00Z",
+        "end_dt": "2026-09-12 12:00:00+00:00",
+        "hours_left": 27.5,
+        "yes_token": "17302610956409763661198953860882138550456717600409788519088394535946173888245",
+        "no_token": "7684225729030125841467927773537513609318482688125070668503083279565280996745",
+        "bucket_low_f": 60.0,
+        "bucket_high_f": 61.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=ksfo",
+        "volume_num": 87.80744200000001,
+        "liquidity_num": 222.0783,
+        "event_id": "998694",
+        "event_slug": "lowest-temperature-in-san-francisco-on-september-12-2026",
+        "ask_price": 0.58
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 59.167999999999985,
+        "ecmwf_mean_f": 57.8552,
+        "combined_mean_f": 59.23592233009706,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, outside_mean_buffer",
+        "edge_pct": -30.05,
+        "ensemble_prob": 0.2795,
+        "ask_price": 0.58,
+        "gfs_mean_f": 59.2,
+        "ecmwf_mean_f": 57.9,
+        "combined_mean_f": 59.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.279 ask=0.580 edge=-30.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=27.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=59.2F ecmwf=57.9F diff=0.73C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[60.0,61.0] mean=59.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$27.11 max=$590.99 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.279 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.580 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.277 min=0.030"
+          ]
+        ],
+        "shares": 34.4828,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
