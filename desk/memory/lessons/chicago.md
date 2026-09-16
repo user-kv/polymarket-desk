@@ -152,3 +152,17 @@
 - rule: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.
 - tags: variance,latency,lost
 
+## LESSON 2026-09-16T14:15:03Z | category: chicago | bet: highest-temperature-in-chicago-on-september-15-2026-78-79f__2026-09-14T1900
+- outcome: WON
+- thesis: edge=7.66pt prob=0.1334 ask=0.21
+- root_cause: Edge of 8pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
+## LESSON 2026-09-16T14:15:03Z | category: chicago | bet: highest-temperature-in-chicago-on-september-15-2026-86-87f__2026-09-15T0900
+- outcome: LOST
+- thesis: edge=10.46pt prob=0.1546 ask=0.05
+- root_cause: Actual high 80F missed bucket [86,87] by 6F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
