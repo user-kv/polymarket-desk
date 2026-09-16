@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-09-16T17:30:15Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 78-79\u00b0F on September 17?",
+        "slug": "highest-temperature-in-chicago-on-september-17-2026-78-79f",
+        "market_id": "4580461",
+        "end_date": "2026-09-17T12:00:00Z",
+        "end_dt": "2026-09-17 12:00:00+00:00",
+        "hours_left": 18.5,
+        "yes_token": "33364688249936563572562007193780720432042462833775587177532877691737486428319",
+        "no_token": "32900017670382304835844353873858252657837790382167043860080200936718750235426",
+        "bucket_low_f": 78.0,
+        "bucket_high_f": 79.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kord",
+        "volume_num": 974.953264,
+        "liquidity_num": 5459.6491,
+        "event_id": "1027095",
+        "event_slug": "highest-temperature-in-chicago-on-september-17-2026",
+        "ask_price": 0.14
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 78.324,
+        "ecmwf_mean_f": 76.32479999999998,
+        "combined_mean_f": 74.90475728155339,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": -2.15,
+        "ensemble_prob": 0.1185,
+        "ask_price": 0.14,
+        "gfs_mean_f": 78.3,
+        "ecmwf_mean_f": 76.3,
+        "combined_mean_f": 74.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.118 ask=0.140 edge=-2.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=18.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=78.3F ecmwf=76.3F diff=1.11C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[78.0,79.0] mean=74.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$340.38 max=$690.12 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.118 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.140 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.112 min=0.030"
+          ]
+        ],
+        "shares": 142.8571,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the lowest temperature in San Francisco be between 56-57\u00b0F on September 18?",
+        "slug": "lowest-temperature-in-san-francisco-on-september-18-2026-56-57f",
+        "market_id": "4611468",
+        "end_date": "2026-09-18T12:00:00Z",
+        "end_dt": "2026-09-18 12:00:00+00:00",
+        "hours_left": 42.5,
+        "yes_token": "107309592928577008707743064056389127829497436592512231184256322364459604700659",
+        "no_token": "13494895729006960232238218510691224353395217624215322119994018221406297760655",
+        "bucket_low_f": 56.0,
+        "bucket_high_f": 57.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=ksfo",
+        "volume_num": 87.52454600000002,
+        "liquidity_num": 1294.4253,
+        "event_id": "1032663",
+        "event_slug": "lowest-temperature-in-san-francisco-on-september-18-2026",
+        "ask_price": 0.4
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 58.49,
+        "ecmwf_mean_f": 57.703999999999986,
+        "combined_mean_f": 57.90776699029128,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, outside_mean_buffer",
+        "edge_pct": -14.48,
+        "ensemble_prob": 0.2552,
+        "ask_price": 0.4,
+        "gfs_mean_f": 58.5,
+        "ecmwf_mean_f": 57.7,
+        "combined_mean_f": 57.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.255 ask=0.400 edge=-14.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=42.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=58.5F ecmwf=57.7F diff=0.44C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[56.0,57.0] mean=57.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$340.38 max=$690.12 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.255 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.400 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.272 min=0.030"
+          ]
+        ],
+        "shares": 50.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
