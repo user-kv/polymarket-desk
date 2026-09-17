@@ -166,3 +166,17 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-09-17T14:15:02Z | category: chicago | bet: highest-temperature-in-chicago-on-september-16-2026-68-69f__2026-09-14T1930
+- outcome: WON
+- thesis: edge=8.06pt prob=0.0894 ask=0.17
+- root_cause: Edge of 8pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
+## LESSON 2026-09-17T14:15:02Z | category: chicago | bet: lowest-temperature-in-chicago-on-september-16-2026-57forbelow__2026-09-15T1030
+- outcome: WON
+- thesis: edge=12.0pt prob=0.0 ask=0.12
+- root_cause: Edge of 12pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
