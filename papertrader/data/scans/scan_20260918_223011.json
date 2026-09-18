@@ -1,0 +1,99 @@
+{
+  "scan_timestamp": "2026-09-18T22:30:11Z",
+  "test_mode": false,
+  "markets_found": 1,
+  "markets_priced": 1,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 84-85\u00b0F on September 20?",
+        "slug": "highest-temperature-in-houston-on-september-20-2026-84-85f",
+        "market_id": "4675559",
+        "end_date": "2026-09-20T12:00:00Z",
+        "end_dt": "2026-09-20 12:00:00+00:00",
+        "hours_left": 37.5,
+        "yes_token": "57310686876862642802695635256635527651039923291574179821448436915704707988033",
+        "no_token": "10481955998705396484943317058830477505181895531165547382063224409868209726786",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=khou",
+        "volume_num": 93.39899999999999,
+        "liquidity_num": 3836.02065,
+        "event_id": "1042008",
+        "event_slug": "highest-temperature-in-houston-on-september-20-2026",
+        "ask_price": 0.004
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 94.12999999999998,
+        "ecmwf_mean_f": 92.4116,
+        "combined_mean_f": 92.7386407766991,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.4,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.004,
+        "gfs_mean_f": 94.1,
+        "ecmwf_mean_f": 92.4,
+        "combined_mean_f": 92.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.004 edge=-0.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=37.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=94.1F ecmwf=92.4F diff=0.95C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[84.0,85.0] mean=92.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$525.90 max=$617.83 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.004 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 5000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
