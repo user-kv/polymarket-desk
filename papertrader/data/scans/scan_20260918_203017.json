@@ -1,0 +1,277 @@
+{
+  "scan_timestamp": "2026-09-18T20:30:17Z",
+  "test_mode": false,
+  "markets_found": 3,
+  "markets_priced": 3,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 90-91\u00b0F on September 20?",
+        "slug": "highest-temperature-in-miami-on-september-20-2026-90-91f",
+        "market_id": "4674351",
+        "end_date": "2026-09-20T12:00:00Z",
+        "end_dt": "2026-09-20 12:00:00+00:00",
+        "hours_left": 39.5,
+        "yes_token": "58747654237412252431925020779135618102656293546278099241420983081067213736610",
+        "no_token": "76549747001497186748369431100611122887088323223140484803705685090118553787904",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 91.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 992.745758,
+        "liquidity_num": 2706.1581,
+        "event_id": "1041823",
+        "event_slug": "highest-temperature-in-miami-on-september-20-2026",
+        "ask_price": 0.34
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 87.23,
+        "ecmwf_mean_f": 83.53039999999999,
+        "combined_mean_f": 85.69242718446601,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": -21.13,
+        "ensemble_prob": 0.1287,
+        "ask_price": 0.34,
+        "gfs_mean_f": 87.2,
+        "ecmwf_mean_f": 83.5,
+        "combined_mean_f": 85.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.129 ask=0.340 edge=-21.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=39.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=87.2F ecmwf=83.5F diff=2.06C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[90.0,91.0] mean=85.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$525.90 max=$617.83 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.129 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.340 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.083 min=0.030"
+          ]
+        ],
+        "shares": 58.8235,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 96-97\u00b0F on September 20?",
+        "slug": "highest-temperature-in-austin-on-september-20-2026-96-97f",
+        "market_id": "4675551",
+        "end_date": "2026-09-20T12:00:00Z",
+        "end_dt": "2026-09-20 12:00:00+00:00",
+        "hours_left": 39.5,
+        "yes_token": "58769704558202153339593824093501585554604631834010031872268822738656614758995",
+        "no_token": "2546099044291921658963035213079929218926047535160267694441522338758269108359",
+        "bucket_low_f": 96.0,
+        "bucket_high_f": 97.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 97.498332,
+        "liquidity_num": 2282.4653,
+        "event_id": "1042007",
+        "event_slug": "highest-temperature-in-austin-on-september-20-2026",
+        "ask_price": 0.31
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 99.82799999999999,
+        "ecmwf_mean_f": 98.79839999999996,
+        "combined_mean_f": 97.7976699029126,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, outside_mean_buffer",
+        "edge_pct": -2.46,
+        "ensemble_prob": 0.2854,
+        "ask_price": 0.31,
+        "gfs_mean_f": 99.8,
+        "ecmwf_mean_f": 98.8,
+        "combined_mean_f": 97.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.285 ask=0.310 edge=-2.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=39.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=99.8F ecmwf=98.8F diff=0.57C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[96.0,97.0] mean=97.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$525.90 max=$617.83 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.285 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.310 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.233 min=0.030"
+          ]
+        ],
+        "shares": 64.5161,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 72-73\u00b0F on September 19?",
+        "slug": "highest-temperature-in-san-francisco-on-september-19-2026-72-73f",
+        "market_id": "4637514",
+        "end_date": "2026-09-19T12:00:00Z",
+        "end_dt": "2026-09-19 12:00:00+00:00",
+        "hours_left": 15.5,
+        "yes_token": "55781175207062793246162990981493854221287341791179587924694197376771827780918",
+        "no_token": "63921034739938052370742598895229459174261704366420342126141159726160331543022",
+        "bucket_low_f": 72.0,
+        "bucket_high_f": 73.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=ksfo",
+        "volume_num": 922.3736869999999,
+        "liquidity_num": 4050.0624,
+        "event_id": "1037820",
+        "event_slug": "highest-temperature-in-san-francisco-on-september-19-2026",
+        "ask_price": 0.3
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 78.44000000000001,
+        "ecmwf_mean_f": 74.59519999999999,
+        "combined_mean_f": 72.23262135922332,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -9.23,
+        "ensemble_prob": 0.2077,
+        "ask_price": 0.3,
+        "gfs_mean_f": 78.4,
+        "ecmwf_mean_f": 74.6,
+        "combined_mean_f": 72.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.208 ask=0.300 edge=-9.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=15.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=78.4F ecmwf=74.6F diff=2.14C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[72.0,73.0] mean=72.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$525.90 max=$617.83 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.208 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.300 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.204 min=0.030"
+          ]
+        ],
+        "shares": 66.6667,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
