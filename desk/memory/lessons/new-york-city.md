@@ -208,3 +208,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-09-18T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-september-17-2026-84-85f__2026-09-15T1900
+- outcome: LOST
+- thesis: edge=15.38pt prob=0.0862 ask=0.24
+- root_cause: Actual high 85F missed bucket [84,85] by 0F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+

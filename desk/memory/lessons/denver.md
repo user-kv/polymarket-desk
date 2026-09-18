@@ -180,3 +180,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-09-18T14:15:02Z | category: denver | bet: highest-temperature-in-denver-on-september-17-2026-84forhigher__2026-09-16T1830
+- outcome: LOST
+- thesis: edge=6.92pt prob=0.2072 ask=0.138
+- root_cause: Actual high 82F missed bucket [84,999] by 2F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
