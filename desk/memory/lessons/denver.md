@@ -187,3 +187,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-09-19T14:15:02Z | category: denver | bet: highest-temperature-in-denver-on-september-18-2026-78-79f__2026-09-16T2030
+- outcome: WON
+- thesis: edge=8.83pt prob=0.1317 ask=0.22
+- root_cause: Edge of 9pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+

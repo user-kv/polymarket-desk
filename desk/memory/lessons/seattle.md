@@ -145,3 +145,24 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-09-19T14:15:02Z | category: seattle | bet: highest-temperature-in-seattle-on-september-18-2026-72-73f__2026-09-16T1900
+- outcome: LOST
+- thesis: edge=6.59pt prob=0.2359 ask=0.17
+- root_cause: Actual high 70F missed bucket [72,73] by 2F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
+## LESSON 2026-09-19T14:15:02Z | category: seattle | bet: highest-temperature-in-seattle-on-september-18-2026-76-77f__2026-09-16T1900
+- outcome: WON
+- thesis: edge=10.09pt prob=0.0091 ask=0.11
+- root_cause: Edge of 10pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
+## LESSON 2026-09-19T14:15:02Z | category: seattle | bet: highest-temperature-in-seattle-on-september-18-2026-74-75f__2026-09-17T2200
+- outcome: WON
+- thesis: edge=7.53pt prob=0.0547 ask=0.13
+- root_cause: Edge of 8pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
