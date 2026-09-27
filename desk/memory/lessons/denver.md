@@ -194,3 +194,17 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-09-27T14:15:02Z | category: denver | bet: highest-temperature-in-denver-on-september-26-2026-90forhigher__2026-09-24T2000
+- outcome: WON
+- thesis: edge=8.7pt prob=0.0 ask=0.087
+- root_cause: Edge of 9pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
+## LESSON 2026-09-27T14:15:02Z | category: denver | bet: highest-temperature-in-denver-on-september-26-2026-84-85f__2026-09-25T1030
+- outcome: WON
+- thesis: edge=23.58pt prob=0.0142 ask=0.25
+- root_cause: Edge of 24pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
