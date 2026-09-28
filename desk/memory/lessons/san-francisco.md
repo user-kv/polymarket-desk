@@ -117,3 +117,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-09-28T14:15:03Z | category: san-francisco | bet: highest-temperature-in-san-francisco-on-september-27-2026-62-63f__2026-09-26T0830
+- outcome: LOST
+- thesis: edge=22.11pt prob=0.2711 ask=0.05
+- root_cause: Actual high 65F missed bucket [62,63] by 2F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
