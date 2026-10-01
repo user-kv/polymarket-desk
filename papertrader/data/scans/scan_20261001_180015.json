@@ -1,0 +1,277 @@
+{
+  "scan_timestamp": "2026-10-01T18:00:15Z",
+  "test_mode": false,
+  "markets_found": 3,
+  "markets_priced": 3,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be 90\u00b0F or higher on October 2?",
+        "slug": "highest-temperature-in-nyc-on-october-2-2026-90forhigher",
+        "market_id": "5150568",
+        "end_date": "2026-10-02T12:00:00Z",
+        "end_dt": "2026-10-02 12:00:00+00:00",
+        "hours_left": 18.0,
+        "yes_token": "41082944189709613648186318033779160248947759016447809477785029465512035090831",
+        "no_token": "3028340752389520880096874902926007961159170882773280923383372282289579863013",
+        "bucket_low_f": 90.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klga",
+        "volume_num": 985.337831,
+        "liquidity_num": 3494.22446,
+        "event_id": "1107535",
+        "event_slug": "highest-temperature-in-nyc-on-october-2-2026",
+        "ask_price": 0.008
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.474,
+        "ecmwf_mean_f": 81.40279999999998,
+        "combined_mean_f": 82.6306796116505,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.8,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.008,
+        "gfs_mean_f": 83.5,
+        "ecmwf_mean_f": 81.4,
+        "combined_mean_f": 82.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.008 edge=-0.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=18.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=83.5F ecmwf=81.4F diff=1.15C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[90.0,999.0] mean=82.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$583.67 max=$566.94 exposure $583.67+$20.00 > $566.94"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.008 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 2500.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 86-87\u00b0F on October 2?",
+        "slug": "highest-temperature-in-houston-on-october-2-2026-86-87f",
+        "market_id": "5150655",
+        "end_date": "2026-10-02T12:00:00Z",
+        "end_dt": "2026-10-02 12:00:00+00:00",
+        "hours_left": 18.0,
+        "yes_token": "76495677024178988057872041817959546773930847489981214194799309543521209044565",
+        "no_token": "12781769043852837605685405666887408925143684922792951484497503672288880692004",
+        "bucket_low_f": 86.0,
+        "bucket_high_f": 87.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=khou",
+        "volume_num": 97.95047500000001,
+        "liquidity_num": 2542.2918,
+        "event_id": "1107553",
+        "event_slug": "highest-temperature-in-houston-on-october-2-2026",
+        "ask_price": 0.08
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 91.34599999999999,
+        "ecmwf_mean_f": 87.0008,
+        "combined_mean_f": 88.87475728155347,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer, bankroll_ok, min_ensemble_prob",
+        "edge_pct": 6.63,
+        "ensemble_prob": 0.1463,
+        "ask_price": 0.08,
+        "gfs_mean_f": 91.3,
+        "ecmwf_mean_f": 87.0,
+        "combined_mean_f": 88.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.146 ask=0.080 edge=6.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=18.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=91.3F ecmwf=87.0F diff=2.41C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[86.0,87.0] mean=88.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$583.67 max=$566.94 exposure $583.67+$51.08 > $566.94"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.146 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.080 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.150 min=0.030"
+          ]
+        ],
+        "shares": 638.5477,
+        "stake": 51.083816889768734,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the highest temperature in Los Angeles be between 88-89\u00b0F on October 2?",
+        "slug": "highest-temperature-in-los-angeles-on-october-2-2026-88-89f",
+        "market_id": "5153541",
+        "end_date": "2026-10-02T12:00:00Z",
+        "end_dt": "2026-10-02 12:00:00+00:00",
+        "hours_left": 18.0,
+        "yes_token": "70044103029106249267488524348927701552996782945006636103790361651860516344002",
+        "no_token": "74630050910222193065923089746647268613256005754358555754946620584486751040227",
+        "bucket_low_f": 88.0,
+        "bucket_high_f": 89.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klax",
+        "volume_num": 961.3238869999999,
+        "liquidity_num": 3025.588,
+        "event_id": "1108268",
+        "event_slug": "highest-temperature-in-los-angeles-on-october-2-2026",
+        "ask_price": 0.23
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.51600000000002,
+        "ecmwf_mean_f": 100.99760000000002,
+        "combined_mean_f": 92.79805825242717,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, bankroll_ok",
+        "edge_pct": 6.24,
+        "ensemble_prob": 0.2924,
+        "ask_price": 0.23,
+        "gfs_mean_f": 89.5,
+        "ecmwf_mean_f": 101.0,
+        "combined_mean_f": 92.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.292 ask=0.230 edge=6.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=18.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=89.5F ecmwf=101.0F diff=6.38C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[88.0,89.0] mean=92.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$583.67 max=$566.94 exposure $583.67+$57.38 > $566.94"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.292 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.230 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.277 min=0.030"
+          ]
+        ],
+        "shares": 249.4971,
+        "stake": 57.384341322566335,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
