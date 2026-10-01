@@ -40,3 +40,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-10-01T14:15:02Z | category: houston | bet: highest-temperature-in-houston-on-september-30-2026-88-89f__2026-09-29T1200
+- outcome: LOST
+- thesis: edge=9.13pt prob=0.1503 ask=0.059
+- root_cause: Actual high 91F missed bucket [88,89] by 2F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
