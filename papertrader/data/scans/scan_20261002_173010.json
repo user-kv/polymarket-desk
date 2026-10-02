@@ -1,0 +1,99 @@
+{
+  "scan_timestamp": "2026-10-02T17:30:10Z",
+  "test_mode": false,
+  "markets_found": 1,
+  "markets_priced": 1,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 92-93\u00b0F on October 4?",
+        "slug": "highest-temperature-in-miami-on-october-4-2026-92-93f",
+        "market_id": "5200454",
+        "end_date": "2026-10-04T12:00:00Z",
+        "end_dt": "2026-10-04 12:00:00+00:00",
+        "hours_left": 42.5,
+        "yes_token": "108259803395866683061290178837714424063706239382259441466681015899163259647822",
+        "no_token": "60487657572668674726275192319043102658174642792804172098166559002434427405063",
+        "bucket_low_f": 92.0,
+        "bucket_high_f": 93.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 97.258694,
+        "liquidity_num": 2569.5495,
+        "event_id": "1118071",
+        "event_slug": "highest-temperature-in-miami-on-october-4-2026",
+        "ask_price": 0.08
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 86.72,
+        "ecmwf_mean_f": 85.7912,
+        "combined_mean_f": 87.55796116504857,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob",
+        "edge_pct": -0.5,
+        "ensemble_prob": 0.075,
+        "ask_price": 0.08,
+        "gfs_mean_f": 86.7,
+        "ecmwf_mean_f": 85.8,
+        "combined_mean_f": 87.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.075 ask=0.080 edge=-0.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=42.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=86.7F ecmwf=85.8F diff=0.52C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[92.0,93.0] mean=87.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$283.67 max=$598.15 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.075 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.080 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.044 min=0.030"
+          ]
+        ],
+        "shares": 250.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
