@@ -194,3 +194,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-10-02T14:15:02Z | category: dallas | bet: highest-temperature-in-dallas-on-october-1-2026-80-81f__2026-09-30T1400
+- outcome: LOST
+- thesis: edge=12.82pt prob=0.1218 ask=0.25
+- root_cause: Actual high 80F missed bucket [80,81] by 0F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+

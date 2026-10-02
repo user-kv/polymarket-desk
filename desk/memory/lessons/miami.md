@@ -166,3 +166,17 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-10-02T14:15:02Z | category: miami | bet: highest-temperature-in-miami-on-october-1-2026-80-81f__2026-09-30T1200
+- outcome: LOST
+- thesis: edge=6.85pt prob=0.0645 ask=0.133
+- root_cause: Actual high 81F missed bucket [80,81] by 0F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
+## LESSON 2026-10-02T14:15:02Z | category: miami | bet: highest-temperature-in-miami-on-october-1-2026-78-79f__2026-09-30T1400
+- outcome: WON
+- thesis: edge=8.57pt prob=0.0033 ask=0.089
+- root_cause: Edge of 9pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
