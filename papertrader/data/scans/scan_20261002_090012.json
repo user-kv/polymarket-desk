@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-10-02T09:00:12Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 78-79\u00b0F on October 3?",
+        "slug": "highest-temperature-in-austin-on-october-3-2026-78-79f",
+        "market_id": "5172406",
+        "end_date": "2026-10-03T12:00:00Z",
+        "end_dt": "2026-10-03 12:00:00+00:00",
+        "hours_left": 27.0,
+        "yes_token": "33386640495285098150518134056621092112165503082681596130334733259877367863665",
+        "no_token": "65446625271194677571674479010240859338722017321856906661519955491776580563055",
+        "bucket_low_f": 78.0,
+        "bucket_high_f": 79.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 963.6752059999999,
+        "liquidity_num": 3788.2409,
+        "event_id": "1112731",
+        "event_slug": "highest-temperature-in-austin-on-october-3-2026",
+        "ask_price": 0.22
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.76199999999999,
+        "ecmwf_mean_f": 81.7456,
+        "combined_mean_f": 80.35145631067964,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, outside_mean_buffer",
+        "edge_pct": -3.97,
+        "ensemble_prob": 0.1803,
+        "ask_price": 0.22,
+        "gfs_mean_f": 82.8,
+        "ecmwf_mean_f": 81.7,
+        "combined_mean_f": 80.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.180 ask=0.220 edge=-4.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=27.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=82.8F ecmwf=81.7F diff=0.56C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[78.0,79.0] mean=80.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$283.67 max=$598.15 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.180 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.220 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.277 min=0.030"
+          ]
+        ],
+        "shares": 90.9091,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the lowest temperature in Los Angeles be 59\u00b0F or below on October 2?",
+        "slug": "lowest-temperature-in-los-angeles-on-october-2-2026-59forbelow",
+        "market_id": "5153271",
+        "end_date": "2026-10-02T12:00:00Z",
+        "end_dt": "2026-10-02 12:00:00+00:00",
+        "hours_left": 3.0,
+        "yes_token": "29172435772979620140797833143154949472753500475182652709863358568443934984292",
+        "no_token": "53680739806222461673481149012767429632742556356983744794859300824646178928584",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 59.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klax",
+        "volume_num": 96.21477300000001,
+        "liquidity_num": 779.28228,
+        "event_id": "1108198",
+        "event_slug": "lowest-temperature-in-los-angeles-on-october-2-2026",
+        "ask_price": 0.011
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 74.08999999999999,
+        "ecmwf_mean_f": 65.1236,
+        "combined_mean_f": 68.07864077669902,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.011,
+        "gfs_mean_f": 74.1,
+        "ecmwf_mean_f": 65.1,
+        "combined_mean_f": 68.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.011 edge=-1.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=3.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=74.1F ecmwf=65.1F diff=4.98C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,59.0] mean=68.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$283.67 max=$598.15 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.011 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 1818.1818,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
