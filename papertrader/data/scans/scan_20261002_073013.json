@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-10-02T07:30:13Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 82-83\u00b0F on October 3?",
+        "slug": "highest-temperature-in-san-francisco-on-october-3-2026-82-83f",
+        "market_id": "5174521",
+        "end_date": "2026-10-03T12:00:00Z",
+        "end_dt": "2026-10-03 12:00:00+00:00",
+        "hours_left": 28.5,
+        "yes_token": "74234236205442853771724888477012606563884297811622736849782017792315168169029",
+        "no_token": "58673488558913604909867563563309241499038639711789813479391828680512637094681",
+        "bucket_low_f": 82.0,
+        "bucket_high_f": 83.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=ksfo",
+        "volume_num": 97.671826,
+        "liquidity_num": 2231.1501,
+        "event_id": "1113433",
+        "event_slug": "highest-temperature-in-san-francisco-on-october-3-2026",
+        "ask_price": 0.06
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 94.05799999999999,
+        "ecmwf_mean_f": 90.03919999999998,
+        "combined_mean_f": 86.70339805825229,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob",
+        "edge_pct": -0.44,
+        "ensemble_prob": 0.0556,
+        "ask_price": 0.06,
+        "gfs_mean_f": 94.1,
+        "ecmwf_mean_f": 90.0,
+        "combined_mean_f": 86.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.056 ask=0.060 edge=-0.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=28.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=94.1F ecmwf=90.0F diff=2.23C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[82.0,83.0] mean=86.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$583.67 max=$566.94 exposure $583.67+$20.00 > $566.94"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.056 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.060 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.073 min=0.030"
+          ]
+        ],
+        "shares": 333.3333,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the lowest temperature in Los Angeles be 59\u00b0F or below on October 2?",
+        "slug": "lowest-temperature-in-los-angeles-on-october-2-2026-59forbelow",
+        "market_id": "5153271",
+        "end_date": "2026-10-02T12:00:00Z",
+        "end_dt": "2026-10-02 12:00:00+00:00",
+        "hours_left": 4.5,
+        "yes_token": "29172435772979620140797833143154949472753500475182652709863358568443934984292",
+        "no_token": "53680739806222461673481149012767429632742556356983744794859300824646178928584",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 59.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klax",
+        "volume_num": 96.21477300000001,
+        "liquidity_num": 109.36039,
+        "event_id": "1108198",
+        "event_slug": "lowest-temperature-in-los-angeles-on-october-2-2026",
+        "ask_price": 0.047
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 74.08999999999999,
+        "ecmwf_mean_f": 65.1236,
+        "combined_mean_f": 68.07864077669902,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -4.7,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.047,
+        "gfs_mean_f": 74.1,
+        "ecmwf_mean_f": 65.1,
+        "combined_mean_f": 68.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.047 edge=-4.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=4.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=74.1F ecmwf=65.1F diff=4.98C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,59.0] mean=68.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$583.67 max=$566.94 exposure $583.67+$20.00 > $566.94"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.047 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 425.5319,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
