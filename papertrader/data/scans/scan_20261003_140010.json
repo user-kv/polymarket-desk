@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-10-03T14:00:10Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 92-93\u00b0F on October 5?",
+        "slug": "highest-temperature-in-miami-on-october-5-2026-92-93f",
+        "market_id": "5227801",
+        "end_date": "2026-10-05T12:00:00Z",
+        "end_dt": "2026-10-05 12:00:00+00:00",
+        "hours_left": 46.0,
+        "yes_token": "109131288368654983951114660859546288683504674053553813692698273181886015186527",
+        "no_token": "9003375928036830958136090079112851934534612277868392884042830260649670602884",
+        "bucket_low_f": 92.0,
+        "bucket_high_f": 93.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 99.482223,
+        "liquidity_num": 3398.0008,
+        "event_id": "1123310",
+        "event_slug": "highest-temperature-in-miami-on-october-5-2026",
+        "ask_price": 0.07
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 87.09800000000001,
+        "ecmwf_mean_f": 86.02880000000003,
+        "combined_mean_f": 87.84980582524274,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob",
+        "edge_pct": 3.0,
+        "ensemble_prob": 0.1,
+        "ask_price": 0.07,
+        "gfs_mean_f": 87.1,
+        "ecmwf_mean_f": 86.0,
+        "combined_mean_f": 87.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.100 ask=0.070 edge=3.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=46.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=87.1F ecmwf=86.0F diff=0.59C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[92.0,93.0] mean=87.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$651.74 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.100 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.070 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.058 min=0.030"
+          ]
+        ],
+        "shares": 375.4277,
+        "stake": 26.279937903225797,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 96-97\u00b0F on October 4?",
+        "slug": "highest-temperature-in-miami-on-october-4-2026-96-97f",
+        "market_id": "5200456",
+        "end_date": "2026-10-04T12:00:00Z",
+        "end_dt": "2026-10-04 12:00:00+00:00",
+        "hours_left": 22.0,
+        "yes_token": "18915511709153205004711435943541824004311776026423409169534281722158087905764",
+        "no_token": "87131372127233089119903193572143409096368604699197353695887663070030165132685",
+        "bucket_low_f": 96.0,
+        "bucket_high_f": 97.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 98.976,
+        "liquidity_num": 3640.60703,
+        "event_id": "1118071",
+        "event_slug": "highest-temperature-in-miami-on-october-4-2026",
+        "ask_price": 0.01
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 86.75600000000001,
+        "ecmwf_mean_f": 85.8704,
+        "combined_mean_f": 87.85854368932043,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.0,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.01,
+        "gfs_mean_f": 86.8,
+        "ecmwf_mean_f": 85.9,
+        "combined_mean_f": 87.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.010 edge=-1.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=22.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=86.8F ecmwf=85.9F diff=0.49C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[96.0,97.0] mean=87.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$651.74 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.010 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 2000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
