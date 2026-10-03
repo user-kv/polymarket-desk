@@ -1,0 +1,277 @@
+{
+  "scan_timestamp": "2026-10-03T20:30:15Z",
+  "test_mode": false,
+  "markets_found": 3,
+  "markets_priced": 3,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 82-83\u00b0F on October 5?",
+        "slug": "highest-temperature-in-denver-on-october-5-2026-82-83f",
+        "market_id": "5227820",
+        "end_date": "2026-10-05T12:00:00Z",
+        "end_dt": "2026-10-05 12:00:00+00:00",
+        "hours_left": 39.5,
+        "yes_token": "743363837697148628645634365299966549463787119630893361503947652100694963311",
+        "no_token": "103479059473565068276953924481269415714388686040776160167210873633293990502692",
+        "bucket_low_f": 82.0,
+        "bucket_high_f": 83.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kbkf",
+        "volume_num": 99.16701099999999,
+        "liquidity_num": 2102.19396,
+        "event_id": "1123312",
+        "event_slug": "highest-temperature-in-denver-on-october-5-2026",
+        "ask_price": 0.039
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 83.60000000000001,
+        "ecmwf_mean_f": 85.34120000000004,
+        "combined_mean_f": 84.98466019417481,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 22.5pt would qualify but bucket straddles mean)",
+        "edge_pct": 22.47,
+        "ensemble_prob": 0.2637,
+        "ask_price": 0.039,
+        "gfs_mean_f": 83.6,
+        "ecmwf_mean_f": 85.3,
+        "combined_mean_f": 85.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.264 ask=0.039 edge=22.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=39.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=83.6F ecmwf=85.3F diff=0.97C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[82.0,83.0] mean=85.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$651.74 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.264 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.039 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.189 min=0.030"
+          ]
+        ],
+        "shares": 2564.1026,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 96-97\u00b0F on October 4?",
+        "slug": "highest-temperature-in-miami-on-october-4-2026-96-97f",
+        "market_id": "5200456",
+        "end_date": "2026-10-04T12:00:00Z",
+        "end_dt": "2026-10-04 12:00:00+00:00",
+        "hours_left": 15.5,
+        "yes_token": "18915511709153205004711435943541824004311776026423409169534281722158087905764",
+        "no_token": "87131372127233089119903193572143409096368604699197353695887663070030165132685",
+        "bucket_low_f": 96.0,
+        "bucket_high_f": 97.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 98.976,
+        "liquidity_num": 4272.81451,
+        "event_id": "1118071",
+        "event_slug": "highest-temperature-in-miami-on-october-4-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 86.546,
+        "ecmwf_mean_f": 86.01079999999997,
+        "combined_mean_f": 87.77553398058254,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 86.5,
+        "ecmwf_mean_f": 86.0,
+        "combined_mean_f": 87.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=15.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=86.5F ecmwf=86.0F diff=0.30C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[96.0,97.0] mean=87.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$651.74 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 62-63\u00b0F on October 4?",
+        "slug": "highest-temperature-in-seattle-on-october-4-2026-62-63f",
+        "market_id": "5202929",
+        "end_date": "2026-10-04T12:00:00Z",
+        "end_dt": "2026-10-04 12:00:00+00:00",
+        "hours_left": 15.5,
+        "yes_token": "108169230751924960290347680436514693965845136056935030567370150517614584302079",
+        "no_token": "55573738305136160006491206704680639478436136854864489384300366944018926105631",
+        "bucket_low_f": 62.0,
+        "bucket_high_f": 63.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=ksea",
+        "volume_num": 97.684,
+        "liquidity_num": 3056.4409,
+        "event_id": "1118802",
+        "event_slug": "highest-temperature-in-seattle-on-october-4-2026",
+        "ask_price": 0.017
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 74.348,
+        "ecmwf_mean_f": 67.96759999999999,
+        "combined_mean_f": 68.59155339805832,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 4.97,
+        "ensemble_prob": 0.0667,
+        "ask_price": 0.017,
+        "gfs_mean_f": 74.3,
+        "ecmwf_mean_f": 68.0,
+        "combined_mean_f": 68.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.067 ask=0.017 edge=5.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=15.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=74.3F ecmwf=68.0F diff=3.54C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[62.0,63.0] mean=68.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$651.74 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.067 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.017 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.097 min=0.030"
+          ]
+        ],
+        "shares": 2421.3,
+        "stake": 41.16210009325195,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
