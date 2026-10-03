@@ -1,0 +1,99 @@
+{
+  "scan_timestamp": "2026-10-03T03:30:10Z",
+  "test_mode": false,
+  "markets_found": 1,
+  "markets_priced": 1,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 80-81\u00b0F on October 3?",
+        "slug": "highest-temperature-in-atlanta-on-october-3-2026-80-81f",
+        "market_id": "5171546",
+        "end_date": "2026-10-03T12:00:00Z",
+        "end_dt": "2026-10-03 12:00:00+00:00",
+        "hours_left": 8.5,
+        "yes_token": "13001868434380938328797117112585980182754987775787591247151759489833508642306",
+        "no_token": "63873108611892590017983372908186510721006267833330458041172209883465185557977",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 81.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=katl",
+        "volume_num": 987.618681,
+        "liquidity_num": 2147.9018,
+        "event_id": "1112509",
+        "event_slug": "highest-temperature-in-atlanta-on-october-3-2026",
+        "ask_price": 0.106
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 86.29,
+        "ecmwf_mean_f": 84.72639999999998,
+        "combined_mean_f": 83.80990291262134,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob",
+        "edge_pct": 2.11,
+        "ensemble_prob": 0.1271,
+        "ask_price": 0.106,
+        "gfs_mean_f": 86.3,
+        "ecmwf_mean_f": 84.7,
+        "combined_mean_f": 83.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.127 ask=0.106 edge=2.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=8.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=86.3F ecmwf=84.7F diff=0.87C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[80.0,81.0] mean=83.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$383.67 max=$578.15 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.127 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.106 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.121 min=0.030"
+          ]
+        ],
+        "shares": 160.7514,
+        "stake": 17.039649195181983,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
