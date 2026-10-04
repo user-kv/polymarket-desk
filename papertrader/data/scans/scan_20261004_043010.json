@@ -1,0 +1,99 @@
+{
+  "scan_timestamp": "2026-10-04T04:30:10Z",
+  "test_mode": false,
+  "markets_found": 1,
+  "markets_priced": 1,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be 53\u00b0F or below on October 5?",
+        "slug": "highest-temperature-in-chicago-on-october-5-2026-53forbelow",
+        "market_id": "5226938",
+        "end_date": "2026-10-05T12:00:00Z",
+        "end_dt": "2026-10-05 12:00:00+00:00",
+        "hours_left": 31.5,
+        "yes_token": "112746351596464353594916648815112895662409359643108903187441544166038216158855",
+        "no_token": "94240651395663021148275267600477670074689179101334979923682884338065649881708",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 53.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kord",
+        "volume_num": 99.9898,
+        "liquidity_num": 3067.67185,
+        "event_id": "1123092",
+        "event_slug": "highest-temperature-in-chicago-on-october-5-2026",
+        "ask_price": 0.01
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 67.408,
+        "ecmwf_mean_f": 64.3,
+        "combined_mean_f": 65.60194174757284,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.0,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.01,
+        "gfs_mean_f": 67.4,
+        "ecmwf_mean_f": 64.3,
+        "combined_mean_f": 65.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.010 edge=-1.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=31.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=67.4F ecmwf=64.3F diff=1.73C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,53.0] mean=65.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$651.74 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.010 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 2000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
