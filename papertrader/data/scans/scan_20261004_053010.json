@@ -1,0 +1,99 @@
+{
+  "scan_timestamp": "2026-10-04T05:30:10Z",
+  "test_mode": false,
+  "markets_found": 1,
+  "markets_priced": 1,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 82-83\u00b0F on October 5?",
+        "slug": "highest-temperature-in-dallas-on-october-5-2026-82-83f",
+        "market_id": "5227778",
+        "end_date": "2026-10-05T12:00:00Z",
+        "end_dt": "2026-10-05 12:00:00+00:00",
+        "hours_left": 30.5,
+        "yes_token": "93461736072062470500798148937328248800960714831339718140291622726583133047052",
+        "no_token": "115636319557463063254772634786662733265876455265959021971790909895317336305426",
+        "bucket_low_f": 82.0,
+        "bucket_high_f": 83.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kdal",
+        "volume_num": 999.578319,
+        "liquidity_num": 2952.7627,
+        "event_id": "1123308",
+        "event_slug": "highest-temperature-in-dallas-on-october-5-2026",
+        "ask_price": 0.43
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 84.74000000000002,
+        "ecmwf_mean_f": 79.0904,
+        "combined_mean_f": 81.17466019417478,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -15.58,
+        "ensemble_prob": 0.2742,
+        "ask_price": 0.43,
+        "gfs_mean_f": 84.7,
+        "ecmwf_mean_f": 79.1,
+        "combined_mean_f": 81.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.274 ask=0.430 edge=-15.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=30.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=84.7F ecmwf=79.1F diff=3.14C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[82.0,83.0] mean=81.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$651.74 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.274 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.430 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.262 min=0.030"
+          ]
+        ],
+        "shares": 46.5116,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
