@@ -1,0 +1,99 @@
+{
+  "scan_timestamp": "2026-10-04T06:30:10Z",
+  "test_mode": false,
+  "markets_found": 1,
+  "markets_priced": 1,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the highest temperature in Los Angeles be between 96-97\u00b0F on October 4?",
+        "slug": "highest-temperature-in-los-angeles-on-october-4-2026-96-97f",
+        "market_id": "5202946",
+        "end_date": "2026-10-04T12:00:00Z",
+        "end_dt": "2026-10-04 12:00:00+00:00",
+        "hours_left": 5.5,
+        "yes_token": "106247449533096792113077410916312858113907301848552479565835611082569787298265",
+        "no_token": "83269741543942861789109759972834054902245637498515868235861613066251612957907",
+        "bucket_low_f": 96.0,
+        "bucket_high_f": 97.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klax",
+        "volume_num": 9960.063709999999,
+        "liquidity_num": 2388.831,
+        "event_id": "1118803",
+        "event_slug": "highest-temperature-in-los-angeles-on-october-4-2026",
+        "ask_price": 0.31
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 92.948,
+        "ecmwf_mean_f": 102.6968,
+        "combined_mean_f": 95.19398058252426,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -30.15,
+        "ensemble_prob": 0.0085,
+        "ask_price": 0.31,
+        "gfs_mean_f": 92.9,
+        "ecmwf_mean_f": 102.7,
+        "combined_mean_f": 95.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.009 ask=0.310 edge=-30.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=5.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=92.9F ecmwf=102.7F diff=5.42C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[96.0,97.0] mean=95.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$651.74 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.009 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.310 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.010 min=0.030"
+          ]
+        ],
+        "shares": 64.5161,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
