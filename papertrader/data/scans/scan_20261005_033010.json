@@ -1,0 +1,99 @@
+{
+  "scan_timestamp": "2026-10-05T03:30:10Z",
+  "test_mode": false,
+  "markets_found": 1,
+  "markets_priced": 1,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 80-81\u00b0F on October 6?",
+        "slug": "highest-temperature-in-austin-on-october-6-2026-80-81f",
+        "market_id": "5270666",
+        "end_date": "2026-10-06T12:00:00Z",
+        "end_dt": "2026-10-06 12:00:00+00:00",
+        "hours_left": 32.5,
+        "yes_token": "32282543845783851826140355720770796302672367410034091752754606583096347179834",
+        "no_token": "44664408808027148266932698093011842233248452626091100454802247043936611826083",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 81.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 99.97999999999999,
+        "liquidity_num": 2329.75132,
+        "event_id": "1129482",
+        "event_slug": "highest-temperature-in-austin-on-october-6-2026",
+        "ask_price": 0.009
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 89.08800000000002,
+        "ecmwf_mean_f": 83.05440000000003,
+        "combined_mean_f": 84.55776699029121,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.43,
+        "ensemble_prob": 0.0047,
+        "ask_price": 0.009,
+        "gfs_mean_f": 89.1,
+        "ecmwf_mean_f": 83.1,
+        "combined_mean_f": 84.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.005 ask=0.009 edge=-0.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=32.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=89.1F ecmwf=83.1F diff=3.35C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[80.0,81.0] mean=84.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$0.00 max=$673.28 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.005 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.009 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.010 min=0.030"
+          ]
+        ],
+        "shares": 2222.2222,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
