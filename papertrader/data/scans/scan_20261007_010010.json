@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-10-07T01:00:10Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 76-77\u00b0F on October 7?",
+        "slug": "highest-temperature-in-nyc-on-october-7-2026-76-77f",
+        "market_id": "5317637",
+        "end_date": "2026-10-07T12:00:00Z",
+        "end_dt": "2026-10-07 12:00:00+00:00",
+        "hours_left": 11.0,
+        "yes_token": "24952778462518364036299774689081876690963015627865751157017882715916270656814",
+        "no_token": "56866928172497194083072384983171327864248199291354843313071833983186066986492",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klga",
+        "volume_num": 99.98099999999998,
+        "liquidity_num": 5626.34784,
+        "event_id": "1135859",
+        "event_slug": "highest-temperature-in-nyc-on-october-7-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 67.50399999999998,
+        "ecmwf_mean_f": 63.854800000000004,
+        "combined_mean_f": 66.68834951456314,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 67.5,
+        "ecmwf_mean_f": 63.9,
+        "combined_mean_f": 66.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=11.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=67.5F ecmwf=63.9F diff=2.03C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[76.0,77.0] mean=66.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$0.00 max=$673.28 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 72-73\u00b0F on October 8?",
+        "slug": "highest-temperature-in-nyc-on-october-8-2026-72-73f",
+        "market_id": "5368844",
+        "end_date": "2026-10-08T12:00:00Z",
+        "end_dt": "2026-10-08 12:00:00+00:00",
+        "hours_left": 35.0,
+        "yes_token": "7148692173491143385281164083858255557267510058838210550781232586518356091026",
+        "no_token": "1715376644848849182220606294439199939166701842740902535968343187478224532321",
+        "bucket_low_f": 72.0,
+        "bucket_high_f": 73.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klga",
+        "volume_num": 99.93818299999998,
+        "liquidity_num": 2668.90857,
+        "event_id": "1141602",
+        "event_slug": "highest-temperature-in-nyc-on-october-8-2026",
+        "ask_price": 0.065
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 75.36399999999999,
+        "ecmwf_mean_f": 74.46399999999997,
+        "combined_mean_f": 74.9491262135922,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 3.3pt would qualify but bucket straddles mean)",
+        "edge_pct": 3.34,
+        "ensemble_prob": 0.0984,
+        "ask_price": 0.065,
+        "gfs_mean_f": 75.4,
+        "ecmwf_mean_f": 74.5,
+        "combined_mean_f": 74.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.098 ask=0.065 edge=3.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=35.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=75.4F ecmwf=74.5F diff=0.50C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[72.0,73.0] mean=74.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$0.00 max=$673.28 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.098 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.065 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.180 min=0.030"
+          ]
+        ],
+        "shares": 462.3977,
+        "stake": 30.055852179308836,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
