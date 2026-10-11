@@ -1,0 +1,277 @@
+{
+  "scan_timestamp": "2026-10-11T03:30:15Z",
+  "test_mode": false,
+  "markets_found": 3,
+  "markets_priced": 3,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 82-83\u00b0F on October 12?",
+        "slug": "highest-temperature-in-miami-on-october-12-2026-82-83f",
+        "market_id": "5483503",
+        "end_date": "2026-10-12T12:00:00Z",
+        "end_dt": "2026-10-12 12:00:00+00:00",
+        "hours_left": 32.5,
+        "yes_token": "7471076573124655580118721800728277444894659754464705608308577319382208524707",
+        "no_token": "44206561574042679212594123521062068523018881545572271002818304118632953529469",
+        "bucket_low_f": 82.0,
+        "bucket_high_f": 83.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 99.99799999999999,
+        "liquidity_num": 2244.92982,
+        "event_id": "1163499",
+        "event_slug": "highest-temperature-in-miami-on-october-12-2026",
+        "ask_price": 0.009
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 87.61399999999998,
+        "ecmwf_mean_f": 87.6056,
+        "combined_mean_f": 88.04378640776694,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": 0.55,
+        "ensemble_prob": 0.0145,
+        "ask_price": 0.009,
+        "gfs_mean_f": 87.6,
+        "ecmwf_mean_f": 87.6,
+        "combined_mean_f": 88.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.014 ask=0.009 edge=0.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=32.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=87.6F ecmwf=87.6F diff=0.00C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[82.0,83.0] mean=88.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$0.00 max=$675.81 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.014 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.009 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.019 min=0.030"
+          ]
+        ],
+        "shares": 555.5556,
+        "stake": 5.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the lowest temperature in Denver be between 70-71\u00b0F on October 11?",
+        "slug": "lowest-temperature-in-denver-on-october-11-2026-70-71f",
+        "market_id": "5451494",
+        "end_date": "2026-10-11T12:00:00Z",
+        "end_dt": "2026-10-11 12:00:00+00:00",
+        "hours_left": 8.5,
+        "yes_token": "72973929567194170912514752538063328134437154799894584479912142851652273398779",
+        "no_token": "22762831441873821867304160132198262735836986815384966759167995758007636311084",
+        "bucket_low_f": 70.0,
+        "bucket_high_f": 71.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kbkf",
+        "volume_num": 99.994878,
+        "liquidity_num": 65.9909,
+        "event_id": "1158049",
+        "event_slug": "lowest-temperature-in-denver-on-october-11-2026",
+        "ask_price": 0.67
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 61.50199999999999,
+        "ecmwf_mean_f": 64.13000000000002,
+        "combined_mean_f": 59.90174757281551,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -67.0,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.67,
+        "gfs_mean_f": 61.5,
+        "ecmwf_mean_f": 64.1,
+        "combined_mean_f": 59.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.670 edge=-67.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=8.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=61.5F ecmwf=64.1F diff=1.46C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[70.0,71.0] mean=59.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$0.00 max=$675.81 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.670 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 29.8507,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 80-81\u00b0F on October 11?",
+        "slug": "highest-temperature-in-dallas-on-october-11-2026-80-81f",
+        "market_id": "5450951",
+        "end_date": "2026-10-11T12:00:00Z",
+        "end_dt": "2026-10-11 12:00:00+00:00",
+        "hours_left": 8.5,
+        "yes_token": "84803131120088784340186794446587864083460925498203866061913783908873653060407",
+        "no_token": "41605154624280298254957565615119449926775915208823602818427148127431067547232",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 81.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kdal",
+        "volume_num": 96.016,
+        "liquidity_num": 3535.56689,
+        "event_id": "1157933",
+        "event_slug": "highest-temperature-in-dallas-on-october-11-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 88.80400000000002,
+        "ecmwf_mean_f": 87.67480000000002,
+        "combined_mean_f": 88.55106796116507,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 88.8,
+        "ecmwf_mean_f": 87.7,
+        "combined_mean_f": 88.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=8.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=88.8F ecmwf=87.7F diff=0.63C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[80.0,81.0] mean=88.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$0.00 max=$675.81 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
