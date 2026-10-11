@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-10-11T10:00:11Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the lowest temperature in Chicago be between 72-73\u00b0F on October 12?",
+        "slug": "lowest-temperature-in-chicago-on-october-12-2026-72-73f",
+        "market_id": "5483104",
+        "end_date": "2026-10-12T12:00:00Z",
+        "end_dt": "2026-10-12 12:00:00+00:00",
+        "hours_left": 26.0,
+        "yes_token": "12380883242436944380295626233638995358360184276779779810189332332931296449399",
+        "no_token": "88464381957847393983288905390842187788918049895223730700525589551351247977631",
+        "bucket_low_f": 72.0,
+        "bucket_high_f": 73.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kord",
+        "volume_num": 99.99041600000001,
+        "liquidity_num": 162.3759,
+        "event_id": "1163408",
+        "event_slug": "lowest-temperature-in-chicago-on-october-12-2026",
+        "ask_price": 0.65
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 65.77999999999999,
+        "ecmwf_mean_f": 61.70000000000001,
+        "combined_mean_f": 61.4990291262136,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -65.0,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.65,
+        "gfs_mean_f": 65.8,
+        "ecmwf_mean_f": 61.7,
+        "combined_mean_f": 61.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.650 edge=-65.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=26.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=65.8F ecmwf=61.7F diff=2.27C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[72.0,73.0] mean=61.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$655.81 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.650 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 30.7692,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 66-67\u00b0F on October 12?",
+        "slug": "highest-temperature-in-seattle-on-october-12-2026-66-67f",
+        "market_id": "5487536",
+        "end_date": "2026-10-12T12:00:00Z",
+        "end_dt": "2026-10-12 12:00:00+00:00",
+        "hours_left": 26.0,
+        "yes_token": "70422042158670703832237733548911208386448240978987284351277087982619896732759",
+        "no_token": "106946808588208112443447994697687874969259834959643854318337059549732739994098",
+        "bucket_low_f": 66.0,
+        "bucket_high_f": 67.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=ksea",
+        "volume_num": 99.988935,
+        "liquidity_num": 1710.01171,
+        "event_id": "1164053",
+        "event_slug": "highest-temperature-in-seattle-on-october-12-2026",
+        "ask_price": 0.007
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 61.40600000000001,
+        "ecmwf_mean_f": 59.79560000000001,
+        "combined_mean_f": 59.29184466019418,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.7,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.007,
+        "gfs_mean_f": 61.4,
+        "ecmwf_mean_f": 59.8,
+        "combined_mean_f": 59.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.007 edge=-0.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=26.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=61.4F ecmwf=59.8F diff=0.89C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[66.0,67.0] mean=59.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$100.00 max=$655.81 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.007 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 2857.1429,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
