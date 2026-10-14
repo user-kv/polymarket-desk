@@ -1,0 +1,99 @@
+{
+  "scan_timestamp": "2026-10-14T12:00:10Z",
+  "test_mode": false,
+  "markets_found": 1,
+  "markets_priced": 1,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 64-65\u00b0F on October 15?",
+        "slug": "highest-temperature-in-nyc-on-october-15-2026-64-65f",
+        "market_id": "5644665",
+        "end_date": "2026-10-15T12:00:00Z",
+        "end_dt": "2026-10-15 12:00:00+00:00",
+        "hours_left": 24.0,
+        "yes_token": "6448838258237015762425925902580790261957819878801477551886174836718934269041",
+        "no_token": "109836804025098754498308996516856981737760234185396159109195745240228705592477",
+        "bucket_low_f": 64.0,
+        "bucket_high_f": 65.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=klga",
+        "volume_num": 968.9602860000003,
+        "liquidity_num": 2096.6252,
+        "event_id": "1181632",
+        "event_slug": "highest-temperature-in-nyc-on-october-15-2026",
+        "ask_price": 0.27
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 67.66600000000001,
+        "ecmwf_mean_f": 64.4236,
+        "combined_mean_f": 66.18679611650491,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -4.13,
+        "ensemble_prob": 0.2287,
+        "ask_price": 0.27,
+        "gfs_mean_f": 67.7,
+        "ecmwf_mean_f": 64.4,
+        "combined_mean_f": 66.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.229 ask=0.270 edge=-4.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=24.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=67.7F ecmwf=64.4F diff=1.80C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[64.0,65.0] mean=66.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$379.25 max=$610.25 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.229 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.270 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.291 min=0.030"
+          ]
+        ],
+        "shares": 74.0741,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
