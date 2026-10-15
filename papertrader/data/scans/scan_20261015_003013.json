@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-10-15T00:30:13Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be 68\u00b0F or higher on October 16?",
+        "slug": "highest-temperature-in-chicago-on-october-16-2026-68forhigher",
+        "market_id": "5680563",
+        "end_date": "2026-10-16T12:00:00Z",
+        "end_dt": "2026-10-16 12:00:00+00:00",
+        "hours_left": 35.5,
+        "yes_token": "19396556168115142148214147969743283807857149331259075175573916531520604621964",
+        "no_token": "64421651751878145710026926443348766768334122041770714665932809823912246354427",
+        "bucket_low_f": 68.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kord",
+        "volume_num": 979.7101780000002,
+        "liquidity_num": 3916.56725,
+        "event_id": "1186944",
+        "event_slug": "highest-temperature-in-chicago-on-october-16-2026",
+        "ask_price": 0.003
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 58.135999999999996,
+        "ecmwf_mean_f": 62.34559999999998,
+        "combined_mean_f": 59.93000000000001,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": 2.2,
+        "ensemble_prob": 0.025,
+        "ask_price": 0.003,
+        "gfs_mean_f": 58.1,
+        "ecmwf_mean_f": 62.3,
+        "combined_mean_f": 59.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.025 ask=0.003 edge=2.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=35.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=58.1F ecmwf=62.3F diff=2.34C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[68.0,999.0] mean=59.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$379.25 max=$610.25 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.025 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.003 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.019 min=0.030"
+          ]
+        ],
+        "shares": 5618.9635,
+        "stake": 16.856890371514545,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 84-85\u00b0F on October 15?",
+        "slug": "highest-temperature-in-miami-on-october-15-2026-84-85f",
+        "market_id": "5644697",
+        "end_date": "2026-10-15T12:00:00Z",
+        "end_dt": "2026-10-15 12:00:00+00:00",
+        "hours_left": 11.5,
+        "yes_token": "44256795593016612573008261471428402665517854277560362125657825037024406616607",
+        "no_token": "105844130761426973166856237358278811958434307256225507714199054296999631734535",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 975.805916,
+        "liquidity_num": 1935.95106,
+        "event_id": "1181635",
+        "event_slug": "highest-temperature-in-miami-on-october-15-2026",
+        "ask_price": 0.004
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 87.23199999999997,
+        "ecmwf_mean_f": 86.5408,
+        "combined_mean_f": 87.77689320388356,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Favorite-longshot guard: model prob 5.2% < 15% floor (edge 4.8pt is illusory on a tail bucket)",
+        "edge_pct": 4.77,
+        "ensemble_prob": 0.0517,
+        "ask_price": 0.004,
+        "gfs_mean_f": 87.2,
+        "ecmwf_mean_f": 86.5,
+        "combined_mean_f": 87.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.052 ask=0.004 edge=4.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=11.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=87.2F ecmwf=86.5F diff=0.38C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[84.0,85.0] mean=87.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$379.25 max=$610.25 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.052 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.004 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.107 min=0.030"
+          ]
+        ],
+        "shares": 9127.256,
+        "stake": 36.50902408024156,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
