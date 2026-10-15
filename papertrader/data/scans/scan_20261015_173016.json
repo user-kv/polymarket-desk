@@ -1,0 +1,366 @@
+{
+  "scan_timestamp": "2026-10-15T17:30:16Z",
+  "test_mode": false,
+  "markets_found": 4,
+  "markets_priced": 4,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 84-85\u00b0F on October 17?",
+        "slug": "highest-temperature-in-miami-on-october-17-2026-84-85f",
+        "market_id": "5724275",
+        "end_date": "2026-10-17T12:00:00Z",
+        "end_dt": "2026-10-17 12:00:00+00:00",
+        "hours_left": 42.5,
+        "yes_token": "94406876674945744968872129609018918946310001471598014720937769250261737442245",
+        "no_token": "69086036749354191359078670682304851699218921262517827322450481857412364259586",
+        "bucket_low_f": 84.0,
+        "bucket_high_f": 85.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kmia",
+        "volume_num": 999.4185480000001,
+        "liquidity_num": 4204.9637,
+        "event_id": "1192913",
+        "event_slug": "highest-temperature-in-miami-on-october-17-2026",
+        "ask_price": 0.12
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 84.65800000000002,
+        "ecmwf_mean_f": 84.8524,
+        "combined_mean_f": 86.00135922330098,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 10.0pt would qualify but bucket straddles mean)",
+        "edge_pct": 9.95,
+        "ensemble_prob": 0.2195,
+        "ask_price": 0.12,
+        "gfs_mean_f": 84.7,
+        "ecmwf_mean_f": 84.9,
+        "combined_mean_f": 86.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.220 ask=0.120 edge=10.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=42.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=84.7F ecmwf=84.9F diff=0.11C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[84.0,85.0] mean=86.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$612.78 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.220 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.120 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.306 min=0.030"
+          ]
+        ],
+        "shares": 722.0124,
+        "stake": 86.64149271285524,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 68-69\u00b0F on October 16?",
+        "slug": "highest-temperature-in-dallas-on-october-16-2026-68-69f",
+        "market_id": "5681149",
+        "end_date": "2026-10-16T12:00:00Z",
+        "end_dt": "2026-10-16 12:00:00+00:00",
+        "hours_left": 18.5,
+        "yes_token": "66692903223462375993763956514584192325557223454584402729148322913125564846480",
+        "no_token": "72895374519071133160992114594657653051298164737540597049765643883595629194267",
+        "bucket_low_f": 68.0,
+        "bucket_high_f": 69.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kdal",
+        "volume_num": 975.202961,
+        "liquidity_num": 8931.0244,
+        "event_id": "1187134",
+        "event_slug": "highest-temperature-in-dallas-on-october-16-2026",
+        "ask_price": 0.31
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 73.586,
+        "ecmwf_mean_f": 72.0644,
+        "combined_mean_f": 70.72708737864082,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, outside_mean_buffer",
+        "edge_pct": -12.85,
+        "ensemble_prob": 0.1815,
+        "ask_price": 0.31,
+        "gfs_mean_f": 73.6,
+        "ecmwf_mean_f": 72.1,
+        "combined_mean_f": 70.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.181 ask=0.310 edge=-12.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=18.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=73.6F ecmwf=72.1F diff=0.85C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[68.0,69.0] mean=70.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$612.78 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.181 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.310 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.180 min=0.030"
+          ]
+        ],
+        "shares": 64.5161,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 72-73\u00b0F on October 16?",
+        "slug": "highest-temperature-in-austin-on-october-16-2026-72-73f",
+        "market_id": "5681184",
+        "end_date": "2026-10-16T12:00:00Z",
+        "end_dt": "2026-10-16 12:00:00+00:00",
+        "hours_left": 18.5,
+        "yes_token": "51750310326782926726298309562427065766747814963720208791720336426265658056768",
+        "no_token": "22261092634920598997947581896095132418409945880304907659577890990171677934837",
+        "bucket_low_f": 72.0,
+        "bucket_high_f": 73.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 971.9120000000003,
+        "liquidity_num": 3673.5898,
+        "event_id": "1187137",
+        "event_slug": "highest-temperature-in-austin-on-october-16-2026",
+        "ask_price": 0.11
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 77.982,
+        "ecmwf_mean_f": 77.83679999999998,
+        "combined_mean_f": 77.55233009708736,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -9.9,
+        "ensemble_prob": 0.011,
+        "ask_price": 0.11,
+        "gfs_mean_f": 78.0,
+        "ecmwf_mean_f": 77.8,
+        "combined_mean_f": 77.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.011 ask=0.110 edge=-9.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=18.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=78.0F ecmwf=77.8F diff=0.08C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[72.0,73.0] mean=77.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=True exposure=$300.00 max=$612.78 duplicate slug"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.011 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.110 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.010 min=0.030"
+          ]
+        ],
+        "shares": 181.8182,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be between 66-67\u00b0F on October 16?",
+        "slug": "highest-temperature-in-austin-on-october-16-2026-66-67f",
+        "market_id": "5681181",
+        "end_date": "2026-10-16T12:00:00Z",
+        "end_dt": "2026-10-16 12:00:00+00:00",
+        "hours_left": 18.5,
+        "yes_token": "64603614671845696312246083148755742122224766469072705902173959110369897101376",
+        "no_token": "15435183811891290564729820206036014457126130410859364947212380886590728493151",
+        "bucket_low_f": 66.0,
+        "bucket_high_f": 67.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://www.weather.gov/wrh/timeseries?site=kaus",
+        "volume_num": 96.88300000000001,
+        "liquidity_num": 3384.25808,
+        "event_id": "1187137",
+        "event_slug": "highest-temperature-in-austin-on-october-16-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 77.982,
+        "ecmwf_mean_f": 77.83679999999998,
+        "combined_mean_f": 77.55233009708736,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 78.0,
+        "ecmwf_mean_f": 77.8,
+        "combined_mean_f": 77.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=18.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=78.0F ecmwf=77.8F diff=0.08C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[66.0,67.0] mean=77.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$300.00 max=$612.78 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
