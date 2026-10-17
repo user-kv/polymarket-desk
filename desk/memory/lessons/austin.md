@@ -131,3 +131,17 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-10-17T14:15:02Z | category: austin | bet: highest-temperature-in-austin-on-october-16-2026-72-73f__2026-10-15T1600
+- outcome: WON
+- thesis: edge=11.9pt prob=0.011 ask=0.13
+- root_cause: Edge of 12pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
+## LESSON 2026-10-17T14:15:02Z | category: austin | bet: highest-temperature-in-austin-on-october-16-2026-74-75f__2026-10-15T1800
+- outcome: WON
+- thesis: edge=22.95pt prob=0.1105 ask=0.34
+- root_cause: Edge of 23pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
