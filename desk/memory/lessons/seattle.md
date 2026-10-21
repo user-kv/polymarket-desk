@@ -194,3 +194,10 @@
 - rule: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.
 - tags: variance,latency,lost
 
+## LESSON 2026-10-21T14:15:02Z | category: seattle | bet: highest-temperature-in-seattle-on-october-20-2026-64-65f__2026-10-20T0900
+- outcome: WON
+- thesis: edge=9.1pt prob=0.0 ask=0.091
+- root_cause: Edge of 9pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
