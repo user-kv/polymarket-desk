@@ -1,0 +1,277 @@
+{
+  "scan_timestamp": "2026-10-22T17:30:19Z",
+  "test_mode": false,
+  "markets_found": 3,
+  "markets_priced": 3,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 70-71\u00b0F on October 24?",
+        "slug": "highest-temperature-in-chicago-on-october-24-2026-70-71f",
+        "market_id": "6037829",
+        "end_date": "2026-10-24T12:00:00Z",
+        "end_dt": "2026-10-24 12:00:00+00:00",
+        "hours_left": 42.5,
+        "yes_token": "45296070635302757190186639581885458694602127339334773131336666255116070449712",
+        "no_token": "54047552061523514330614056103962881604616533718471513168654114047565471769960",
+        "bucket_low_f": 70.0,
+        "bucket_high_f": 71.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KORD&format=raw&date=2026-10-25T08:00:00Z&hours=30",
+        "volume_num": 981.8975640000001,
+        "liquidity_num": 12321.7719,
+        "event_id": "1234085",
+        "event_slug": "highest-temperature-in-chicago-on-october-24-2026",
+        "ask_price": 0.36
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 68.816,
+        "ecmwf_mean_f": 66.25399999999998,
+        "combined_mean_f": 68.46048543689317,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer",
+        "edge_pct": -11.25,
+        "ensemble_prob": 0.2475,
+        "ask_price": 0.36,
+        "gfs_mean_f": 68.8,
+        "ecmwf_mean_f": 66.3,
+        "combined_mean_f": 68.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.247 ask=0.360 edge=-11.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=42.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=68.8F ecmwf=66.3F diff=1.42C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[70.0,71.0] mean=68.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$382.53 max=$601.14 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.247 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.360 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.228 min=0.030"
+          ]
+        ],
+        "shares": 55.5556,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be 80\u00b0F or higher on October 23?",
+        "slug": "highest-temperature-in-atlanta-on-october-23-2026-80forhigher",
+        "market_id": "6005157",
+        "end_date": "2026-10-23T12:00:00Z",
+        "end_dt": "2026-10-23 12:00:00+00:00",
+        "hours_left": 18.5,
+        "yes_token": "103915098585654296308870271065643288695364489219818526484634803443431447361022",
+        "no_token": "44264800370212469681733701305551978814033546159509389852087300294960328599914",
+        "bucket_low_f": 80.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KATL&format=raw&date=2026-10-24T04:00:00Z&hours=27",
+        "volume_num": 955.955009,
+        "liquidity_num": 2378.32564,
+        "event_id": "1228410",
+        "event_slug": "highest-temperature-in-atlanta-on-october-23-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 75.702,
+        "ecmwf_mean_f": 72.06719999999999,
+        "combined_mean_f": 73.18893203883495,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 75.7,
+        "ecmwf_mean_f": 72.1,
+        "combined_mean_f": 73.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=18.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=75.7F ecmwf=72.1F diff=2.02C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[80.0,999.0] mean=73.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$382.53 max=$601.14 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 76-77\u00b0F on October 24?",
+        "slug": "highest-temperature-in-houston-on-october-24-2026-76-77f",
+        "market_id": "6037847",
+        "end_date": "2026-10-24T12:00:00Z",
+        "end_dt": "2026-10-24 12:00:00+00:00",
+        "hours_left": 42.5,
+        "yes_token": "59469461422599483207156493110589826429268938319182176600066845188663547660915",
+        "no_token": "45795088414257741587026073789512250670026615882362696019681656652216321052728",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KHOU&format=raw&date=2026-10-25T08:00:00Z&hours=30",
+        "volume_num": 94.885,
+        "liquidity_num": 1456.12446,
+        "event_id": "1234087",
+        "event_slug": "highest-temperature-in-houston-on-october-24-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.96400000000001,
+        "ecmwf_mean_f": 83.01919999999997,
+        "combined_mean_f": 83.4284466019417,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 83.0,
+        "ecmwf_mean_f": 83.0,
+        "combined_mean_f": 83.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=42.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=83.0F ecmwf=83.0F diff=0.03C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[76.0,77.0] mean=83.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$382.53 max=$601.14 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
