@@ -47,3 +47,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-10-25T14:15:02Z | category: houston | bet: highest-temperature-in-houston-on-october-24-2026-86-87f__2026-10-22T1230
+- outcome: WON
+- thesis: edge=5.17pt prob=0.1183 ask=0.17
+- root_cause: Edge of 5pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
