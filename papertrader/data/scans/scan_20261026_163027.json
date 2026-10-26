@@ -1,0 +1,633 @@
+{
+  "scan_timestamp": "2026-10-26T16:30:27Z",
+  "test_mode": false,
+  "markets_found": 7,
+  "markets_priced": 7,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 62-63\u00b0F on October 27?",
+        "slug": "highest-temperature-in-chicago-on-october-27-2026-62-63f",
+        "market_id": "6181549",
+        "end_date": "2026-10-27T12:00:00Z",
+        "end_dt": "2026-10-27 12:00:00+00:00",
+        "hours_left": 19.5,
+        "yes_token": "56545717213922517174476280280381052353906167905117157100789998138539338191454",
+        "no_token": "87728121538246292358647738096892413179946920711352369889826284089878740927079",
+        "bucket_low_f": 62.0,
+        "bucket_high_f": 63.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KORD&format=raw&date=2026-10-28T08:00:00Z&hours=30",
+        "volume_num": 99.94266600000002,
+        "liquidity_num": 1263.59671,
+        "event_id": "1251359",
+        "event_slug": "highest-temperature-in-chicago-on-october-27-2026",
+        "ask_price": 0.015
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 68.454,
+        "ecmwf_mean_f": 65.256,
+        "combined_mean_f": 67.3301941747573,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 12.2,
+        "ensemble_prob": 0.137,
+        "ask_price": 0.015,
+        "gfs_mean_f": 68.5,
+        "ecmwf_mean_f": 65.3,
+        "combined_mean_f": 67.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.137 ask=0.015 edge=12.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=19.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=68.5F ecmwf=65.3F diff=1.78C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[62.0,63.0] mean=67.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$294.04 max=$621.39 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.137 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.015 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.058 min=0.030"
+          ]
+        ],
+        "shares": 6412.7666,
+        "stake": 96.19149953075234,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the lowest temperature in Los Angeles be 70\u00b0F or higher on October 27?",
+        "slug": "lowest-temperature-in-los-angeles-on-october-27-2026-70forhigher",
+        "market_id": "6183578",
+        "end_date": "2026-10-27T12:00:00Z",
+        "end_dt": "2026-10-27 12:00:00+00:00",
+        "hours_left": 19.5,
+        "yes_token": "580307328529630086960448104331747529829010949074244583157079188589199015387",
+        "no_token": "92934344000318292891938946744821265181124818195832210707390075437752380459442",
+        "bucket_low_f": 70.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLAX&format=raw&date=2026-10-28T10:00:00Z&hours=30",
+        "volume_num": 95.08025,
+        "liquidity_num": 239.76368,
+        "event_id": "1251931",
+        "event_slug": "lowest-temperature-in-los-angeles-on-october-27-2026",
+        "ask_price": 0.029
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 66.18199999999999,
+        "ecmwf_mean_f": 57.837199999999996,
+        "combined_mean_f": 59.941067961165125,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -2.9,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.029,
+        "gfs_mean_f": 66.2,
+        "ecmwf_mean_f": 57.8,
+        "combined_mean_f": 59.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.029 edge=-2.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=19.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=66.2F ecmwf=57.8F diff=4.64C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[70.0,999.0] mean=59.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$294.04 max=$621.39 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.029 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 689.6552,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the lowest temperature in Los Angeles be 51\u00b0F or below on October 27?",
+        "slug": "lowest-temperature-in-los-angeles-on-october-27-2026-51forbelow",
+        "market_id": "6183568",
+        "end_date": "2026-10-27T12:00:00Z",
+        "end_dt": "2026-10-27 12:00:00+00:00",
+        "hours_left": 19.5,
+        "yes_token": "93322715688997081108983923911076310789267863176792367106155475219108213875838",
+        "no_token": "42806150451793037326834683237340225473843509785791900415874494587404606558664",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 51.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLAX&format=raw&date=2026-10-28T10:00:00Z&hours=30",
+        "volume_num": 95.0,
+        "liquidity_num": 160.0745,
+        "event_id": "1251931",
+        "event_slug": "lowest-temperature-in-los-angeles-on-october-27-2026",
+        "ask_price": 0.025
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 66.18199999999999,
+        "ecmwf_mean_f": 57.837199999999996,
+        "combined_mean_f": 59.941067961165125,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -2.5,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.025,
+        "gfs_mean_f": 66.2,
+        "ecmwf_mean_f": 57.8,
+        "combined_mean_f": 59.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.025 edge=-2.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=19.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=66.2F ecmwf=57.8F diff=4.64C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,51.0] mean=59.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$294.04 max=$621.39 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.025 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 800.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the highest temperature in Los Angeles be between 68-69\u00b0F on October 27?",
+        "slug": "highest-temperature-in-los-angeles-on-october-27-2026-68-69f",
+        "market_id": "6184950",
+        "end_date": "2026-10-27T12:00:00Z",
+        "end_dt": "2026-10-27 12:00:00+00:00",
+        "hours_left": 19.5,
+        "yes_token": "43241760188750874129727973352958957254985943651101360341784276556275621889508",
+        "no_token": "48403081309187759782660310845754578337760715330406084716766492691131226273766",
+        "bucket_low_f": 68.0,
+        "bucket_high_f": 69.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLAX&format=raw&date=2026-10-28T10:00:00Z&hours=30",
+        "volume_num": 90.992,
+        "liquidity_num": 1954.60602,
+        "event_id": "1252011",
+        "event_slug": "highest-temperature-in-los-angeles-on-october-27-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 72.99199999999998,
+        "ecmwf_mean_f": 77.54719999999999,
+        "combined_mean_f": 74.11213592233008,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 73.0,
+        "ecmwf_mean_f": 77.5,
+        "combined_mean_f": 74.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=19.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=73.0F ecmwf=77.5F diff=2.53C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[68.0,69.0] mean=74.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$294.04 max=$621.39 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 70-71\u00b0F on October 27?",
+        "slug": "highest-temperature-in-atlanta-on-october-27-2026-70-71f",
+        "market_id": "6181528",
+        "end_date": "2026-10-27T12:00:00Z",
+        "end_dt": "2026-10-27 12:00:00+00:00",
+        "hours_left": 19.5,
+        "yes_token": "80813132242910824439087965970429072290671135959674214299369265845342637168602",
+        "no_token": "112802714521493868527731224806712843938965032091155917696529278075067205634273",
+        "bucket_low_f": 70.0,
+        "bucket_high_f": 71.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KATL&format=raw&date=2026-10-28T07:00:00Z&hours=30",
+        "volume_num": 949.1782019999999,
+        "liquidity_num": 1852.80678,
+        "event_id": "1251357",
+        "event_slug": "highest-temperature-in-atlanta-on-october-27-2026",
+        "ask_price": 0.025
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 76.624,
+        "ecmwf_mean_f": 73.6156,
+        "combined_mean_f": 73.98126213592236,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, min_ask_for_yes",
+        "edge_pct": 16.07,
+        "ensemble_prob": 0.1857,
+        "ask_price": 0.025,
+        "gfs_mean_f": 76.6,
+        "ecmwf_mean_f": 73.6,
+        "combined_mean_f": 74.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.186 ask=0.025 edge=16.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=19.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=76.6F ecmwf=73.6F diff=1.67C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[70.0,71.0] mean=74.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$294.04 max=$621.39 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.186 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.025 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.049 min=0.030"
+          ]
+        ],
+        "shares": 4000.0,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 76-77\u00b0F on October 27?",
+        "slug": "highest-temperature-in-atlanta-on-october-27-2026-76-77f",
+        "market_id": "6181531",
+        "end_date": "2026-10-27T12:00:00Z",
+        "end_dt": "2026-10-27 12:00:00+00:00",
+        "hours_left": 19.5,
+        "yes_token": "85609926371692709065454516269410108960236856857838053019365285883652147093867",
+        "no_token": "83108843750732074341402259721016282863261069380336777841311454420075128571733",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KATL&format=raw&date=2026-10-28T07:00:00Z&hours=30",
+        "volume_num": 919.0541800000001,
+        "liquidity_num": 1717.0334,
+        "event_id": "1251357",
+        "event_slug": "highest-temperature-in-atlanta-on-october-27-2026",
+        "ask_price": 0.09
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 76.624,
+        "ecmwf_mean_f": 73.6156,
+        "combined_mean_f": 73.98126213592236,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": -6.63,
+        "ensemble_prob": 0.0237,
+        "ask_price": 0.09,
+        "gfs_mean_f": 76.6,
+        "ecmwf_mean_f": 73.6,
+        "combined_mean_f": 74.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.024 ask=0.090 edge=-6.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=19.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=76.6F ecmwf=73.6F diff=1.67C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[76.0,77.0] mean=74.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$294.04 max=$621.39 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.024 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.090 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.087 min=0.030"
+          ]
+        ],
+        "shares": 222.2222,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be 47\u00b0F or below on October 27?",
+        "slug": "highest-temperature-in-seattle-on-october-27-2026-47forbelow",
+        "market_id": "6184936",
+        "end_date": "2026-10-27T12:00:00Z",
+        "end_dt": "2026-10-27 12:00:00+00:00",
+        "hours_left": 19.5,
+        "yes_token": "71848216661135530081362619218081170473384342843678504323918721140117875997563",
+        "no_token": "114949989006193678178274685452869565815101046266574787979609609506257908093598",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 47.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSEA&format=raw&date=2026-10-28T10:00:00Z&hours=30",
+        "volume_num": 93.431,
+        "liquidity_num": 2011.34499,
+        "event_id": "1252010",
+        "event_slug": "highest-temperature-in-seattle-on-october-27-2026",
+        "ask_price": 0.015
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 54.39200000000002,
+        "ecmwf_mean_f": 53.114,
+        "combined_mean_f": 53.548446601941755,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.5,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.015,
+        "gfs_mean_f": 54.4,
+        "ecmwf_mean_f": 53.1,
+        "combined_mean_f": 53.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.015 edge=-1.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=19.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=54.4F ecmwf=53.1F diff=0.71C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,47.0] mean=53.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$294.04 max=$621.39 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.015 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 1333.3333,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
