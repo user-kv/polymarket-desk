@@ -215,3 +215,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-10-27T14:15:02Z | category: chicago | bet: highest-temperature-in-chicago-on-october-26-2026-60-61f__2026-10-25T0830
+- outcome: LOST
+- thesis: edge=8.02pt prob=0.2102 ask=0.13
+- root_cause: Actual high 62F missed bucket [60,61] by 1F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
