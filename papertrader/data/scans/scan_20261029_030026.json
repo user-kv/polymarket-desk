@@ -1,0 +1,989 @@
+{
+  "scan_timestamp": "2026-10-29T03:00:26Z",
+  "test_mode": false,
+  "markets_found": 11,
+  "markets_priced": 11,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be between 76-77\u00b0F on October 29?",
+        "slug": "lowest-temperature-in-miami-on-october-29-2026-76-77f",
+        "market_id": "6293625",
+        "end_date": "2026-10-29T12:00:00Z",
+        "end_dt": "2026-10-29 12:00:00+00:00",
+        "hours_left": 9.0,
+        "yes_token": "83268171259881802125983265867515307483845335491072760604944148037801558230553",
+        "no_token": "22351115530394149005803956103806271029410955373720316506967778037072573076956",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KMIA&format=raw&date=2026-10-30T07:00:00Z&hours=30",
+        "volume_num": 972.2485760000001,
+        "liquidity_num": 435.0084,
+        "event_id": "1264611",
+        "event_slug": "lowest-temperature-in-miami-on-october-29-2026",
+        "ask_price": 0.58
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 78.71600000000002,
+        "ecmwf_mean_f": 74.4008,
+        "combined_mean_f": 75.34766990291261,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, bankroll_ok",
+        "edge_pct": -41.48,
+        "ensemble_prob": 0.1652,
+        "ask_price": 0.58,
+        "gfs_mean_f": 78.7,
+        "ecmwf_mean_f": 74.4,
+        "combined_mean_f": 75.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.165 ask=0.580 edge=-41.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=9.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=78.7F ecmwf=74.4F diff=2.40C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[76.0,77.0] mean=75.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$20.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.165 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.580 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.218 min=0.030"
+          ]
+        ],
+        "shares": 34.4828,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be 72\u00b0F or higher on October 30?",
+        "slug": "highest-temperature-in-san-francisco-on-october-30-2026-72forhigher",
+        "market_id": "6339589",
+        "end_date": "2026-10-30T12:00:00Z",
+        "end_dt": "2026-10-30 12:00:00+00:00",
+        "hours_left": 33.0,
+        "yes_token": "40171868997961746386942598187918936640885055177278985461974861428273831470415",
+        "no_token": "64075323384875590295734487641288239670429120390538821851077100713317187812296",
+        "bucket_low_f": 72.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSFO&format=raw&date=2026-10-31T10:00:00Z&hours=30",
+        "volume_num": 97.218,
+        "liquidity_num": 1077.56366,
+        "event_id": "1271547",
+        "event_slug": "highest-temperature-in-san-francisco-on-october-30-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 65.61800000000001,
+        "ecmwf_mean_f": 66.11000000000001,
+        "combined_mean_f": 64.77485436893204,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 65.6,
+        "ecmwf_mean_f": 66.1,
+        "combined_mean_f": 64.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=33.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=65.6F ecmwf=66.1F diff=0.27C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[72.0,999.0] mean=64.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$20.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 58-59\u00b0F on October 30?",
+        "slug": "highest-temperature-in-san-francisco-on-october-30-2026-58-59f",
+        "market_id": "6339582",
+        "end_date": "2026-10-30T12:00:00Z",
+        "end_dt": "2026-10-30 12:00:00+00:00",
+        "hours_left": 33.0,
+        "yes_token": "113509764705322128423111304208471117586984483161753992871941568450665521928169",
+        "no_token": "55260103582688047327959559960447520866064373765781348788261177603174845982830",
+        "bucket_low_f": 58.0,
+        "bucket_high_f": 59.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSFO&format=raw&date=2026-10-31T10:00:00Z&hours=30",
+        "volume_num": 92.20299999999999,
+        "liquidity_num": 916.16517,
+        "event_id": "1271547",
+        "event_slug": "highest-temperature-in-san-francisco-on-october-30-2026",
+        "ask_price": 0.014
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 65.61800000000001,
+        "ecmwf_mean_f": 66.11000000000001,
+        "combined_mean_f": 64.77485436893204,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.4,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.014,
+        "gfs_mean_f": 65.6,
+        "ecmwf_mean_f": 66.1,
+        "combined_mean_f": 64.8,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.014 edge=-1.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=33.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=65.6F ecmwf=66.1F diff=0.27C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[58.0,59.0] mean=64.8F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$20.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.014 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 1428.5714,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 66-67\u00b0F on October 29?",
+        "slug": "highest-temperature-in-san-francisco-on-october-29-2026-66-67f",
+        "market_id": "6295902",
+        "end_date": "2026-10-29T12:00:00Z",
+        "end_dt": "2026-10-29 12:00:00+00:00",
+        "hours_left": 9.0,
+        "yes_token": "85374069291198924026491359245565517032311162478375827190443021861751858354901",
+        "no_token": "55211637456505130395721657234933903286811224026636358150212643894065973916633",
+        "bucket_low_f": 66.0,
+        "bucket_high_f": 67.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSFO&format=raw&date=2026-10-30T10:00:00Z&hours=30",
+        "volume_num": 903.49045,
+        "liquidity_num": 21499.7985,
+        "event_id": "1265342",
+        "event_slug": "highest-temperature-in-san-francisco-on-october-29-2026",
+        "ask_price": 0.48
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 69.026,
+        "ecmwf_mean_f": 67.61120000000001,
+        "combined_mean_f": 66.37213592233003,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, outside_mean_buffer, bankroll_ok",
+        "edge_pct": -18.41,
+        "ensemble_prob": 0.2959,
+        "ask_price": 0.48,
+        "gfs_mean_f": 69.0,
+        "ecmwf_mean_f": 67.6,
+        "combined_mean_f": 66.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.296 ask=0.480 edge=-18.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=9.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=69.0F ecmwf=67.6F diff=0.79C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[66.0,67.0] mean=66.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$20.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.296 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.480 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.340 min=0.030"
+          ]
+        ],
+        "shares": 41.6667,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 54-55\u00b0F on October 30?",
+        "slug": "lowest-temperature-in-nyc-on-october-30-2026-54-55f",
+        "market_id": "6335481",
+        "end_date": "2026-10-30T12:00:00Z",
+        "end_dt": "2026-10-30 12:00:00+00:00",
+        "hours_left": 33.0,
+        "yes_token": "21998113218344138689697664026139428734361129197625696024644993884726994783207",
+        "no_token": "74830804628885355938614055355467790678921428509463660382040212437089747224048",
+        "bucket_low_f": 54.0,
+        "bucket_high_f": 55.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-10-31T07:00:00Z&hours=30",
+        "volume_num": 954.2382530000001,
+        "liquidity_num": 780.6962,
+        "event_id": "1270655",
+        "event_slug": "lowest-temperature-in-nyc-on-october-30-2026",
+        "ask_price": 0.27
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 54.776,
+        "ecmwf_mean_f": 52.7324,
+        "combined_mean_f": 53.44796116504854,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer, bankroll_ok",
+        "edge_pct": 13.89,
+        "ensemble_prob": 0.4089,
+        "ask_price": 0.27,
+        "gfs_mean_f": 54.8,
+        "ecmwf_mean_f": 52.7,
+        "combined_mean_f": 53.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.409 ask=0.270 edge=13.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=33.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=54.8F ecmwf=52.7F diff=1.14C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[54.0,55.0] mean=53.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$100.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.409 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.270 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.427 min=0.030"
+          ]
+        ],
+        "shares": 370.3704,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 52-53\u00b0F on October 30?",
+        "slug": "lowest-temperature-in-nyc-on-october-30-2026-52-53f",
+        "market_id": "6335480",
+        "end_date": "2026-10-30T12:00:00Z",
+        "end_dt": "2026-10-30 12:00:00+00:00",
+        "hours_left": 33.0,
+        "yes_token": "70452695894619781601358931440333562025542268681313456000832958399256521004993",
+        "no_token": "49322920551484218298820043030628442548971116288816381535826129200900674010472",
+        "bucket_low_f": 52.0,
+        "bucket_high_f": 53.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-10-31T07:00:00Z&hours=30",
+        "volume_num": 95.200008,
+        "liquidity_num": 589.85145,
+        "event_id": "1270655",
+        "event_slug": "lowest-temperature-in-nyc-on-october-30-2026",
+        "ask_price": 0.036
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 54.776,
+        "ecmwf_mean_f": 52.7324,
+        "combined_mean_f": 53.44796116504854,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer, bankroll_ok, min_ask_for_yes",
+        "edge_pct": 30.98,
+        "ensemble_prob": 0.3458,
+        "ask_price": 0.036,
+        "gfs_mean_f": 54.8,
+        "ecmwf_mean_f": 52.7,
+        "combined_mean_f": 53.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.346 ask=0.036 edge=31.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=33.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=54.8F ecmwf=52.7F diff=1.14C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[52.0,53.0] mean=53.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$100.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.346 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.036 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.374 min=0.030"
+          ]
+        ],
+        "shares": 2777.7778,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be 62\u00b0F or higher on October 29?",
+        "slug": "lowest-temperature-in-nyc-on-october-29-2026-62forhigher",
+        "market_id": "6293553",
+        "end_date": "2026-10-29T12:00:00Z",
+        "end_dt": "2026-10-29 12:00:00+00:00",
+        "hours_left": 9.0,
+        "yes_token": "100225220083135969141011103043865955816794661050464224475522560123936406733122",
+        "no_token": "60267273806870615304837100150145302736069057994593106794987368977190986889614",
+        "bucket_low_f": 62.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-10-30T07:00:00Z&hours=30",
+        "volume_num": 95.0,
+        "liquidity_num": 2106.87459,
+        "event_id": "1264604",
+        "event_slug": "lowest-temperature-in-nyc-on-october-29-2026",
+        "ask_price": 0.015
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 55.556,
+        "ecmwf_mean_f": 48.657199999999996,
+        "combined_mean_f": 50.170388349514575,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.5,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.015,
+        "gfs_mean_f": 55.6,
+        "ecmwf_mean_f": 48.7,
+        "combined_mean_f": 50.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.015 edge=-1.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=9.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=55.6F ecmwf=48.7F diff=3.83C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[62.0,999.0] mean=50.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$20.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.015 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 1333.3333,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 58-59\u00b0F on October 29?",
+        "slug": "lowest-temperature-in-nyc-on-october-29-2026-58-59f",
+        "market_id": "6293551",
+        "end_date": "2026-10-29T12:00:00Z",
+        "end_dt": "2026-10-29 12:00:00+00:00",
+        "hours_left": 9.0,
+        "yes_token": "26815346840446148127099055805794404564016668768672721156643877978582063514755",
+        "no_token": "606406082423970157106952071494718049325379321667000859644699665865583621535",
+        "bucket_low_f": 58.0,
+        "bucket_high_f": 59.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-10-30T07:00:00Z&hours=30",
+        "volume_num": 93.59,
+        "liquidity_num": 765.74109,
+        "event_id": "1264604",
+        "event_slug": "lowest-temperature-in-nyc-on-october-29-2026",
+        "ask_price": 0.002
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 55.556,
+        "ecmwf_mean_f": 48.657199999999996,
+        "combined_mean_f": 50.170388349514575,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.2,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.002,
+        "gfs_mean_f": 55.6,
+        "ecmwf_mean_f": 48.7,
+        "combined_mean_f": 50.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.002 edge=-0.2pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=9.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=55.6F ecmwf=48.7F diff=3.83C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[58.0,59.0] mean=50.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$20.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.002 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 10000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 60-61\u00b0F on October 29?",
+        "slug": "lowest-temperature-in-nyc-on-october-29-2026-60-61f",
+        "market_id": "6293552",
+        "end_date": "2026-10-29T12:00:00Z",
+        "end_dt": "2026-10-29 12:00:00+00:00",
+        "hours_left": 9.0,
+        "yes_token": "12579395113184248338635979850648986108265192837473075026994093075059672676311",
+        "no_token": "32036283945024050151062759541958343926020374190248522217215412025784764837206",
+        "bucket_low_f": 60.0,
+        "bucket_high_f": 61.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-10-30T07:00:00Z&hours=30",
+        "volume_num": 93.59,
+        "liquidity_num": 865.11132,
+        "event_id": "1264604",
+        "event_slug": "lowest-temperature-in-nyc-on-october-29-2026",
+        "ask_price": 0.017
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 55.556,
+        "ecmwf_mean_f": 48.657199999999996,
+        "combined_mean_f": 50.170388349514575,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.7,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.017,
+        "gfs_mean_f": 55.6,
+        "ecmwf_mean_f": 48.7,
+        "combined_mean_f": 50.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.017 edge=-1.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=9.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=55.6F ecmwf=48.7F diff=3.83C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[60.0,61.0] mean=50.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$20.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.017 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 1176.4706,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 74-75\u00b0F on October 29?",
+        "slug": "highest-temperature-in-dallas-on-october-29-2026-74-75f",
+        "market_id": "6294086",
+        "end_date": "2026-10-29T12:00:00Z",
+        "end_dt": "2026-10-29 12:00:00+00:00",
+        "hours_left": 9.0,
+        "yes_token": "81756522228442671594532412725345586941483096240257226279629585864036029847830",
+        "no_token": "1124448555223485432611522802317691857853175466134617656637134860520276833084",
+        "bucket_low_f": 74.0,
+        "bucket_high_f": 75.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KDAL&format=raw&date=2026-10-30T08:00:00Z&hours=30",
+        "volume_num": 923.9460640000001,
+        "liquidity_num": 2084.28463,
+        "event_id": "1264712",
+        "event_slug": "highest-temperature-in-dallas-on-october-29-2026",
+        "ask_price": 0.009
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.67399999999999,
+        "ecmwf_mean_f": 81.09839999999997,
+        "combined_mean_f": 80.90941747572813,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": 1.27,
+        "ensemble_prob": 0.0217,
+        "ask_price": 0.009,
+        "gfs_mean_f": 82.7,
+        "ecmwf_mean_f": 81.1,
+        "combined_mean_f": 80.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.022 ask=0.009 edge=1.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=9.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=82.7F ecmwf=81.1F diff=0.88C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[74.0,75.0] mean=80.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$9.05 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.022 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.009 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.024 min=0.030"
+          ]
+        ],
+        "shares": 1006.032,
+        "stake": 9.054288390505073,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 62-63\u00b0F on October 30?",
+        "slug": "highest-temperature-in-chicago-on-october-30-2026-62-63f",
+        "market_id": "6336421",
+        "end_date": "2026-10-30T12:00:00Z",
+        "end_dt": "2026-10-30 12:00:00+00:00",
+        "hours_left": 33.0,
+        "yes_token": "6692290184507853378991512497417219875449893210603212882492865547985543042921",
+        "no_token": "16904540927233916150698921973161211182187249658521979458738609700350979911474",
+        "bucket_low_f": 62.0,
+        "bucket_high_f": 63.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KORD&format=raw&date=2026-10-31T08:00:00Z&hours=30",
+        "volume_num": 907.255589,
+        "liquidity_num": 2449.3263,
+        "event_id": "1270754",
+        "event_slug": "highest-temperature-in-chicago-on-october-30-2026",
+        "ask_price": 0.08
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 60.09,
+        "ecmwf_mean_f": 60.53280000000001,
+        "combined_mean_f": 60.71563106796113,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 14.6pt would qualify but bucket straddles mean)",
+        "edge_pct": 14.62,
+        "ensemble_prob": 0.2262,
+        "ask_price": 0.08,
+        "gfs_mean_f": 60.1,
+        "ecmwf_mean_f": 60.5,
+        "combined_mean_f": 60.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.226 ask=0.080 edge=14.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=33.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=60.1F ecmwf=60.5F diff=0.25C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[62.0,63.0] mean=60.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$569.78 max=$564.35 exposure $569.78+$100.00 > $564.35"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.226 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.080 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.209 min=0.030"
+          ]
+        ],
+        "shares": 1250.0,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
