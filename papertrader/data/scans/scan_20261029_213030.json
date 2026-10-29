@@ -1,0 +1,900 @@
+{
+  "scan_timestamp": "2026-10-29T21:30:30Z",
+  "test_mode": false,
+  "markets_found": 10,
+  "markets_priced": 10,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 52-53\u00b0F on October 31?",
+        "slug": "highest-temperature-in-chicago-on-october-31-2026-52-53f",
+        "market_id": "6381784",
+        "end_date": "2026-10-31T12:00:00Z",
+        "end_dt": "2026-10-31 12:00:00+00:00",
+        "hours_left": 38.5,
+        "yes_token": "3045895315109355491223075426176270301630307398876869586707175913079528119024",
+        "no_token": "67559400442735726500355224435464110469943089862881629498350192848045648570382",
+        "bucket_low_f": 52.0,
+        "bucket_high_f": 53.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KORD&format=raw&date=2026-11-01T08:00:00Z&hours=30",
+        "volume_num": 9.929666,
+        "liquidity_num": 549.61269,
+        "event_id": "1276452",
+        "event_slug": "highest-temperature-in-chicago-on-october-31-2026",
+        "ask_price": 0.02
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 59.166000000000004,
+        "ecmwf_mean_f": 60.190799999999996,
+        "combined_mean_f": 59.61902912621359,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -2.0,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.02,
+        "gfs_mean_f": 59.2,
+        "ecmwf_mean_f": 60.2,
+        "combined_mean_f": 59.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.020 edge=-2.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=38.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=59.2F ecmwf=60.2F diff=0.57C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[52.0,53.0] mean=59.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=True exposure=$578.44 max=$568.19 duplicate slugexposure $578.44+$20.00 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.020 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 1000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the highest temperature in Austin be 71\u00b0F or below on October 31?",
+        "slug": "highest-temperature-in-austin-on-october-31-2026-71forbelow",
+        "market_id": "6381794",
+        "end_date": "2026-10-31T12:00:00Z",
+        "end_dt": "2026-10-31 12:00:00+00:00",
+        "hours_left": 38.5,
+        "yes_token": "10371146681118749042453193490751199463554580999880873173398664495013559121494",
+        "no_token": "4313494759817365498585155522309312929730725695074538932908835675066007968914",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 71.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KAUS&format=raw&date=2026-11-01T08:00:00Z&hours=30",
+        "volume_num": 97.36175,
+        "liquidity_num": 398.75778,
+        "event_id": "1276453",
+        "event_slug": "highest-temperature-in-austin-on-october-31-2026",
+        "ask_price": 0.021
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.804,
+        "ecmwf_mean_f": 78.91120000000001,
+        "combined_mean_f": 78.1964077669903,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.3,
+        "ensemble_prob": 0.008,
+        "ask_price": 0.021,
+        "gfs_mean_f": 82.8,
+        "ecmwf_mean_f": 78.9,
+        "combined_mean_f": 78.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.008 ask=0.021 edge=-1.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=38.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=82.8F ecmwf=78.9F diff=2.16C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,71.0] mean=78.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$578.44 max=$568.19 exposure $578.44+$20.00 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.008 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.021 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.029 min=0.030"
+          ]
+        ],
+        "shares": 952.381,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 78-79\u00b0F on October 31?",
+        "slug": "highest-temperature-in-miami-on-october-31-2026-78-79f",
+        "market_id": "6381775",
+        "end_date": "2026-10-31T12:00:00Z",
+        "end_dt": "2026-10-31 12:00:00+00:00",
+        "hours_left": 38.5,
+        "yes_token": "25581104409647591964017702968292273022068643654334119497291048060785610000799",
+        "no_token": "68099363108616370413286247563048305222071204438839930599878292318302518273307",
+        "bucket_low_f": 78.0,
+        "bucket_high_f": 79.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KMIA&format=raw&date=2026-11-01T07:00:00Z&hours=30",
+        "volume_num": 97.3045,
+        "liquidity_num": 383.1634,
+        "event_id": "1276451",
+        "event_slug": "highest-temperature-in-miami-on-october-31-2026",
+        "ask_price": 0.003
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.69400000000002,
+        "ecmwf_mean_f": 82.06880000000001,
+        "combined_mean_f": 82.90854368932042,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": 0.7,
+        "ensemble_prob": 0.01,
+        "ask_price": 0.003,
+        "gfs_mean_f": 82.7,
+        "ecmwf_mean_f": 82.1,
+        "combined_mean_f": 82.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.010 ask=0.003 edge=0.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=38.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=82.7F ecmwf=82.1F diff=0.35C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[78.0,79.0] mean=82.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$578.44 max=$568.19 exposure $578.44+$5.00 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.010 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.003 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.015 min=0.030"
+          ]
+        ],
+        "shares": 1666.6667,
+        "stake": 5.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be 67\u00b0F or below on October 30?",
+        "slug": "lowest-temperature-in-miami-on-october-30-2026-67forbelow",
+        "market_id": "6335510",
+        "end_date": "2026-10-30T12:00:00Z",
+        "end_dt": "2026-10-30 12:00:00+00:00",
+        "hours_left": 14.5,
+        "yes_token": "58000780676505215725644139417818259595539925479541386262497911209927793139631",
+        "no_token": "15324808221626889393540561042773357626573166857215231974489989445867538135948",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 67.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KMIA&format=raw&date=2026-10-31T07:00:00Z&hours=30",
+        "volume_num": 94.996,
+        "liquidity_num": 811.04749,
+        "event_id": "1270658",
+        "event_slug": "lowest-temperature-in-miami-on-october-30-2026",
+        "ask_price": 0.047
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 79.05199999999998,
+        "ecmwf_mean_f": 74.25320000000004,
+        "combined_mean_f": 75.73825242718449,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -4.7,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.047,
+        "gfs_mean_f": 79.1,
+        "ecmwf_mean_f": 74.3,
+        "combined_mean_f": 75.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.047 edge=-4.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=79.1F ecmwf=74.3F diff=2.67C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,67.0] mean=75.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$578.44 max=$568.19 exposure $578.44+$20.00 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.047 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 425.5319,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the lowest temperature in Miami be between 76-77\u00b0F on October 30?",
+        "slug": "lowest-temperature-in-miami-on-october-30-2026-76-77f",
+        "market_id": "6335515",
+        "end_date": "2026-10-30T12:00:00Z",
+        "end_dt": "2026-10-30 12:00:00+00:00",
+        "hours_left": 14.5,
+        "yes_token": "4370612677063639129054555229381343233533956365495554844872648550348306683361",
+        "no_token": "86374934362797229825618105754667626723517912138279557554462606996629654745007",
+        "bucket_low_f": 76.0,
+        "bucket_high_f": 77.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KMIA&format=raw&date=2026-10-31T07:00:00Z&hours=30",
+        "volume_num": 930.9276050000002,
+        "liquidity_num": 804.8658,
+        "event_id": "1270658",
+        "event_slug": "lowest-temperature-in-miami-on-october-30-2026",
+        "ask_price": 0.63
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 79.05199999999998,
+        "ecmwf_mean_f": 74.25320000000004,
+        "combined_mean_f": 75.73825242718449,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, bankroll_ok",
+        "edge_pct": -35.71,
+        "ensemble_prob": 0.2729,
+        "ask_price": 0.63,
+        "gfs_mean_f": 79.1,
+        "ecmwf_mean_f": 74.3,
+        "combined_mean_f": 75.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.273 ask=0.630 edge=-35.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=79.1F ecmwf=74.3F diff=2.67C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[76.0,77.0] mean=75.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$578.44 max=$568.19 exposure $578.44+$20.00 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.273 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.630 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.296 min=0.030"
+          ]
+        ],
+        "shares": 31.746,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Miami",
+        "station": "KMIA",
+        "question": "Will the highest temperature in Miami be between 82-83\u00b0F on October 31?",
+        "slug": "highest-temperature-in-miami-on-october-31-2026-82-83f",
+        "market_id": "6381777",
+        "end_date": "2026-10-31T12:00:00Z",
+        "end_dt": "2026-10-31 12:00:00+00:00",
+        "hours_left": 38.5,
+        "yes_token": "87813152033537216512825556388935352509492976862152506916920836958581967124171",
+        "no_token": "86823216063209909172225524859793484947883821515355715894214254793930670107391",
+        "bucket_low_f": 82.0,
+        "bucket_high_f": 83.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KMIA&format=raw&date=2026-11-01T07:00:00Z&hours=30",
+        "volume_num": 906.0025660000001,
+        "liquidity_num": 1512.0868,
+        "event_id": "1276451",
+        "event_slug": "highest-temperature-in-miami-on-october-31-2026",
+        "ask_price": 0.17
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 82.69400000000002,
+        "ecmwf_mean_f": 82.06880000000001,
+        "combined_mean_f": 82.90854368932042,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 28.1pt would qualify but bucket straddles mean)",
+        "edge_pct": 28.07,
+        "ensemble_prob": 0.4507,
+        "ask_price": 0.17,
+        "gfs_mean_f": 82.7,
+        "ecmwf_mean_f": 82.1,
+        "combined_mean_f": 82.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.451 ask=0.170 edge=28.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=38.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=82.7F ecmwf=82.1F diff=0.35C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[82.0,83.0] mean=82.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$578.44 max=$568.19 exposure $578.44+$100.00 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.451 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.170 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.471 min=0.030"
+          ]
+        ],
+        "shares": 588.2353,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 64-65\u00b0F on October 31?",
+        "slug": "highest-temperature-in-denver-on-october-31-2026-64-65f",
+        "market_id": "6381812",
+        "end_date": "2026-10-31T12:00:00Z",
+        "end_dt": "2026-10-31 12:00:00+00:00",
+        "hours_left": 38.5,
+        "yes_token": "55333362922168862676764873192498150551376557776877644068552093003788702555526",
+        "no_token": "76971932085180602193373189835967715703792148292294296891214550011211767734703",
+        "bucket_low_f": 64.0,
+        "bucket_high_f": 65.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KDEN&format=raw&date=2026-11-01T09:00:00Z&hours=30",
+        "volume_num": 97.172836,
+        "liquidity_num": 525.4314,
+        "event_id": "1276454",
+        "event_slug": "highest-temperature-in-denver-on-october-31-2026",
+        "ask_price": 0.28
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 61.502,
+        "ecmwf_mean_f": 59.8568,
+        "combined_mean_f": 60.255631067961154,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok",
+        "edge_pct": -9.69,
+        "ensemble_prob": 0.1831,
+        "ask_price": 0.28,
+        "gfs_mean_f": 61.5,
+        "ecmwf_mean_f": 59.9,
+        "combined_mean_f": 60.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.183 ask=0.280 edge=-9.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=38.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=61.5F ecmwf=59.9F diff=0.91C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[64.0,65.0] mean=60.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$578.44 max=$568.19 exposure $578.44+$20.00 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.183 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.280 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.146 min=0.030"
+          ]
+        ],
+        "shares": 71.4286,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Houston",
+        "station": "KHOU",
+        "question": "Will the highest temperature in Houston be between 72-73\u00b0F on October 30?",
+        "slug": "highest-temperature-in-houston-on-october-30-2026-72-73f",
+        "market_id": "6336452",
+        "end_date": "2026-10-30T12:00:00Z",
+        "end_dt": "2026-10-30 12:00:00+00:00",
+        "hours_left": 14.5,
+        "yes_token": "68920706825489888037660324265886840052098295494580211154324412843765662879917",
+        "no_token": "59128441973031990872964689297837649603635014536072353788897108886337108048963",
+        "bucket_low_f": 72.0,
+        "bucket_high_f": 73.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KHOU&format=raw&date=2026-10-31T08:00:00Z&hours=30",
+        "volume_num": 959.4930499999999,
+        "liquidity_num": 1422.83916,
+        "event_id": "1270757",
+        "event_slug": "highest-temperature-in-houston-on-october-30-2026",
+        "ask_price": 0.009
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 77.09600000000002,
+        "ecmwf_mean_f": 76.13960000000002,
+        "combined_mean_f": 76.66184466019419,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Bankroll/dup rule blocked (edge 5.1pt)",
+        "edge_pct": 5.05,
+        "ensemble_prob": 0.0595,
+        "ask_price": 0.009,
+        "gfs_mean_f": 77.1,
+        "ecmwf_mean_f": 76.1,
+        "combined_mean_f": 76.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.060 ask=0.009 edge=5.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=77.1F ecmwf=76.1F diff=0.53C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[72.0,73.0] mean=76.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$578.44 max=$568.19 exposure $578.44+$36.20 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.060 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.009 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.063 min=0.030"
+          ]
+        ],
+        "shares": 4021.7731,
+        "stake": 36.195957737181146,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 68-69\u00b0F on October 31?",
+        "slug": "highest-temperature-in-atlanta-on-october-31-2026-68-69f",
+        "market_id": "6381764",
+        "end_date": "2026-10-31T12:00:00Z",
+        "end_dt": "2026-10-31 12:00:00+00:00",
+        "hours_left": 38.5,
+        "yes_token": "97329904950800702320732195363907656024979113413927626036569432415797068457987",
+        "no_token": "84059509150094878998989678508371005513100168685299505099249153484726262674975",
+        "bucket_low_f": 68.0,
+        "bucket_high_f": 69.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KATL&format=raw&date=2026-11-01T07:00:00Z&hours=30",
+        "volume_num": 917.1689719999999,
+        "liquidity_num": 1023.9554,
+        "event_id": "1276450",
+        "event_slug": "highest-temperature-in-atlanta-on-october-31-2026",
+        "ask_price": 0.08
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 74.43399999999998,
+        "ecmwf_mean_f": 71.03440000000002,
+        "combined_mean_f": 72.37524271844659,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, bankroll_ok",
+        "edge_pct": 7.55,
+        "ensemble_prob": 0.1555,
+        "ask_price": 0.08,
+        "gfs_mean_f": 74.4,
+        "ecmwf_mean_f": 71.0,
+        "combined_mean_f": 72.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.155 ask=0.080 edge=7.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=38.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=74.4F ecmwf=71.0F diff=1.89C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[68.0,69.0] mean=72.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$578.44 max=$568.19 exposure $578.44+$58.28 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.155 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.080 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.087 min=0.030"
+          ]
+        ],
+        "shares": 728.4811,
+        "stake": 58.27848963939897,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Los Angeles",
+        "station": "KLAX",
+        "question": "Will the highest temperature in Los Angeles be between 74-75\u00b0F on October 30?",
+        "slug": "highest-temperature-in-los-angeles-on-october-30-2026-74-75f",
+        "market_id": "6339562",
+        "end_date": "2026-10-30T12:00:00Z",
+        "end_dt": "2026-10-30 12:00:00+00:00",
+        "hours_left": 14.5,
+        "yes_token": "1806775735881636957972878531423715482560350028419631309539966069178727812722",
+        "no_token": "93442539893343658159023833245226429296107083068641486048869316434278356212678",
+        "bucket_low_f": 74.0,
+        "bucket_high_f": 75.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLAX&format=raw&date=2026-10-31T10:00:00Z&hours=30",
+        "volume_num": 903.4429359999999,
+        "liquidity_num": 1426.00722,
+        "event_id": "1271546",
+        "event_slug": "highest-temperature-in-los-angeles-on-october-30-2026",
+        "ask_price": 0.04
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 67.84999999999998,
+        "ecmwf_mean_f": 72.1328,
+        "combined_mean_f": 70.14601941747574,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes",
+        "edge_pct": 1.7,
+        "ensemble_prob": 0.057,
+        "ask_price": 0.04,
+        "gfs_mean_f": 67.8,
+        "ecmwf_mean_f": 72.1,
+        "combined_mean_f": 70.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.057 ask=0.040 edge=1.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=14.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=67.8F ecmwf=72.1F diff=2.38C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[74.0,75.0] mean=70.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$578.44 max=$568.19 exposure $578.44+$12.59 > $568.19"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.057 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.040 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.053 min=0.030"
+          ]
+        ],
+        "shares": 314.7704,
+        "stake": 12.59081759311631,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
