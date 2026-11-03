@@ -243,3 +243,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-11-03T14:15:02Z | category: dallas | bet: highest-temperature-in-dallas-on-november-2-2026-86-87f__2026-11-02T0930
+- outcome: LOST
+- thesis: edge=6.3pt prob=0.173 ask=0.11
+- root_cause: Actual high 82F missed bucket [86,87] by 4F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
