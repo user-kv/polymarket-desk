@@ -285,3 +285,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-11-06T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-november-5-2026-72-73f__2026-11-04T1030
+- outcome: LOST
+- thesis: edge=22.54pt prob=0.0546 ask=0.28
+- root_cause: Lost despite a clean signal — likely normal variance or stale pricing before our scan.
+- rule: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.
+- tags: variance,latency,lost
+

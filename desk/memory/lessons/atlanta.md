@@ -166,3 +166,17 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-11-06T14:15:02Z | category: atlanta | bet: highest-temperature-in-atlanta-on-november-5-2026-78-79f__2026-11-03T2030
+- outcome: LOST
+- thesis: edge=5.06pt prob=0.1294 ask=0.18
+- root_cause: Lost despite a clean signal — likely normal variance or stale pricing before our scan.
+- rule: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.
+- tags: variance,latency,lost
+
+## LESSON 2026-11-06T14:15:02Z | category: atlanta | bet: highest-temperature-in-atlanta-on-november-5-2026-72-73f__2026-11-05T0200
+- outcome: LOST
+- thesis: edge=10.79pt prob=0.1979 ask=0.09
+- root_cause: Actual high 78F missed bucket [72,73] by 5F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
