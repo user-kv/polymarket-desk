@@ -250,3 +250,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-11-10T14:15:02Z | category: dallas | bet: highest-temperature-in-dallas-on-november-9-2026-74-75f__2026-11-08T1730
+- outcome: WON
+- thesis: edge=9.26pt prob=0.0874 ask=0.18
+- root_cause: Edge of 9pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
