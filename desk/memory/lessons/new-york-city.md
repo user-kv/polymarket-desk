@@ -292,3 +292,10 @@
 - rule: Trigger scans on model-run publish times (00/06/12/18Z) so we price fresh runs before the market repriced.
 - tags: variance,latency,lost
 
+## LESSON 2026-11-12T14:15:02Z | category: new-york-city | bet: highest-temperature-in-nyc-on-november-11-2026-64-65f__2026-11-10T0830
+- outcome: WON
+- thesis: edge=16.27pt prob=0.0183 ask=0.181
+- root_cause: Edge of 16pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
