@@ -236,3 +236,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-11-15T14:15:02Z | category: seattle | bet: highest-temperature-in-seattle-on-november-14-2026-60-61f__2026-11-13T1230
+- outcome: WON
+- thesis: edge=9.3pt prob=0.0 ask=0.093
+- root_cause: Edge of 9pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
