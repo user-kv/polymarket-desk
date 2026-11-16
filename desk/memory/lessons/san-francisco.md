@@ -152,3 +152,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-11-16T14:15:02Z | category: san-francisco | bet: highest-temperature-in-san-francisco-on-november-15-2026-66-67f__2026-11-14T0830
+- outcome: LOST
+- thesis: edge=6.0pt prob=0.02 ask=0.08
+- root_cause: Actual high 66F missed bucket [66,67] by 0F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+
