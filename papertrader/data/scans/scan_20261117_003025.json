@@ -1,0 +1,722 @@
+{
+  "scan_timestamp": "2026-11-17T00:30:25Z",
+  "test_mode": false,
+  "markets_found": 8,
+  "markets_priced": 8,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 60-61\u00b0F on November 17?",
+        "slug": "highest-temperature-in-san-francisco-on-november-17-2026-60-61f",
+        "market_id": "7063327",
+        "end_date": "2026-11-17T12:00:00Z",
+        "end_dt": "2026-11-17 12:00:00+00:00",
+        "hours_left": 11.5,
+        "yes_token": "49198517622852692329322629587320499960828657856799604414738760922636944062296",
+        "no_token": "42475932660203288538652746420107006472041801601413469434080121712063143159400",
+        "bucket_low_f": 60.0,
+        "bucket_high_f": 61.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSFO&format=raw&date=2026-11-18T11:00:00Z&hours=30",
+        "volume_num": 973.198433,
+        "liquidity_num": 7527.3752,
+        "event_id": "1393630",
+        "event_slug": "highest-temperature-in-san-francisco-on-november-17-2026",
+        "ask_price": 0.67
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 58.477999999999994,
+        "ecmwf_mean_f": 58.84159999999999,
+        "combined_mean_f": 59.04543689320392,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, outside_mean_buffer, bankroll_ok",
+        "edge_pct": -35.64,
+        "ensemble_prob": 0.3136,
+        "ask_price": 0.67,
+        "gfs_mean_f": 58.5,
+        "ecmwf_mean_f": 58.8,
+        "combined_mean_f": 59.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.314 ask=0.670 edge=-35.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=11.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=58.5F ecmwf=58.8F diff=0.20C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[60.0,61.0] mean=59.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$624.90 max=$605.87 exposure $624.90+$20.00 > $605.87"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.314 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.670 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.311 min=0.030"
+          ]
+        ],
+        "shares": 29.8507,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be 68\u00b0F or higher on November 17?",
+        "slug": "highest-temperature-in-san-francisco-on-november-17-2026-68forhigher",
+        "market_id": "7063331",
+        "end_date": "2026-11-17T12:00:00Z",
+        "end_dt": "2026-11-17 12:00:00+00:00",
+        "hours_left": 11.5,
+        "yes_token": "6360818816521581813206197056734618822383255492544927536463859638643476327890",
+        "no_token": "40379944236829192430214246541475443348923097262669866554181536526576692796017",
+        "bucket_low_f": 68.0,
+        "bucket_high_f": 999.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": true,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSFO&format=raw&date=2026-11-18T11:00:00Z&hours=30",
+        "volume_num": 95.0,
+        "liquidity_num": 1488.15108,
+        "event_id": "1393630",
+        "event_slug": "highest-temperature-in-san-francisco-on-november-17-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 58.477999999999994,
+        "ecmwf_mean_f": 58.84159999999999,
+        "combined_mean_f": 59.04543689320392,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 58.5,
+        "ecmwf_mean_f": 58.8,
+        "combined_mean_f": 59.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=11.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=58.5F ecmwf=58.8F diff=0.20C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[68.0,999.0] mean=59.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$624.90 max=$605.87 exposure $624.90+$20.00 > $605.87"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 50-51\u00b0F on November 18?",
+        "slug": "highest-temperature-in-san-francisco-on-november-18-2026-50-51f",
+        "market_id": "7090650",
+        "end_date": "2026-11-18T12:00:00Z",
+        "end_dt": "2026-11-18 12:00:00+00:00",
+        "hours_left": 35.5,
+        "yes_token": "11047786249091375070193051524054978793639752119243530331928726965271511723506",
+        "no_token": "107617829393489831441142194690542208940889569767424311098309008534288613062959",
+        "bucket_low_f": 50.0,
+        "bucket_high_f": 51.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSFO&format=raw&date=2026-11-19T11:00:00Z&hours=30",
+        "volume_num": 92.952,
+        "liquidity_num": 1191.25838,
+        "event_id": "1401103",
+        "event_slug": "highest-temperature-in-san-francisco-on-november-18-2026",
+        "ask_price": 0.019
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 57.482,
+        "ecmwf_mean_f": 57.826400000000014,
+        "combined_mean_f": 58.25815533980582,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.9,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.019,
+        "gfs_mean_f": 57.5,
+        "ecmwf_mean_f": 57.8,
+        "combined_mean_f": 58.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.019 edge=-1.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=35.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=57.5F ecmwf=57.8F diff=0.19C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[50.0,51.0] mean=58.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$624.90 max=$605.87 exposure $624.90+$20.00 > $605.87"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.019 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 1052.6316,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 52-53\u00b0F on November 18?",
+        "slug": "highest-temperature-in-san-francisco-on-november-18-2026-52-53f",
+        "market_id": "7090651",
+        "end_date": "2026-11-18T12:00:00Z",
+        "end_dt": "2026-11-18 12:00:00+00:00",
+        "hours_left": 35.5,
+        "yes_token": "102458037002596231659135216428476690020184333959551213330807449207017253833309",
+        "no_token": "20221903040023094567622912398961008143929922358854041643727748784894503939563",
+        "bucket_low_f": 52.0,
+        "bucket_high_f": 53.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSFO&format=raw&date=2026-11-19T11:00:00Z&hours=30",
+        "volume_num": 92.95175,
+        "liquidity_num": 884.93544,
+        "event_id": "1401103",
+        "event_slug": "highest-temperature-in-san-francisco-on-november-18-2026",
+        "ask_price": 0.03
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 57.482,
+        "ecmwf_mean_f": 57.826400000000014,
+        "combined_mean_f": 58.25815533980582,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -3.0,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.03,
+        "gfs_mean_f": 57.5,
+        "ecmwf_mean_f": 57.8,
+        "combined_mean_f": 58.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.030 edge=-3.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=35.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=57.5F ecmwf=57.8F diff=0.19C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[52.0,53.0] mean=58.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$624.90 max=$605.87 exposure $624.90+$20.00 > $605.87"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.030 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 666.6667,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 60-61\u00b0F on November 17?",
+        "slug": "highest-temperature-in-chicago-on-november-17-2026-60-61f",
+        "market_id": "7062085",
+        "end_date": "2026-11-17T12:00:00Z",
+        "end_dt": "2026-11-17 12:00:00+00:00",
+        "hours_left": 11.5,
+        "yes_token": "1390568408872422085326048246820224461623544207864712045512846084372657303717",
+        "no_token": "109871655235847753380506516862387317776699522440837832515496064797724128994387",
+        "bucket_low_f": 60.0,
+        "bucket_high_f": 61.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KORD&format=raw&date=2026-11-18T09:00:00Z&hours=30",
+        "volume_num": 959.1024199999999,
+        "liquidity_num": 1553.97942,
+        "event_id": "1392917",
+        "event_slug": "highest-temperature-in-chicago-on-november-17-2026",
+        "ask_price": 0.028
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 55.323999999999984,
+        "ecmwf_mean_f": 53.0596,
+        "combined_mean_f": 54.7125242718447,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -2.8,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.028,
+        "gfs_mean_f": 55.3,
+        "ecmwf_mean_f": 53.1,
+        "combined_mean_f": 54.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.028 edge=-2.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=11.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=55.3F ecmwf=53.1F diff=1.26C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[60.0,61.0] mean=54.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$624.90 max=$605.87 exposure $624.90+$20.00 > $605.87"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.028 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 714.2857,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 54-55\u00b0F on November 17?",
+        "slug": "highest-temperature-in-nyc-on-november-17-2026-54-55f",
+        "market_id": "7062031",
+        "end_date": "2026-11-17T12:00:00Z",
+        "end_dt": "2026-11-17 12:00:00+00:00",
+        "hours_left": 11.5,
+        "yes_token": "84327085849586359253906191510999577675380940404098456571968888607898098051106",
+        "no_token": "76616644048914233241013485495101438362653380510006138495213422302219423543082",
+        "bucket_low_f": 54.0,
+        "bucket_high_f": 55.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-11-18T08:00:00Z&hours=30",
+        "volume_num": 932.8179319999999,
+        "liquidity_num": 2096.00005,
+        "event_id": "1392907",
+        "event_slug": "highest-temperature-in-nyc-on-november-17-2026",
+        "ask_price": 0.038
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 56.047999999999995,
+        "ecmwf_mean_f": 53.44520000000001,
+        "combined_mean_f": 55.01203883495144,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = models_agree, outside_mean_buffer, bankroll_ok, min_ask_for_yes",
+        "edge_pct": 41.59,
+        "ensemble_prob": 0.4539,
+        "ask_price": 0.038,
+        "gfs_mean_f": 56.0,
+        "ecmwf_mean_f": 53.4,
+        "combined_mean_f": 55.0,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.454 ask=0.038 edge=41.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=11.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=56.0F ecmwf=53.4F diff=1.45C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[54.0,55.0] mean=55.0F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$624.90 max=$605.87 exposure $624.90+$100.00 > $605.87"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.454 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.038 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.437 min=0.030"
+          ]
+        ],
+        "shares": 2631.5789,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 72-73\u00b0F on November 18?",
+        "slug": "highest-temperature-in-atlanta-on-november-18-2026-72-73f",
+        "market_id": "7088998",
+        "end_date": "2026-11-18T12:00:00Z",
+        "end_dt": "2026-11-18 12:00:00+00:00",
+        "hours_left": 35.5,
+        "yes_token": "84263735813734799449274632842310077133615023719430371271781875446311163640246",
+        "no_token": "8956626722400453983637411352364304380382265736073299719304878458630334585807",
+        "bucket_low_f": 72.0,
+        "bucket_high_f": 73.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KATL&format=raw&date=2026-11-19T08:00:00Z&hours=30",
+        "volume_num": 8.88,
+        "liquidity_num": 983.81823,
+        "event_id": "1400361",
+        "event_slug": "highest-temperature-in-atlanta-on-november-18-2026",
+        "ask_price": 0.013
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 64.72200000000001,
+        "ecmwf_mean_f": 65.85,
+        "combined_mean_f": 65.56689320388347,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.3,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.013,
+        "gfs_mean_f": 64.7,
+        "ecmwf_mean_f": 65.8,
+        "combined_mean_f": 65.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.013 edge=-1.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=35.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=64.7F ecmwf=65.8F diff=0.63C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[72.0,73.0] mean=65.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$624.90 max=$605.87 exposure $624.90+$20.00 > $605.87"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.013 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 1538.4615,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Denver",
+        "station": "KBKF",
+        "question": "Will the highest temperature in Denver be between 66-67\u00b0F on November 17?",
+        "slug": "highest-temperature-in-denver-on-november-17-2026-66-67f",
+        "market_id": "7063305",
+        "end_date": "2026-11-17T12:00:00Z",
+        "end_dt": "2026-11-17 12:00:00+00:00",
+        "hours_left": 11.5,
+        "yes_token": "6596908820872291866385226699764612225293464116404141285134786042753208571444",
+        "no_token": "112690788753656879993954822967153335359358790197021267620403012420681498413091",
+        "bucket_low_f": 66.0,
+        "bucket_high_f": 67.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KDEN&format=raw&date=2026-11-18T10:00:00Z&hours=30",
+        "volume_num": 88.615021,
+        "liquidity_num": 452.3218,
+        "event_id": "1393628",
+        "event_slug": "highest-temperature-in-denver-on-november-17-2026",
+        "ask_price": 0.39
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 63.548000000000016,
+        "ecmwf_mean_f": 65.18119999999998,
+        "combined_mean_f": 63.09631067961166,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok",
+        "edge_pct": -19.4,
+        "ensemble_prob": 0.196,
+        "ask_price": 0.39,
+        "gfs_mean_f": 63.5,
+        "ecmwf_mean_f": 65.2,
+        "combined_mean_f": 63.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.196 ask=0.390 edge=-19.4pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=11.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=63.5F ecmwf=65.2F diff=0.91C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[66.0,67.0] mean=63.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$624.90 max=$605.87 exposure $624.90+$20.00 > $605.87"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.196 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.390 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.209 min=0.030"
+          ]
+        ],
+        "shares": 51.2821,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
