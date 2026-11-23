@@ -159,3 +159,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-11-23T14:15:02Z | category: san-francisco | bet: highest-temperature-in-san-francisco-on-november-22-2026-58-59f__2026-11-21T1800
+- outcome: WON
+- thesis: edge=5.76pt prob=0.0724 ask=0.13
+- root_cause: Edge of 6pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
