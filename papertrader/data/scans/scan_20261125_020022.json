@@ -1,0 +1,455 @@
+{
+  "scan_timestamp": "2026-11-25T02:00:22Z",
+  "test_mode": false,
+  "markets_found": 5,
+  "markets_priced": 5,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 58-59\u00b0F on November 25?",
+        "slug": "highest-temperature-in-san-francisco-on-november-25-2026-58-59f",
+        "market_id": "7283595",
+        "end_date": "2026-11-25T12:00:00Z",
+        "end_dt": "2026-11-25 12:00:00+00:00",
+        "hours_left": 10.0,
+        "yes_token": "15183210753316597141857566828840067740450347186172806559165431799970840096332",
+        "no_token": "20724056806291831339053114423657311305605056940450569349478464564684937250880",
+        "bucket_low_f": 58.0,
+        "bucket_high_f": 59.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSFO&format=raw&date=2026-11-26T11:00:00Z&hours=30",
+        "volume_num": 96.9146,
+        "liquidity_num": 1024.57336,
+        "event_id": "1447102",
+        "event_slug": "highest-temperature-in-san-francisco-on-november-25-2026",
+        "ask_price": 0.006
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 65.67400000000002,
+        "ecmwf_mean_f": 64.24600000000001,
+        "combined_mean_f": 64.08417475728156,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Bankroll/dup rule blocked (edge 4.3pt)",
+        "edge_pct": 4.32,
+        "ensemble_prob": 0.0492,
+        "ask_price": 0.006,
+        "gfs_mean_f": 65.7,
+        "ecmwf_mean_f": 64.2,
+        "combined_mean_f": 64.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.049 ask=0.006 edge=4.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=10.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=65.7F ecmwf=64.2F diff=0.79C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[58.0,59.0] mean=64.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$628.31 max=$615.07 exposure $628.31+$33.43 > $615.07"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.049 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.006 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.034 min=0.030"
+          ]
+        ],
+        "shares": 5571.3657,
+        "stake": 33.428193946999656,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 54-55\u00b0F on November 25?",
+        "slug": "highest-temperature-in-seattle-on-november-25-2026-54-55f",
+        "market_id": "7283560",
+        "end_date": "2026-11-25T12:00:00Z",
+        "end_dt": "2026-11-25 12:00:00+00:00",
+        "hours_left": 10.0,
+        "yes_token": "7452246309130146388296167737734785390941671710207413890681224344545019387731",
+        "no_token": "113305192729300479802153545005795379269032865486282091468645225397620100045995",
+        "bucket_low_f": 54.0,
+        "bucket_high_f": 55.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSEA&format=raw&date=2026-11-26T11:00:00Z&hours=30",
+        "volume_num": 95.575989,
+        "liquidity_num": 914.74988,
+        "event_id": "1447096",
+        "event_slug": "highest-temperature-in-seattle-on-november-25-2026",
+        "ask_price": 0.045
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 53.286,
+        "ecmwf_mean_f": 55.04760000000002,
+        "combined_mean_f": 54.27349514563107,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 29.0pt would qualify but bucket straddles mean)",
+        "edge_pct": 29.0,
+        "ensemble_prob": 0.335,
+        "ask_price": 0.045,
+        "gfs_mean_f": 53.3,
+        "ecmwf_mean_f": 55.0,
+        "combined_mean_f": 54.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.335 ask=0.045 edge=29.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=10.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=53.3F ecmwf=55.0F diff=0.98C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[54.0,55.0] mean=54.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$628.31 max=$615.07 exposure $628.31+$100.00 > $615.07"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.335 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.045 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.354 min=0.030"
+          ]
+        ],
+        "shares": 2222.2222,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 56-57\u00b0F on November 26?",
+        "slug": "highest-temperature-in-seattle-on-november-26-2026-56-57f",
+        "market_id": "7308010",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 34.0,
+        "yes_token": "41911423850998796335262526139366443388685309864393763441360402925946724120203",
+        "no_token": "114564138036750016871754373510175297954691433863987397266515922451904935206530",
+        "bucket_low_f": 56.0,
+        "bucket_high_f": 57.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSEA&format=raw&date=2026-11-27T11:00:00Z&hours=30",
+        "volume_num": 9.166667,
+        "liquidity_num": 450.1689,
+        "event_id": "1452260",
+        "event_slug": "highest-temperature-in-seattle-on-november-26-2026",
+        "ask_price": 0.54
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 55.284,
+        "ecmwf_mean_f": 53.679599999999986,
+        "combined_mean_f": 54.238543689320394,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, outside_mean_buffer, bankroll_ok",
+        "edge_pct": -37.93,
+        "ensemble_prob": 0.1607,
+        "ask_price": 0.54,
+        "gfs_mean_f": 55.3,
+        "ecmwf_mean_f": 53.7,
+        "combined_mean_f": 54.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.161 ask=0.540 edge=-37.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=34.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=55.3F ecmwf=53.7F diff=0.89C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[56.0,57.0] mean=54.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$628.31 max=$615.07 exposure $628.31+$20.00 > $615.07"
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.161 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.540 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.160 min=0.030"
+          ]
+        ],
+        "shares": 37.037,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 58-59\u00b0F on November 25?",
+        "slug": "highest-temperature-in-seattle-on-november-25-2026-58-59f",
+        "market_id": "7283562",
+        "end_date": "2026-11-25T12:00:00Z",
+        "end_dt": "2026-11-25 12:00:00+00:00",
+        "hours_left": 10.0,
+        "yes_token": "81395832862914218223997032005147991614222000849109084061789794766411683950601",
+        "no_token": "53144506139593515372541721067631970974171873286585898678538551615551379843679",
+        "bucket_low_f": 58.0,
+        "bucket_high_f": 59.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSEA&format=raw&date=2026-11-26T11:00:00Z&hours=30",
+        "volume_num": 915.7997869999999,
+        "liquidity_num": 994.1434,
+        "event_id": "1447096",
+        "event_slug": "highest-temperature-in-seattle-on-november-25-2026",
+        "ask_price": 0.43
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 53.286,
+        "ecmwf_mean_f": 55.04760000000002,
+        "combined_mean_f": 54.27349514563107,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob",
+        "edge_pct": -39.27,
+        "ensemble_prob": 0.0373,
+        "ask_price": 0.43,
+        "gfs_mean_f": 53.3,
+        "ecmwf_mean_f": 55.0,
+        "combined_mean_f": 54.3,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.037 ask=0.430 edge=-39.3pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=10.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=53.3F ecmwf=55.0F diff=0.98C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[58.0,59.0] mean=54.3F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$628.31 max=$615.07 exposure $628.31+$20.00 > $615.07"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.037 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.430 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.034 min=0.030"
+          ]
+        ],
+        "shares": 46.5116,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 52-53\u00b0F on November 26?",
+        "slug": "highest-temperature-in-nyc-on-november-26-2026-52-53f",
+        "market_id": "7304856",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 34.0,
+        "yes_token": "1304567292104579522530582944178631656107034319502628153202976400084872200960",
+        "no_token": "1304567292104579522530582944178631656107034319502628153202976400084872200961",
+        "bucket_low_f": 52.0,
+        "bucket_high_f": 53.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-11-27T08:00:00Z&hours=30",
+        "volume_num": 91.095888,
+        "liquidity_num": 225.56,
+        "event_id": "1451670",
+        "event_slug": "highest-temperature-in-nyc-on-november-26-2026",
+        "ask_price": 0.39
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 59.01199999999999,
+        "ecmwf_mean_f": 51.551600000000015,
+        "combined_mean_f": 54.44932038834956,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, outside_mean_buffer, bankroll_ok, min_ensemble_prob",
+        "edge_pct": -27.12,
+        "ensemble_prob": 0.1188,
+        "ask_price": 0.39,
+        "gfs_mean_f": 59.0,
+        "ecmwf_mean_f": 51.6,
+        "combined_mean_f": 54.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.119 ask=0.390 edge=-27.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=34.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=59.0F ecmwf=51.6F diff=4.14C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[52.0,53.0] mean=54.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=False exposure=$628.31 max=$615.07 exposure $628.31+$20.00 > $615.07"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.119 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.390 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.131 min=0.030"
+          ]
+        ],
+        "shares": 51.2821,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
