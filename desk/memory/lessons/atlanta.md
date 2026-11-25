@@ -215,3 +215,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-11-25T14:15:02Z | category: atlanta | bet: highest-temperature-in-atlanta-on-november-24-2026-66-67f__2026-11-22T2130
+- outcome: WON
+- thesis: edge=6.27pt prob=0.0873 ask=0.15
+- root_cause: Edge of 6pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
