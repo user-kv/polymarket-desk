@@ -1,0 +1,811 @@
+{
+  "scan_timestamp": "2026-11-26T10:30:24Z",
+  "test_mode": false,
+  "markets_found": 9,
+  "markets_priced": 9,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Atlanta",
+        "station": "KATL",
+        "question": "Will the highest temperature in Atlanta be between 46-47\u00b0F on November 26?",
+        "slug": "highest-temperature-in-atlanta-on-november-26-2026-46-47f",
+        "market_id": "7305056",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "45659015197427226348627516718847066949931303859650581909529590739256983937874",
+        "no_token": "37857820992781972838906681606538980061476777942254451108880082873181556095515",
+        "bucket_low_f": 46.0,
+        "bucket_high_f": 47.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KATL&format=raw&date=2026-11-27T08:00:00Z&hours=30",
+        "volume_num": 992.8795790000001,
+        "liquidity_num": 761.47763,
+        "event_id": "1451693",
+        "event_slug": "highest-temperature-in-atlanta-on-november-26-2026",
+        "ask_price": 0.015
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 51.217999999999996,
+        "ecmwf_mean_f": 51.4544,
+        "combined_mean_f": 50.859805825242724,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -1.5,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.015,
+        "gfs_mean_f": 51.2,
+        "ecmwf_mean_f": 51.5,
+        "combined_mean_f": 50.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.015 edge=-1.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=51.2F ecmwf=51.5F diff=0.13C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[46.0,47.0] mean=50.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.015 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 1333.3333,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 50-51\u00b0F on November 26?",
+        "slug": "lowest-temperature-in-nyc-on-november-26-2026-50-51f",
+        "market_id": "7305256",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "4634539818091135345317737197724238926926373613043315723078188513803822670047",
+        "no_token": "102370431271140924439021641896625925572685277921271879794475859524092735124027",
+        "bucket_low_f": 50.0,
+        "bucket_high_f": 51.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-11-27T08:00:00Z&hours=30",
+        "volume_num": 98.4948,
+        "liquidity_num": 3930.54449,
+        "event_id": "1451709",
+        "event_slug": "lowest-temperature-in-nyc-on-november-26-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 46.346000000000004,
+        "ecmwf_mean_f": 43.2932,
+        "combined_mean_f": 42.73533980582522,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 46.3,
+        "ecmwf_mean_f": 43.3,
+        "combined_mean_f": 42.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=46.3F ecmwf=43.3F diff=1.70C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[50.0,51.0] mean=42.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 50-51\u00b0F on November 26?",
+        "slug": "highest-temperature-in-nyc-on-november-26-2026-50-51f",
+        "market_id": "7304855",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "1304567292104579522530582944178631656107034319502628153202976400084872200704",
+        "no_token": "1304567292104579522530582944178631656107034319502628153202976400084872200705",
+        "bucket_low_f": 50.0,
+        "bucket_high_f": 51.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-11-27T08:00:00Z&hours=30",
+        "volume_num": 943.701446,
+        "liquidity_num": 303.0751,
+        "event_id": "1451670",
+        "event_slug": "highest-temperature-in-nyc-on-november-26-2026",
+        "ask_price": 0.27
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 58.718,
+        "ecmwf_mean_f": 52.995200000000004,
+        "combined_mean_f": 53.235631067961194,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree",
+        "edge_pct": -1.72,
+        "ensemble_prob": 0.2528,
+        "ask_price": 0.27,
+        "gfs_mean_f": 58.7,
+        "ecmwf_mean_f": 53.0,
+        "combined_mean_f": 53.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.253 ask=0.270 edge=-1.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=58.7F ecmwf=53.0F diff=3.18C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[50.0,51.0] mean=53.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.253 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.270 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.267 min=0.030"
+          ]
+        ],
+        "shares": 74.0741,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 52-53\u00b0F on November 26?",
+        "slug": "lowest-temperature-in-nyc-on-november-26-2026-52-53f",
+        "market_id": "7305258",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "85869836020207910050987802532719474565108993493636460478116194080539369299961",
+        "no_token": "22741454977069573432347518841023668834583874021362568135412971236379729248037",
+        "bucket_low_f": 52.0,
+        "bucket_high_f": 53.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-11-27T08:00:00Z&hours=30",
+        "volume_num": 89.995,
+        "liquidity_num": 4304.70598,
+        "event_id": "1451709",
+        "event_slug": "lowest-temperature-in-nyc-on-november-26-2026",
+        "ask_price": 0.001
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 46.346000000000004,
+        "ecmwf_mean_f": 43.2932,
+        "combined_mean_f": 42.73533980582522,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -0.1,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.001,
+        "gfs_mean_f": 46.3,
+        "ecmwf_mean_f": 43.3,
+        "combined_mean_f": 42.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.001 edge=-0.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=46.3F ecmwf=43.3F diff=1.70C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[52.0,53.0] mean=42.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.001 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 20000.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 48-49\u00b0F on November 26?",
+        "slug": "highest-temperature-in-nyc-on-november-26-2026-48-49f",
+        "market_id": "7304854",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "1304567292104579522530582944178631656107034319502628153202976400084872200448",
+        "no_token": "1304567292104579522530582944178631656107034319502628153202976400084872200449",
+        "bucket_low_f": 48.0,
+        "bucket_high_f": 49.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-11-27T08:00:00Z&hours=30",
+        "volume_num": 896.027252,
+        "liquidity_num": 621.38174,
+        "event_id": "1451670",
+        "event_slug": "highest-temperature-in-nyc-on-november-26-2026",
+        "ask_price": 0.139
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 58.718,
+        "ecmwf_mean_f": 52.995200000000004,
+        "combined_mean_f": 53.235631067961194,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": -5.71,
+        "ensemble_prob": 0.0819,
+        "ask_price": 0.139,
+        "gfs_mean_f": 58.7,
+        "ecmwf_mean_f": 53.0,
+        "combined_mean_f": 53.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.082 ask=0.139 edge=-5.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=58.7F ecmwf=53.0F diff=3.18C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[48.0,49.0] mean=53.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.082 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.139 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.097 min=0.030"
+          ]
+        ],
+        "shares": 143.8849,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be 37\u00b0F or below on November 26?",
+        "slug": "lowest-temperature-in-nyc-on-november-26-2026-37forbelow",
+        "market_id": "7305240",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "81865914826417644009474027684971943156887905883620672605052826648998060046430",
+        "no_token": "21688129039733872637771031568320564045258975805403386309573463952230650443232",
+        "bucket_low_f": -999.0,
+        "bucket_high_f": 37.0,
+        "is_open_ended_low": true,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-11-27T08:00:00Z&hours=30",
+        "volume_num": 89.49000000000001,
+        "liquidity_num": 89.5544,
+        "event_id": "1451709",
+        "event_slug": "lowest-temperature-in-nyc-on-november-26-2026",
+        "ask_price": 0.089
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 46.346000000000004,
+        "ecmwf_mean_f": 43.2932,
+        "combined_mean_f": 42.73533980582522,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -8.9,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.089,
+        "gfs_mean_f": 46.3,
+        "ecmwf_mean_f": 43.3,
+        "combined_mean_f": 42.7,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.089 edge=-8.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=46.3F ecmwf=43.3F diff=1.70C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[-999.0,37.0] mean=42.7F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.089 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 224.7191,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the highest temperature in New York City be between 56-57\u00b0F on November 26?",
+        "slug": "highest-temperature-in-nyc-on-november-26-2026-56-57f",
+        "market_id": "7304858",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "1304567292104579522530582944178631656107034319502628153202976400084872201472",
+        "no_token": "1304567292104579522530582944178631656107034319502628153202976400084872201473",
+        "bucket_low_f": 56.0,
+        "bucket_high_f": 57.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-11-27T08:00:00Z&hours=30",
+        "volume_num": 894.3889770000001,
+        "liquidity_num": 240.8887,
+        "event_id": "1451670",
+        "event_slug": "highest-temperature-in-nyc-on-november-26-2026",
+        "ask_price": 0.09
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 58.718,
+        "ecmwf_mean_f": 52.995200000000004,
+        "combined_mean_f": 53.235631067961194,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": 2.15,
+        "ensemble_prob": 0.1115,
+        "ask_price": 0.09,
+        "gfs_mean_f": 58.7,
+        "ecmwf_mean_f": 53.0,
+        "combined_mean_f": 53.2,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.111 ask=0.090 edge=2.1pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=58.7F ecmwf=53.0F diff=3.18C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[56.0,57.0] mean=53.2F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.111 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.090 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.092 min=0.030"
+          ]
+        ],
+        "shares": 217.1582,
+        "stake": 19.54423386703795,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Austin",
+        "station": "KAUS",
+        "question": "Will the lowest temperature in Austin be between 32-33\u00b0F on November 26?",
+        "slug": "lowest-temperature-in-austin-on-november-26-2026-32-33f",
+        "market_id": "7305358",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "58724618618193246222814604189189214871037051422381465930673085432722953621334",
+        "no_token": "39663334600589573001091463923471919565380723489140380273596122054904508620503",
+        "bucket_low_f": 32.0,
+        "bucket_high_f": 33.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KAUS&format=raw&date=2026-11-27T09:00:00Z&hours=30",
+        "volume_num": 93.83983599999999,
+        "liquidity_num": 19.8885,
+        "event_id": "1451715",
+        "event_slug": "lowest-temperature-in-austin-on-november-26-2026",
+        "ask_price": 0.88
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 42.013999999999996,
+        "ecmwf_mean_f": 39.102799999999995,
+        "combined_mean_f": 37.554660194174765,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": -83.5,
+        "ensemble_prob": 0.045,
+        "ask_price": 0.88,
+        "gfs_mean_f": 42.0,
+        "ecmwf_mean_f": 39.1,
+        "combined_mean_f": 37.6,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.045 ask=0.880 edge=-83.5pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=42.0F ecmwf=39.1F diff=1.62C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[32.0,33.0] mean=37.6F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.045 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.880 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.044 min=0.030"
+          ]
+        ],
+        "shares": 22.7273,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 58-59\u00b0F on November 26?",
+        "slug": "highest-temperature-in-seattle-on-november-26-2026-58-59f",
+        "market_id": "7308011",
+        "end_date": "2026-11-26T12:00:00Z",
+        "end_dt": "2026-11-26 12:00:00+00:00",
+        "hours_left": 1.5,
+        "yes_token": "46543084476054228539386765594718742930120656574787990778034384024725644713845",
+        "no_token": "110117278916274854667481024652488504170092052595852224100444979719329294135471",
+        "bucket_low_f": 58.0,
+        "bucket_high_f": 59.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSEA&format=raw&date=2026-11-27T11:00:00Z&hours=30",
+        "volume_num": 914.0633229999999,
+        "liquidity_num": 614.8621,
+        "event_id": "1452260",
+        "event_slug": "highest-temperature-in-seattle-on-november-26-2026",
+        "ask_price": 0.08
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 55.152,
+        "ecmwf_mean_f": 53.470800000000004,
+        "combined_mean_f": 54.108349514563066,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -7.58,
+        "ensemble_prob": 0.0042,
+        "ask_price": 0.08,
+        "gfs_mean_f": 55.2,
+        "ecmwf_mean_f": 53.5,
+        "combined_mean_f": 54.1,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.004 ask=0.080 edge=-7.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=1.5 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=55.2F ecmwf=53.5F diff=0.93C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[58.0,59.0] mean=54.1F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=True exposure=$500.00 max=$662.92 duplicate slug"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.004 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.080 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.005 min=0.030"
+          ]
+        ],
+        "shares": 250.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
