@@ -1,0 +1,188 @@
+{
+  "scan_timestamp": "2026-11-26T12:00:18Z",
+  "test_mode": false,
+  "markets_found": 2,
+  "markets_priced": 2,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "San Francisco",
+        "station": "KSFO",
+        "question": "Will the highest temperature in San Francisco be between 60-61\u00b0F on November 27?",
+        "slug": "highest-temperature-in-san-francisco-on-november-27-2026-60-61f",
+        "market_id": "7340935",
+        "end_date": "2026-11-27T12:00:00Z",
+        "end_dt": "2026-11-27 12:00:00+00:00",
+        "hours_left": 24.0,
+        "yes_token": "76493862394507684171727870538567279589228437938193737399342601775540064261388",
+        "no_token": "75963389347287468227428577922590484298091647647596377640112195372134218155653",
+        "bucket_low_f": 60.0,
+        "bucket_high_f": 61.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSFO&format=raw&date=2026-11-28T11:00:00Z&hours=30",
+        "volume_num": 895.038495,
+        "liquidity_num": 695.3126,
+        "event_id": "1457719",
+        "event_slug": "highest-temperature-in-san-francisco-on-november-27-2026",
+        "ask_price": 0.21
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 67.31800000000001,
+        "ecmwf_mean_f": 64.25679999999998,
+        "combined_mean_f": 64.48349514563114,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob",
+        "edge_pct": -13.77,
+        "ensemble_prob": 0.0723,
+        "ask_price": 0.21,
+        "gfs_mean_f": 67.3,
+        "ecmwf_mean_f": 64.3,
+        "combined_mean_f": 64.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.072 ask=0.210 edge=-13.8pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=24.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=67.3F ecmwf=64.3F diff=1.70C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[60.0,61.0] mean=64.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.072 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.210 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.112 min=0.030"
+          ]
+        ],
+        "shares": 95.2381,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Chicago",
+        "station": "KORD",
+        "question": "Will the highest temperature in Chicago be between 50-51\u00b0F on November 28?",
+        "slug": "highest-temperature-in-chicago-on-november-28-2026-50-51f",
+        "market_id": "7365314",
+        "end_date": "2026-11-28T12:00:00Z",
+        "end_dt": "2026-11-28 12:00:00+00:00",
+        "hours_left": 48.0,
+        "yes_token": "83603453416457672119764339775618209305295786013136443816688795686009966770527",
+        "no_token": "15639940929200809929998291952628107911295181818278200280943909041163618541365",
+        "bucket_low_f": 50.0,
+        "bucket_high_f": 51.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KORD&format=raw&date=2026-11-29T09:00:00Z&hours=30",
+        "volume_num": 88.846154,
+        "liquidity_num": 267.546,
+        "event_id": "1462460",
+        "event_slug": "highest-temperature-in-chicago-on-november-28-2026",
+        "ask_price": 0.24
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 49.35,
+        "ecmwf_mean_f": 49.060799999999986,
+        "combined_mean_f": 49.50611650485438,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "In mean buffer (edge 14.7pt would qualify but bucket straddles mean)",
+        "edge_pct": 14.7,
+        "ensemble_prob": 0.387,
+        "ask_price": 0.24,
+        "gfs_mean_f": 49.4,
+        "ecmwf_mean_f": 49.1,
+        "combined_mean_f": 49.5,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            true,
+            "prob=0.387 ask=0.240 edge=14.7pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=48.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=49.4F ecmwf=49.1F diff=0.16C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            false,
+            "bucket=[50.0,51.0] mean=49.5F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$500.00 max=$662.92 "
+          ],
+          [
+            "min_ensemble_prob",
+            true,
+            "prob=0.387 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.240 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.413 min=0.030"
+          ]
+        ],
+        "shares": 416.6667,
+        "stake": 100.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
