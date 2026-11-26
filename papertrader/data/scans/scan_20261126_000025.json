@@ -1,0 +1,277 @@
+{
+  "scan_timestamp": "2026-11-26T00:00:25Z",
+  "test_mode": false,
+  "markets_found": 3,
+  "markets_priced": 3,
+  "bets_placed": 0,
+  "near_misses": 0,
+  "results": [
+    {
+      "market": {
+        "city": "Seattle",
+        "station": "KSEA",
+        "question": "Will the highest temperature in Seattle be between 54-55\u00b0F on November 27?",
+        "slug": "highest-temperature-in-seattle-on-november-27-2026-54-55f",
+        "market_id": "7340904",
+        "end_date": "2026-11-27T12:00:00Z",
+        "end_dt": "2026-11-27 12:00:00+00:00",
+        "hours_left": 36.0,
+        "yes_token": "95066816602031669331813471445289414162053042887332748283469488755077410793711",
+        "no_token": "106488529420091099678408752362605584737600830098881938359597285504101386721434",
+        "bucket_low_f": 54.0,
+        "bucket_high_f": 55.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KSEA&format=raw&date=2026-11-28T11:00:00Z&hours=30",
+        "volume_num": 97.221273,
+        "liquidity_num": 374.2521,
+        "event_id": "1457713",
+        "event_slug": "highest-temperature-in-seattle-on-november-27-2026",
+        "ask_price": 0.08
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 49.038000000000004,
+        "ecmwf_mean_f": 48.1428,
+        "combined_mean_f": 49.44233009708736,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, bankroll_ok, min_ensemble_prob, nbm_member_consensus",
+        "edge_pct": -8.0,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.08,
+        "gfs_mean_f": 49.0,
+        "ecmwf_mean_f": 48.1,
+        "combined_mean_f": 49.4,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.080 edge=-8.0pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=36.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=49.0F ecmwf=48.1F diff=0.50C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[54.0,55.0] mean=49.4F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            false,
+            "dup=True exposure=$366.21 max=$681.95 duplicate slug"
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.080 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 250.0,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "New York City",
+        "station": "KLGA",
+        "question": "Will the lowest temperature in New York City be between 58-59\u00b0F on November 27?",
+        "slug": "lowest-temperature-in-nyc-on-november-27-2026-58-59f",
+        "market_id": "7338546",
+        "end_date": "2026-11-27T12:00:00Z",
+        "end_dt": "2026-11-27 12:00:00+00:00",
+        "hours_left": 36.0,
+        "yes_token": "104077037846621601458182890747733071143957125601259257816143601928450437373947",
+        "no_token": "89909307714074321074126932342837770337642705294479208602416928459282088018090",
+        "bucket_low_f": 58.0,
+        "bucket_high_f": 59.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "low",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KLGA&format=raw&date=2026-11-28T08:00:00Z&hours=30",
+        "volume_num": 93.20349999999999,
+        "liquidity_num": 503.04244,
+        "event_id": "1457176",
+        "event_slug": "lowest-temperature-in-nyc-on-november-27-2026",
+        "ask_price": 0.029
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 51.212,
+        "ecmwf_mean_f": 43.77919999999998,
+        "combined_mean_f": 45.91941747572816,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, models_agree, min_ensemble_prob, min_ask_for_yes, nbm_member_consensus",
+        "edge_pct": -2.9,
+        "ensemble_prob": 0.0,
+        "ask_price": 0.029,
+        "gfs_mean_f": 51.2,
+        "ecmwf_mean_f": 43.8,
+        "combined_mean_f": 45.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.000 ask=0.029 edge=-2.9pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=36.0 max=48"
+          ],
+          [
+            "models_agree",
+            false,
+            "gfs=51.2F ecmwf=43.8F diff=4.13C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[58.0,59.0] mean=45.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$366.21 max=$681.95 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.000 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            false,
+            "ask=0.029 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            false,
+            "raw_member_prob=0.000 min=0.030"
+          ]
+        ],
+        "shares": 689.6552,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    },
+    {
+      "market": {
+        "city": "Dallas",
+        "station": "KDAL",
+        "question": "Will the highest temperature in Dallas be between 66-67\u00b0F on November 27?",
+        "slug": "highest-temperature-in-dallas-on-november-27-2026-66-67f",
+        "market_id": "7338474",
+        "end_date": "2026-11-27T12:00:00Z",
+        "end_dt": "2026-11-27 12:00:00+00:00",
+        "hours_left": 36.0,
+        "yes_token": "103670707459588508150670654198908717417034139790800503159073677461172122690053",
+        "no_token": "89442638313693706863810416409669087111562107882994148068572978806568932911012",
+        "bucket_low_f": 66.0,
+        "bucket_high_f": 67.0,
+        "is_open_ended_low": false,
+        "is_open_ended_high": false,
+        "metric": "high",
+        "display_unit": "f",
+        "resolution_source": "https://aviationweather.gov/api/data/metar?ids=KDAL&format=raw&date=2026-11-28T09:00:00Z&hours=30",
+        "volume_num": 910.310508,
+        "liquidity_num": 380.1516,
+        "event_id": "1457167",
+        "event_slug": "highest-temperature-in-dallas-on-november-27-2026",
+        "ask_price": 0.43
+      },
+      "forecast_summary": {
+        "gfs_mean_f": 64.08,
+        "ecmwf_mean_f": 64.14,
+        "combined_mean_f": 63.872621359223295,
+        "n_members": 206
+      },
+      "evaluation": {
+        "action": "SKIP",
+        "reason": "Skip: failed rules = edge_gte_threshold, min_ensemble_prob",
+        "edge_pct": -29.62,
+        "ensemble_prob": 0.1338,
+        "ask_price": 0.43,
+        "gfs_mean_f": 64.1,
+        "ecmwf_mean_f": 64.1,
+        "combined_mean_f": 63.9,
+        "n_members": 206,
+        "all_rules": [
+          [
+            "edge_gte_threshold",
+            false,
+            "prob=0.134 ask=0.430 edge=-29.6pt threshold=5pt"
+          ],
+          [
+            "within_max_hours",
+            true,
+            "hours_left=36.0 max=48"
+          ],
+          [
+            "models_agree",
+            true,
+            "gfs=64.1F ecmwf=64.1F diff=0.03C (max 1.0C)"
+          ],
+          [
+            "outside_mean_buffer",
+            true,
+            "bucket=[66.0,67.0] mean=63.9F buf\u00b12.0F"
+          ],
+          [
+            "bankroll_ok",
+            true,
+            "dup=False exposure=$366.21 max=$681.95 "
+          ],
+          [
+            "min_ensemble_prob",
+            false,
+            "prob=0.134 min=0.150"
+          ],
+          [
+            "min_ask_for_yes",
+            true,
+            "ask=0.430 min=0.050"
+          ],
+          [
+            "nbm_member_consensus",
+            true,
+            "raw_member_prob=0.126 min=0.030"
+          ]
+        ],
+        "shares": 46.5116,
+        "stake": 20.0,
+        "side": "YES",
+        "brain": null
+      }
+    }
+  ]
+}
