@@ -229,3 +229,10 @@
 - rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
 - tags: won,edge_confirmed
 
+## LESSON 2026-11-28T14:15:02Z | category: atlanta | bet: highest-temperature-in-atlanta-on-november-27-2026-46-47f__2026-11-26T0600
+- outcome: LOST
+- thesis: edge=14.15pt prob=0.2115 ask=0.07
+- root_cause: Actual high 52F missed bucket [46,47] by 5F — ensemble was confident but off.
+- rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
+- tags: forecast_miss,lost
+

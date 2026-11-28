@@ -320,3 +320,10 @@
 - rule: Widen the mean-buffer near steep parts of the day's temperature distribution; confident ensembles still miss tails.
 - tags: forecast_miss,lost
 
+## LESSON 2026-11-28T14:15:02Z | category: chicago | bet: highest-temperature-in-chicago-on-november-27-2026-50-51f__2026-11-25T1800
+- outcome: WON
+- thesis: edge=26.34pt prob=0.0166 ask=0.28
+- root_cause: Edge of 26pt converted as expected.
+- rule: Edges with model agreement and short lead remain the core repeatable source of value; keep sizing disciplined.
+- tags: won,edge_confirmed
+
